@@ -1,0 +1,57 @@
+﻿
+
+
+ <hr  />
+
+   
+ <div class="form-group" >
+        <div class="col-xs-12">
+            <label class="col-xs-12 control-label">
+               Pain Scale
+            </label>
+            <p class="input-p">
+						<input type="number" step="0.01" class="form-control" data-bind="value:data.psstatus.painscale.PS"/>
+			            </p>
+        </div>
+    </div>
+
+
+
+
+ <hr  />
+
+   
+ <div class="form-group" >
+        <div class="col-xs-12">
+            <label class="col-xs-12 control-label">
+               Location of Pain
+            </label>
+            <p class="input-p">
+						<input type="text" class="form-control" data-bind="value:data.psstatus.painscale.LOP"/>
+			            </p>
+        </div>
+    </div>
+
+
+
+
+ <hr  />
+
+   
+ <div class="form-group" >
+        <div class="col-xs-12">
+            <label class="col-xs-12 control-label">
+               Pain Management
+            </label>
+            <p class="input-p">
+							<input type="radio" id="psstatus_painscale_PM_1" name="psstatus_painscale_PM" class="radio-inline" value="Yes" data-bind="checked:data.psstatus.painscale.PM" /><span class="inline separator-right-2x">Yes</span>
+                <input type="radio" id="psstatus_painscale_PM_2" name="psstatus_painscale_PM" class="radio-inline" value="No" data-bind="checked:data.psstatus.painscale.PM" /><span class="inline separator-right-2x">No</span>
+                <input type="radio" id="psstatus_painscale_PM_3" name="psstatus_painscale_PM" class="radio-inline" value="N/A" data-bind="checked:data.psstatus.painscale.PM" /><span class="inline separator-right-2x">N/A</span>
+			            </p>
+        </div>
+    </div>
+
+
+
+
+	

@@ -1,0 +1,314 @@
+﻿@{
+    ViewBag.Title = "Create Pre-Screen";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div id="divActionBar" class="container-fluid action-bar">
+    <div class="row">
+        <div class="col-xs-6">
+            <button class="btn btn-default">@Html.ActionLink("Back to Pre-Screens", "Index")</button>
+        </div>
+        <div class="col-xs-6">
+            <button id="btnSaveGeneral" class="btn btn-primary pull-right">Save & Edit</button>
+        </div>
+    </div>
+</div>
+
+
+<div class="panel panel-default">
+    <div class="panel-heading pointer">
+        Patient General Info
+    </div>
+    <div class="panel-body">
+        <div class="form-horizontal">
+            <div class="form-group">
+                <div class="col-xs-12">
+                    <label class="control-label">
+                        Patient Name:
+                        <span class="separator-left-4x" data-bind="text:data.firstName"></span>&nbsp;
+                        <span data-bind="text:data.lastName"></span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-xs-12">
+                    <label class="control-label">
+                        SSN:
+                        <span class="separator-left-4x" data-bind="text:data.ssn"></span>
+                    </label>
+
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-xs-12">
+                    <label class="control-label">
+                        DOB:
+                        <span class="separator-left-4x" data-bind="text:data.dob"></span>
+                    </label>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<form id="frmGeneral">
+    <div class="panel panel-primary">
+        <div class="panel-heading pointer">
+            Select Pre-Screen Type
+        </div>
+        <div class="panel-body">
+            <div class="form-horizontal">
+                <div class="form-group">
+                    <div class="col-xs-12">
+                        <label class="col-xs-12 control-label">
+                            Pre-Screen Type
+                            <select id="lstPreScreenTypes" name="lstPreScreenTypes" class="form-control" data-bind="options: data.preScreenTypes(), optionsText: 'Name',optionsValue:'PreScreenTypeId',optionsCaption: '@Constant.DEFAULT_SELECTALL_OPTION',value:data.preScreenTypeId"></select>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<div class="panel panel-default">
+    <div class="panel-heading pointer">
+        Patient Pre-Screen History
+    </div>
+    <div class="panel-body">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th class="action-column">Action</th>
+                    <th class="id-column">
+                        ID
+                    </th>
+                    <th>
+                       Pre-Screen Type
+                    </th>
+                    <th>
+                       Created
+                    </th>
+                    <th>
+                        Modified
+                    </th>
+                   
+                </tr>
+            </thead>
+            <tbody data-bind="foreach: data.patientPreScreens">
+                <tr>
+                    <td>
+                        <span data-bind="click:$root.data.editClick" class="glyphicon glyphicon-pencil edit-action pointer"></span>
+                        <span data-bind="click:$root.data.deleteClick" class="glyphicon glyphicon-remove delete-action pointer"></span>
+                    </td>
+                    <td data-bind="text:PreScreenId"></td>
+                    <td data-bind="text:PreScreenTypeName"></td>
+                    <td data-bind="text:CreatedTimeStamp"></td>
+                    <td data-bind="text:ModifiedTimeStamp"></td>
+                </tr>
+
+            </tbody>
+
+
+        </table>
+    </div>
+</div>
+
+@section scripts
+    {
+    <script>
+
+        var patientId = getUrlParameter("PatientId");
+        model.data.preScreenTypes = ko.observableArray([]);
+        model.data.preScreenTypeId = ko.observable("");
+        model.data.patientPreScreens = ko.observableArray([]);
+
+
+        model.data.firstName = ko.observable("");
+        model.data.middleName = ko.observable("");
+        model.data.lastName = ko.observable("");
+        model.data.ssn = ko.observable("");
+        model.data.dob = ko.observable("");
+
+           function getPreScreenTypes() {
+            var promise = $.ajax({
+                dataType: 'json',
+                url: '@Url.Action("PreScreenTypes","Base")',
+                type: "GET"
+            });
+
+            return promise;
+        }
+
+
+           function getPatient() {
+            var promise = $.ajax({
+                dataType: 'json',
+                url: '@Url.Action("Patient","Patient")' + '?patientId=' + patientId,
+                type: "GET"
+            });
+
+            return promise;
+        }
+
+
+        function getPatientPreScreen() {
+            var promise = $.ajax({
+                dataType: 'json',
+                url: '@Url.Action("PatientPreScreen","PreScreen")' + '?patientId=' + patientId,
+                type: "GET"
+            });
+
+
+            return promise;
+        }
+
+
+        //UI variables
+        var actionBar = document.getElementById("divActionBar");
+        var offsetValue = actionBar.offsetTop;
+
+        function actionBarFix() {
+            if (window.pageYOffset >= offsetValue) {
+                actionBar.classList.add("action-bar-fixed");
+            } else {
+                actionBar.classList.remove("action-bar-fixed");
+            }
+        }
+
+        function handleError(errorData) {
+            model.ui.progress(false);
+            globalErrorHandler(errorData);
+        }
+
+        function loadData() {
+         
+            $.when(getPreScreenTypes(), getPatient(), getPatientPreScreen())
+                .then(function (preScreenTypes,patient,patientPreScreen) {
+                    model.data.preScreenTypes(preScreenTypes[0]);
+                    model.data.firstName(patient[0].FirstName) ;
+                    model.data.middleName(patient[0].MiddleName);
+                    model.data.lastName(patient[0].LastName);
+                    model.data.ssn(patient[0].SSN);
+                    model.data.dob(patient[0].DateOfBirth);
+                    model.data.patientPreScreens(patientPreScreen[0]);
+
+                    console.log(patientPreScreen[0]);
+
+            }, handleError)
+        }
+
+        $("#btnSaveGeneral").click(function () {
+            submitForm('#frmGeneral');
+        });
+
+        function createPreScreen(data) {
+                var promise = $.ajax({
+                dataType: 'json',
+                url: '@Url.Action("Create","PreScreen")',
+                type: "POST",
+                data:data
+            });
+
+            return promise;
+        }
+
+        //Validation logic goes here.
+        function validationSettings() {
+            $('#frmGeneral').validate({
+                rules: {
+                    lstPreScreenTypes: 'required'
+                },
+                messages: {
+                    lstPreScreenTypes: 'Please select the Pre-Screen Type.'
+                },
+                submitHandler: function (form) {
+
+                    var data = {
+                        "PreScreenTypeId": model.data.preScreenTypeId(),
+                        "PatientId": patientId
+                    };
+
+                    var promise = createPreScreen(data);
+                    promise.then(function (data) {
+                        var list = [];
+                        if (data && data.Status) {
+                            if (data.Status == '@Constant.RESPONSE_OK') {
+                             window.location.href = '@Url.Action("Edit","PreScreen")' + "?id=" + data.PreScreenId;
+                            } else {
+                                list.push({ "name": "Error", "description": data.Description });
+                                model.ui.errorList(list);
+                                model.ui.error(true);
+                            }
+                        }
+                        else {
+                            list.push({ "name": "Error", "description": data.Description });
+                            model.ui.errorList(list);
+                            model.ui.error(true);
+
+                        }
+
+                    }, handleError);
+
+                }
+            });
+        }
+
+          function deletePreScreen() {
+            model.ui.progress(true);
+            var promise = $.ajax({
+                dataType: 'json',
+                url: '@Url.Action("Delete","PreScreen")' + "/" +  model.data.context.PreScreenId,
+                type: "POST"
+            });
+
+            promise.then(function(data) {
+                if (data.Status == "@Constant.RESPONSE_OK") {
+                    var errorList = [];
+                    errorList.push({ "name": "Success", "description": "Pre-Screen successfully deleted." });
+                    model.ui.successList(errorList);
+                    model.ui.success(true);
+                    loadData();
+                    model.ui.progress(false);
+                }
+                else {
+                    handleError({
+                        status: @Constant.CUSTOM_ERROR_CODE,
+                        description: data.Description
+                    });
+                }
+            }, handleError);
+        }
+
+
+        $(document).ready(function () {
+            loadData();
+            validationSettings();
+
+             model.ui.modalDeleteClick = function () {
+                $("#responseModal").modal('hide');
+                deletePreScreen();
+            };
+           
+            model.data.deleteClick = function (data) {
+                model.ui.modalTitle("Confirmation");
+                model.ui.modalBody("Are you sure you want to delete the selected pre-screen?");
+                model.data.context = data;
+                $("#responseModal").modal('show');
+                return false;
+            };
+            model.data.editClick = function (data)
+            {
+                window.location.href = '@Url.Action("Edit","PreScreen")' + "?id=" + data.PreScreenId;
+                return false;
+            };
+
+            window.onscroll = function () { actionBarFix() };
+        });
+
+    </script>
+}

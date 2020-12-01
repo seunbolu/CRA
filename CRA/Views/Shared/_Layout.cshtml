@@ -1,0 +1,206 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - Cornerstone Healthcare Group</title>
+    <link rel="shortcut icon" type="image/png" href="@Url.Content("~/Images/favicon.ico")" />
+    @Styles.Render("~/Content/font-awesome")
+    @Scripts.Render("~/bundles/modernizr")
+    @Styles.Render("~/Content/kendo/css")
+    @Styles.Render("~/Content/css")
+
+</head>
+<body>
+    @Html.Partial("Progress")
+    @Html.Partial("ErrorAlert")
+    @Html.Partial("SuccessAlert")
+    @Html.Partial("InfoAlert")
+    @Html.Partial("ResponseModal")
+    @Html.Partial("Header")
+    @Html.Partial("MainMenu")
+    <div class="container-fluid custom-breadcrumb">
+        @Html.MvcSiteMap().SiteMapPath()
+    </div>
+    <div class="container-fluid">
+        @RenderBody()
+    </div>
+    @Html.Partial("Footer")
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/jquery-ui")
+    @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/bundles/knockout")
+    @Scripts.Render("~/bundles/toastr")
+    @Scripts.Render("~/bundles/kendo")
+
+    <script>
+
+        var model = {
+            ui: {
+                progress: ko.observable(false),
+                error: ko.observable(false),
+                errorList: ko.observableArray([]),
+                success: ko.observable(false),
+                successList: ko.observableArray([]),
+                modalTitle: ko.observable(""),
+                modalBody: ko.observable(""),
+                info: ko.observable(false),
+                infoList: ko.observableArray([])
+            },
+            data: {
+            }
+        }
+
+        function isIterable(obj) {
+            if (obj == null) {
+                return false;
+            }
+            return typeof obj[Symbol.iterator] === 'function';
+        }
+
+        function globalErrorHandler(errorData) {
+            var errorList = [];
+            if (errorData && errorData.status) {
+                switch (errorData.status) {
+                    case 404:
+                        errorList.push({ "name": errorData.status, "description": "The resource you are trying to access has been moved or no longer exists on the server." });
+                        break;
+                    case @Constant.CUSTOM_ERROR_CODE:
+                        errorList.push({ "name": "Application Error", "description": errorData.description });
+                        break;
+                    case 500:
+                        errorList.push({ "name": errorData.status, "description": "Internal Server Error" });
+                        break;
+
+                    default:
+                        errorList.push({ "name": "Unhandled Exception", "description": "An unhandled exception has occurred. Please try again. If the issue persists, please contact the support for details." });
+                }
+            }
+            else {
+                errorList.push({ "name": "Unknown Exception", "description": "An unknown exception has occurred. Please contact the support for details." });
+            }
+            model.ui.errorList(errorList);
+            model.ui.error(true);
+        }
+
+        function submitForm(id) {
+            $(id).submit();
+        }
+
+        var getUrlParameter = function getUrlParameter(sParam) {
+            var sPageURL = decodeURIComponent(window.location.search.substring(1)),
+                sURLVariables = sPageURL.split('&'),
+                sParameterName,
+                i;
+
+            for (i = 0; i < sURLVariables.length; i++) {
+                sParameterName = sURLVariables[i].split('=');
+
+                if (sParameterName[0] === sParam) {
+                    return sParameterName[1] === undefined ? true : sParameterName[1];
+                }
+            }
+        };
+    </script>
+
+    @RenderSection("scripts", required: false)
+
+    <script>
+        $(document).ready(function () {
+
+            model.ui.errorDismissedClick = function () {
+                model.ui.errorList([]);
+                model.ui.error(false);
+            };
+
+            model.ui.successDismissedClick = function () {
+                model.ui.successList([]);
+                model.ui.success(false);
+            };
+
+            model.ui.infoDismissedClick = function () {
+                model.ui.infoList([]);
+                model.ui.info(false);
+            };
+
+            ko.applyBindings(model);
+        });
+    </script>
+
+    <script>
+        $(document).ready(function () {
+
+            $(".phone-mask").mask("9999999999", { placeholder: " " });
+            $(".ssn-mask").mask("999999999", { placeholder: " " });
+
+            $(document).ready(function () {
+                $(".date-control").datepicker();
+            });
+        });
+    </script>
+
+    <script>
+        function getCurrentUserNotifcations() {
+            var promise = $.ajax({
+                dataType: 'json',
+                url: '@Url.Action("GetCurrentUserNotifcations", "Base")',
+                type: "GET"
+            });
+
+            return promise;
+        }
+
+
+        setInterval(function () {
+            getCurrentUserNotifcations().then(function (data) {
+                for (let item of data) {
+                    switch (item.Category) {
+                        case "Success":
+                            toastr.success('<strong>' + item.Subject + '</strong> ' + item.Message);
+                            break;
+                        case "Error":
+                            toastr.error('<strong>' + item.Subject + '</strong> ' + item.Message);
+                            break;
+
+                        case "Info":
+                            toastr.info('<strong>' + item.Subject + '</strong> ' + item.Message);
+                            break;
+
+                    }
+
+                }
+            }, handleNotificationError);
+        }, 10000);
+
+
+
+        function handleNotificationError(errorData) {
+            model.ui.progress(false);
+            globalErrorHandler(errorData);
+        }
+
+
+        $(document).ready(function () {
+
+            toastr.options = {
+                "closeButton": true,
+                "debug": false,
+                "positionClass": "toast-bottom-right",
+                "onclick": null,
+                "showDuration": "200",
+                "hideDuration": "1500",
+                "timeOut": "20000",
+                "extendedTimeOut": "1200",
+                "showEasing": "swing",
+                "hideEasing": "linear",
+                "showMethod": "fadeIn",
+                "hideMethod": "fadeOut"
+            }
+
+        });
+
+    </script>
+
+
+</body>
+</html>

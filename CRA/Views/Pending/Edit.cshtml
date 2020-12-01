@@ -1,0 +1,746 @@
+﻿@{
+    ViewBag.Title = "Edit Patient";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<div id="divActionBar" class="container-fluid action-bar">
+    <div class="row">
+        <div class="col-xs-6">
+            <button class="btn btn-default">@Html.ActionLink("Back to Patients", "Index")</button>
+        </div>
+        <div class="col-xs-6">
+            <button id="btnSaveGeneral" class="btn btn-primary pull-right">Save</button>
+        </div>
+    </div>
+</div>
+
+<form id="frmPatientDemographic">
+
+    <div class="panel panel-default">
+        <div class="panel-heading pointer">
+            Patient Demographics
+        </div>
+        <div class="panel-body">
+            <div class="form-horizontal">
+
+                <div class="form-group">
+                    <div class="col-xs-12">
+                        <label class="col-xs-12 control-label">
+                            Social security number
+                            <input name="txtSSN" type="text" class="form-control" data-bind="value:data.patientDemographic.ssn" />
+                        </label>
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    <div class="col-xs-12">
+                        <label class="col-xs-12 control-label">
+                            First name
+                            <input name="txtFirstName" type="text" class="form-control" data-bind="value:data.patientDemographic.firstName" />
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-xs-12">
+                        <label class="col-xs-12 control-label">
+                            Middle name
+                            <input name="txtMiddleName" type="text" class="form-control" data-bind="value:data.patientDemographic.middleName" />
+                        </label>
+                    </div>
+                </div>
+
+
+
+                <div class="form-group">
+                    <div class="col-xs-12">
+                        <label class="col-xs-12 control-label">
+                            Last name
+                            <input name="txtLastName" type="text" class="form-control" data-bind="value:data.patientDemographic.lastName" />
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-xs-12">
+                        <label class="col-xs-12 control-label">
+                            Date of birth
+                            <input name="txtDateOfBirth" id="txtDateOfBirth" type="text" class="form-control" data-bind="value:data.patientDemographic.dateOfBirth" />
+                        </label>
+                    </div>
+                </div>
+
+
+
+                <div class="form-group">
+                    <div class="col-xs-12">
+                        <label class="col-xs-12 control-label">
+                            Phone
+                            <input name="txtPhone" id="txtPhone" type="text" class="form-control" data-bind="value:data.patientDemographic.phone" />
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-xs-12">
+                        <hr />
+                    </div>
+                </div>
+
+
+
+                <div class="form-group">
+                    <div class="col-xs-12">
+                        <label class="col-xs-12 control-label">
+                            Address
+                            <input name="txtAddress" type="text" class="form-control" data-bind="value:data.patientDemographic.address" />
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-xs-12">
+                        <label class="col-xs-12 control-label">
+                            City
+                            <input name="txtCity" type="text" class="form-control" data-bind="value:data.patientDemographic.city" />
+                        </label>
+                    </div>
+                </div>
+
+
+
+
+
+
+                <div class="form-group">
+                    <div class="col-xs-12">
+                        <label class="col-xs-12 control-label">
+                            Zip code
+                            <input name="txtZipCode" type="text" class="form-control" data-bind="value:data.patientDemographic.zipCode" />
+                        </label>
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+
+                    <div class="col-xs-12">
+                        <label class="col-xs-12 control-label">
+                            Country
+                            <select name="lstCountryType" class="form-control" data-bind="options: data.patientDemographic.countryTypes(), optionsText: 'Name',optionsValue:'CountryTypeId',optionsCaption: '@Constant.DEFAULT_SELECTALL_OPTION',value:data.patientDemographic.countryTypeId"></select>
+                        </label>
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+
+                    <div class="col-xs-12">
+                        <label class="col-xs-12 control-label">
+                            State
+                            <select name="lstStateType" class="form-control" data-bind="options: data.patientDemographic.stateTypes(), optionsText: 'Name',optionsValue:'StateTypeId',optionsCaption: '@Constant.DEFAULT_SELECTALL_OPTION',value:data.patientDemographic.stateTypeId"></select>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-xs-12">
+                        <hr />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-xs-12">
+                        <label class="col-xs-12 control-label">
+                            Gender
+                            <select name="lstGenderType" class="form-control" data-bind="options: data.patientDemographic.genderTypes(), optionsText: 'Name',optionsValue:'GenderTypeId',optionsCaption: '@Constant.DEFAULT_SELECTALL_OPTION',value:data.patientDemographic.genderTypeId"></select>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-xs-12">
+                        <label class="col-xs-12 control-label">
+                            Race
+                            <select name="lstRaceType" class="form-control" data-bind="options: data.patientDemographic.raceTypes(), optionsText: 'Name',optionsValue:'RaceTypeId',optionsCaption: '@Constant.DEFAULT_SELECTALL_OPTION',value:data.patientDemographic.raceTypeId"></select>
+                        </label>
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    <div class="col-xs-12">
+                        <label class="col-xs-12 control-label">
+                            Ethnicity
+                            <select name="lstEthnicityType" class="form-control" data-bind="options: data.patientDemographic.ethnicityTypes(), optionsText: 'Name',optionsValue:'EthnicityTypeId',optionsCaption: '@Constant.DEFAULT_SELECTALL_OPTION',value:data.patientDemographic.ethnicityTypeId"></select>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-xs-12">
+                        <label class="col-xs-12 control-label">
+                            Marital status
+                            <select name="lstMaritalStatusType" class="form-control" data-bind="options: data.patientDemographic.maritalStatusTypes(), optionsText: 'Name',optionsValue:'MaritalStatusTypeId',optionsCaption: '@Constant.DEFAULT_SELECTALL_OPTION',value:data.patientDemographic.maritalStatusTypeId"></select>
+                        </label>
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    <div class="col-xs-12">
+                        <label class="col-xs-12 control-label">
+                            Religious condideration
+                            <input name="txtReligiousConsideration" type="text" class="form-control" data-bind="value:data.patientDemographic.religiousConsideration" />
+                        </label>
+                    </div>
+
+                </div>
+
+
+                <div class="form-group">
+                    <div class="col-xs-12">
+                        <hr />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-xs-12">
+                        <label class="col-xs-12 control-label">
+                            Primary language
+                            <select name="lstPrimaryLanguageType" class="form-control" data-bind="options: data.patientDemographic.languageTypes(), optionsText: 'Name',optionsValue:'LanguageTypeId',optionsCaption: '@Constant.DEFAULT_SELECTALL_OPTION',value:data.patientDemographic.primaryLanguageTypeId"></select>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-xs-12">
+                        <label class="col-xs-12 control-label">
+                            Secondary language
+                            <select name="lstSecondaryLanguageType" class="form-control" data-bind="options: data.patientDemographic.languageTypes(), optionsText: 'Name',optionsValue:'LanguageTypeId',optionsCaption: '@Constant.DEFAULT_SELECTALL_OPTION',value:data.patientDemographic.secondaryLanguageTypeId"></select>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-xs-12">
+                        <hr />
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    <div class="col-xs-12">
+                        <label class="col-xs-12 control-label">
+                            Next of kin
+                            <input name="txtNextOfKin" type="text" class="form-control" data-bind="value:data.patientDemographic.nextOfKin" />
+                        </label>
+                    </div>
+
+                </div>
+
+
+                <div class="form-group">
+                    <div class="col-xs-12">
+                        <label class="col-xs-12 control-label">
+                            Next of kin relationship
+                            <select name="lstNextOfKinRelationshipType" class="form-control" data-bind="options: data.patientDemographic.relationshipTypes(), optionsText: 'Name',optionsValue:'RelationshipTypeId',optionsCaption: '@Constant.DEFAULT_SELECTALL_OPTION',value:data.patientDemographic.nextOfKinRelationshipTypeId"></select>
+                        </label>
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    <div class="col-xs-12">
+                        <label class="col-xs-12 control-label">
+                            Contact number
+                            <input name="txtContactNumber" type="text" class="form-control" data-bind="value:data.patientDemographic.contactNumber" />
+                        </label>
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    <div class="col-xs-12">
+                        <label class="col-xs-12 control-label">
+                            Advance directives
+                        </label>
+                        <p class="input-p">
+                            <input type="radio" value="Yes" id="optAdvanceDirectivesYes" name="advanceDirectives" data-bind="checked:data.patientDemographic.advanceDirective" /><label for="optAdvanceDirectivesYes">Yes</label>
+                            <input type="radio" value="No" id="optAdvanceDirectivesNo" name="advanceDirectives" data-bind="checked:data.patientDemographic.advanceDirective" /><label for="optAdvanceDirectivesNo">No</label>
+                            <input type="radio" value="NA" id="optAdvanceDirectivesNA" name="advanceDirectives" data-bind="checked:data.patientDemographic.advanceDirective" /><label for="optAdvanceDirectivesNA">N/A</label>
+                        </p>
+
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    <div class="col-xs-12">
+                        <label class="col-xs-12 control-label">
+                            Code status
+                            <input name="txtCodeStatus" type="text" class="form-control" data-bind="value:data.patientDemographic.codeStatus" />
+                        </label>
+                    </div>
+
+                </div>
+
+
+                <div class="form-group">
+                    <div class="col-xs-12">
+                        <label class="col-xs-12 control-label">
+                            Power of attorney
+                        </label>
+                        <p class="input-p">
+                            <input type="radio" value="Yes" id="optPOAYes" name="poa" data-bind="checked:data.patientDemographic.poa" /><label for="optPOAYes">Yes</label>
+                            <input type="radio" value="No" id="optPOANo" name="poa" data-bind="checked:data.patientDemographic.poa" /><label for="optPOANo">No</label>
+                            <input type="radio" value="NA" id="optPOANA" name="poa" data-bind="checked:data.patientDemographic.poa" /><label for="optPOANA">N/A</label>
+                        </p>
+
+                    </div>
+                </div>
+
+                <div class="form-group" data-bind="css:{hide:data.patientDemographic.poa()!='Yes'}">
+                    <div class="col-xs-12">
+                        <hr />
+                    </div>
+                </div>
+
+
+                <div class="form-group" data-bind="css:{hide:data.patientDemographic.poa()!='Yes'}">
+                    <div class="col-xs-12">
+                        <label class="col-xs-12 control-label">
+                            Name
+                            <input name="txtName" type="text" class="form-control" data-bind="value:data.patientDemographic.name" />
+                        </label>
+                    </div>
+
+                </div>
+
+                <div class="form-group" data-bind="css:{hide:data.patientDemographic.poa()!='Yes'}">
+                    <div class="col-xs-12">
+                        <label class="col-xs-12 control-label">
+                            Relationship
+                            <select name="lstRelationshipType" class="form-control" data-bind="options: data.patientDemographic.relationshipTypes(), optionsText: 'Name',optionsValue:'RelationshipTypeId',optionsCaption: '@Constant.DEFAULT_SELECTALL_OPTION',value:data.patientDemographic.relationshipTypeId"></select>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group" data-bind="css:{hide:data.patientDemographic.poa()!='Yes'}">
+                    <div class="col-xs-12">
+                        <label class="col-xs-12 control-label">
+                            Phone number
+                            <input name="txtPhoneNumber" type="text" class="form-control" data-bind="value:data.patientDemographic.phoneNumber" />
+                        </label>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</form>
+@section scripts{
+
+    <script id="uiInit">
+
+        var id = getUrlParameter("id");
+
+        //UI variables
+        var actionBar = document.getElementById("divActionBar");
+        var offsetValue = actionBar.offsetTop;
+
+        function actionBarFix() {
+            if (window.pageYOffset >= offsetValue) {
+                actionBar.classList.add("action-bar-fixed");
+            } else {
+                actionBar.classList.remove("action-bar-fixed");
+            }
+        }
+
+        $(document).ready(function () {
+
+            window.onscroll = function () { actionBarFix() };
+        });
+
+    </script>
+
+    <script id="patientDemographic">
+
+        model.data.patientDemographic = {};
+
+        model.data.patientDemographic.ssn = ko.observable("");
+        model.data.patientDemographic.firstName = ko.observable("");
+        model.data.patientDemographic.middleName = ko.observable("");
+        model.data.patientDemographic.lastName = ko.observable("");
+        model.data.patientDemographic.dateOfBirth = ko.observable("");
+        model.data.patientDemographic.phone = ko.observable("");
+
+        model.data.patientDemographic.address = ko.observable("");
+        model.data.patientDemographic.city = ko.observable("");
+        model.data.patientDemographic.stateTypeId = ko.observable("");
+        model.data.patientDemographic.zipCode = ko.observable("");
+        model.data.patientDemographic.countryTypeId = ko.observable("@(ViewBag.DefaultCountryTypeId )");
+        model.data.patientDemographic.countryTypes = ko.observableArray([]);
+        model.data.patientDemographic.stateTypes = ko.observableArray([]);
+
+        model.data.patientDemographic.genderTypes = ko.observableArray([]);
+        model.data.patientDemographic.raceTypes = ko.observableArray([]);
+        model.data.patientDemographic.ethnicityTypes = ko.observableArray([]);
+        model.data.patientDemographic.maritalStatusTypes = ko.observableArray([]);
+
+
+       
+        model.data.patientDemographic.genderTypeId = ko.observable("");
+        model.data.patientDemographic.raceTypeId = ko.observable("");
+        model.data.patientDemographic.ethnicityTypeId = ko.observable("");
+        model.data.patientDemographic.maritalStatusTypeId = ko.observable("");
+        model.data.patientDemographic.religiousConsideration = ko.observable("");
+
+
+        model.data.patientDemographic.languageTypes = ko.observableArray([]);
+        model.data.patientDemographic.primaryLanguageTypeId = ko.observable("");
+        model.data.patientDemographic.secondaryLanguageTypeId = ko.observable("");
+
+        model.data.patientDemographic.nextOfKin = ko.observable("");
+
+        model.data.patientDemographic.relationshipTypes = ko.observableArray([]);
+        model.data.patientDemographic.nextOfKinRelationshipTypeId = ko.observable("");
+
+        model.data.patientDemographic.contactNumber = ko.observable("");
+        model.data.patientDemographic.advanceDirective = ko.observable("");
+        model.data.patientDemographic.codeStatus = ko.observable("");
+        model.data.patientDemographic.poa = ko.observable("");
+
+        model.data.patientDemographic.name = ko.observable("");
+        model.data.patientDemographic.relationshipTypeId = ko.observable("");
+        model.data.patientDemographic.phoneNumber = ko.observable("");
+
+
+
+
+    </script>
+
+    <script id="mainScript">
+
+         function getCountryTypes() {
+            var promise = $.ajax({
+                dataType: 'json',
+                url: '@Url.Action("CountryTypes","Base")',
+                type: "GET"
+            });
+
+            return promise;
+        }
+
+
+        function getStateTypes(countryTypeId) {
+            if (!countryTypeId) {
+                countryTypeId = 0;
+            }
+              var promise = $.ajax({
+                dataType: 'json',
+                url: '@Url.Action("StateTypes","Base")' + '?countryTypeId=' + countryTypeId,
+                type: "GET"
+            });
+            return promise;
+        }
+
+
+           function getEthnicityTypes() {
+            var promise = $.ajax({
+                dataType: 'json',
+                url: '@Url.Action("EthnicityTypes","Base")',
+                type: "GET"
+            });
+
+            return promise;
+        }
+
+
+          function getRaceTypes() {
+            var promise = $.ajax({
+                dataType: 'json',
+                url: '@Url.Action("RaceTypes","Base")',
+                type: "GET"
+            });
+
+            return promise;
+        }
+
+
+          function getGenderTypes() {
+            var promise = $.ajax({
+                dataType: 'json',
+                url: '@Url.Action("GenderTypes","Base")',
+                type: "GET"
+            });
+
+            return promise;
+        }
+
+
+          function getMaritalStatusTypes() {
+            var promise = $.ajax({
+                dataType: 'json',
+                url: '@Url.Action("MaritalStatusTypes","Base")',
+                type: "GET"
+            });
+
+            return promise;
+        }
+
+
+
+          function getLanguageTypes() {
+            var promise = $.ajax({
+                dataType: 'json',
+                url: '@Url.Action("LanguageTypes","Base")',
+                type: "GET"
+            });
+
+            return promise;
+        }
+
+
+         function getRelationshipTypes() {
+            var promise = $.ajax({
+                dataType: 'json',
+                url: '@Url.Action("RelationshipTypes","Base")',
+                type: "GET"
+            });
+
+            return promise;
+        }
+
+
+           function getPatientEntity() {
+            var promise = $.ajax({
+                dataType: 'json',
+                url: '@Url.Action("DetailEntity", "Patient")' + '?id=' + id,
+                type: "GET"
+            });
+
+            return promise;
+        }
+
+           function updatePatientDemographic(id,data) {
+            var promise = $.ajax({
+                dataType: 'json',
+                url: '@Url.Action("UpdatePatientDemographic", "Patient")' + '?patientId=' + id,
+                type: "POST",
+                data:data
+            });
+
+            return promise;
+        }
+        function handleError(errorData) {
+            model.ui.progress(false);
+            globalErrorHandler(errorData);
+        }
+
+
+        function loadData() {
+            $.when(getCountryTypes()
+                ,getEthnicityTypes()
+                , getRaceTypes()
+                , getGenderTypes()
+                , getMaritalStatusTypes()
+                , getLanguageTypes()
+                , getRelationshipTypes()
+                , getPatientEntity()
+            ).then(function (
+                countryTypes,
+                ethnicityTypes,
+                raceTypes,
+                genderTypes,
+                maritalStatusTypes,
+                languageTypes,
+                relationshipTypes,
+                patient
+            )
+            {
+                model.data.patientDemographic.countryTypes(countryTypes[0]);
+                model.data.patientDemographic.ethnicityTypes(ethnicityTypes[0]);
+                model.data.patientDemographic.raceTypes(raceTypes[0]);
+                model.data.patientDemographic.genderTypes(genderTypes[0]);
+                model.data.patientDemographic.maritalStatusTypes(maritalStatusTypes[0]);
+                model.data.patientDemographic.languageTypes(languageTypes[0]);
+                model.data.patientDemographic.relationshipTypes(relationshipTypes[0]);
+             
+                model.data.patientDemographic.countryTypeId.subscribe(function (value) {
+                    getStateTypes(value).then(function (stateTypes) {
+                        model.data.patientDemographic.stateTypes(stateTypes);
+                        model.data.patientDemographic.stateTypeId(data.StateTypeId);
+                    }, handleError);
+                });
+
+                var data = patient[0].Data;
+
+                model.data.patientDemographic.ssn(data.SSN);
+                model.data.patientDemographic.firstName(data.FirstName);
+                model.data.patientDemographic.middleName(data.MiddleName);
+                model.data.patientDemographic.lastName(data.LastName);
+                model.data.patientDemographic.dateOfBirth(data.DateOfBirthString);
+                model.data.patientDemographic.phone(data.Phone);
+
+
+                model.data.patientDemographic.phone(data.Phone);
+                model.data.patientDemographic.address(data.Address);
+                model.data.patientDemographic.city(data.City);
+              
+                model.data.patientDemographic.zipCode(data.ZipCode);
+                model.data.patientDemographic.countryTypeId(data.CountryTypeId);
+      
+                model.data.patientDemographic.genderTypeId(data.GenderTypeId);
+                model.data.patientDemographic.raceTypeId(data.RaceTypeId);
+                model.data.patientDemographic.ethnicityTypeId(data.EthnicityTypeId);
+                model.data.patientDemographic.maritalStatusTypeId(data.MaritalStatusTypeId);
+                model.data.patientDemographic.religiousConsideration(data.ReligiousConsideration);
+
+                model.data.patientDemographic.primaryLanguageTypeId(data.PrimaryLanguageTypeId);
+                model.data.patientDemographic.secondaryLanguageTypeId(data.SecondaryLanguageTypeId);
+
+                model.data.patientDemographic.nextOfKin(data.NextOfKin);
+
+                model.data.patientDemographic.nextOfKinRelationshipTypeId(data.NextOfKinRelationshipTypeId);
+
+                model.data.patientDemographic.contactNumber(data.ContactNumber);
+                model.data.patientDemographic.advanceDirective(data.AdvanceDirective);
+                model.data.patientDemographic.codeStatus(data.CodeStatus);
+                model.data.patientDemographic.poa(data.POA);
+
+                model.data.patientDemographic.name(data.Name);
+                model.data.patientDemographic.relationshipTypeId(data.RelationshipTypeId);
+                model.data.patientDemographic.phoneNumber(data.PhoneNumber);
+
+               
+
+
+              
+                if (!data.CountryTypeId) {
+                       model.data.patientDemographic.countryTypeId("@(ViewBag.DefaultCountryTypeId )");
+                }
+
+              
+            }, handleError);
+        }
+
+
+        $("#btnSaveGeneral").click(function () {
+            submitForm('#frmPatientDemographic');
+        });
+
+        function validationSettings() {
+            $('#frmPatientDemographic').validate({
+                rules: {                  
+                    txtFirstName: { required: true },
+                    txtLastName: { required: true },
+                    txtDateOfBirth: { required: true },
+                    txtPhone: { required: true },
+                    txtAddress: { required: true },
+                    txtCity: { required: true },
+                    lstStateType: { required: true },
+                    txtZipCode: { required: true },
+                    lstCountryType: { required: true },
+                    lstGenderType: { required: true },
+                    txtName: { required: true },
+                    lstRelationshipType: { required: true },
+                    txtPhoneNumber: { required: true }
+                },
+                messages: {
+             
+                    txtFirstName: { required: "Please enter the first name." },
+                    txtLastName: { required: "Please enter the last name." },
+                    txtDateOfBirth: { required: "Please select the date of birth." },
+                    txtPhone: { required: "Please enter the phone number." },
+                    txtAddress: { required: "Please enter the address." },
+                    txtCity: { required: "Please enter the city." },
+                    lstStateType: { required: "Please select the state." },
+                    txtZipCode: { required: "Please enter the zip code." },
+                    lstCountryType: { required: "Please select the country." },
+                    lstGenderType: { required: "Please select the gender." },
+                    txtName: { required: "Please enter the name." },
+                    lstRelationshipType: { required: "Please select the relationship type." },
+                    txtPhoneNumber: { required: "Please enter the phone number." }
+                },
+                submitHandler: function (form) {
+
+
+                    var data = {
+                        SSN: model.data.patientDemographic.ssn(),
+                        FirstName: model.data.patientDemographic.firstName(),
+                        MiddleName: model.data.patientDemographic.middleName(),
+                        LastName: model.data.patientDemographic.lastName(),
+                        DateOfBirth: model.data.patientDemographic.dateOfBirth(),
+                        Address: model.data.patientDemographic.address(),
+                        City: model.data.patientDemographic.city(),
+                        StateTypeId: model.data.patientDemographic.stateTypeId(),
+                        ZipCode: model.data.patientDemographic.zipCode(),
+                        CountryTypeId: model.data.patientDemographic.countryTypeId(),
+                        Phone: model.data.patientDemographic.phone(),
+                        GenderTypeId: model.data.patientDemographic.genderTypeId(),
+                        RaceTypeId: model.data.patientDemographic.raceTypeId(),
+                        EthnicityTypeId: model.data.patientDemographic.ethnicityTypeId(),
+                        MaritalStatusTypeId: model.data.patientDemographic.maritalStatusTypeId(),
+                        PrimaryLanguageTypeId: model.data.patientDemographic.primaryLanguageTypeId(),
+                        SecondaryLanguageTypeId: model.data.patientDemographic.secondaryLanguageTypeId(),
+                        ReligiousConsideration: model.data.patientDemographic.religiousConsideration(),
+                        NextOfKin: model.data.patientDemographic.nextOfKin(),
+                        NextOfKinRelationshipTypeId: model.data.patientDemographic.nextOfKinRelationshipTypeId(),
+                        AdvanceDirective: model.data.patientDemographic.advanceDirective(),
+                        ContactNumber: model.data.patientDemographic.contactNumber(),
+                        CodeStatus: model.data.patientDemographic.codeStatus(),
+                        POA: model.data.patientDemographic.poa(),
+                        name: model.data.patientDemographic.name(),
+                        RelationshipTypeId: model.data.patientDemographic.relationshipTypeId(),
+                        PhoneNumber: model.data.patientDemographic.phoneNumber()
+                    };
+
+
+             
+
+                    var promise = updatePatientDemographic(id, data);
+                    promise.then(function (data) {
+                        var list = [];
+
+                        if (data && data.Status) {
+                            if (data.Status == '@Constant.RESPONSE_OK') {
+                                list.push({ "name": "Success", "description": data.Description });
+                                model.ui.successList(list);
+                                model.ui.success(true);
+                            } else {
+                                list.push({ "name": "Error", "description": data.Description });
+                                model.ui.errorList(list);
+                                model.ui.error(true);
+                            }
+                        }
+                        else {
+                            list.push({ "name": "Error", "description": data.Description });
+                            model.ui.errorList(list);
+                            model.ui.error(true);
+
+                        }
+
+                    }, handleError);
+                }
+            });
+
+        }
+
+
+        $(document).ready(function () {
+            loadData();
+            validationSettings();
+        });
+
+    </script>
+
+    <script id="pageLoad">
+        $("#txtDateOfBirth").datepicker();
+    </script>
+
+}

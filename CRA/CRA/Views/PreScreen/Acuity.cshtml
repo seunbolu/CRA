@@ -1,0 +1,286 @@
+﻿@model CRA.Models.PreScreen.AcuityReportModel
+@using System.Linq;
+@{
+    ViewBag.Title = "Acuity Report";
+    Layout = "~/Views/Shared/_ReportLayout.cshtml";
+}
+
+
+<div class="container-fluid">
+    <h3>Acuity Report - @DateTime.Now.ToString()</h3>
+</div>
+
+
+<div class="container-fluid">
+    <div class="panel panel-default" style="width:900px;">
+        <div class="panel-heading">
+            <h4><i>Criteria Results - Counts</i></h4>
+        </div>
+        <div class="panel-body">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Admission Level</th>
+                        <th>ICU</th>
+                        <th>Intermediate</th>
+                        <th>Med Surg</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Criteria Count</td>
+                        <td>@Model.Items.Where(p => p.Category == "ICU").Where(p=>p.Positive==true).Count()</td>
+                        <td>@Model.Items.Where(p => p.Category == "INT").Where(p => p.Positive == true).Count()</td>
+                        <td>@Model.Items.Where(p => p.Category == "MED").Where(p => p.Positive == true).Count()</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+@{
+    int index = 1;
+}
+
+<div class="container-fluid">
+    <div class="panel panel-default" style="width:900px;">
+        <div class="panel-heading">
+            <h4><i>Criteria Results - Admission Level ICU</i></h4>
+        </div>
+        <div class="panel-body">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Count</th>
+                        <th>Category</th>
+                        <th>Field</th>
+                        <th>Field Result</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Items.Where(p => p.Category == "ICU" && p.Positive == true))
+                    {
+                        <tr>
+                            <td>@(index)</td>
+                            <td>@item.SectionLabel</td>
+                            <td>@item.Label</td>
+                            <td>@item.Value</td>
+                        </tr>
+
+                        index++;
+                    }
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@{
+    index = 1;
+}
+
+
+<div class="container-fluid">
+    <div class="panel panel-default" style="width:900px;">
+        <div class="panel-heading">
+            <h4><i>Remaining Criteria - Admission Level ICU</i></h4>
+        </div>
+        <div class="panel-body">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Count</th>
+                        <th>Category</th>
+                        <th>Field</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Items.Where(p => p.Category == "ICU" && p.Positive == false))
+                    {
+                        <tr>
+                            <td>@(index)</td>
+                            <td>@item.SectionLabel</td>
+                            <td>@item.Label</td>
+
+                        </tr>
+
+                        index++;
+                    }
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@{
+    index = 1;
+}
+
+
+
+
+
+
+
+<div class="container-fluid">
+    <div class="panel panel-default" style="width:900px;">
+        <div class="panel-heading">
+            <h4><i>Criteria Results - Admission Level Intermediate</i></h4>
+        </div>
+        <div class="panel-body">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Count</th>
+                        <th>Category</th>
+                        <th>Field</th>
+                        <th>Field Result</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Items.Where(p => p.Category == "INT" && p.Positive == true))
+                    {
+                        <tr>
+                            <td>@(index)</td>
+                            <td>@item.SectionLabel</td>
+                            <td>@item.Label</td>
+                            <td>@item.Value</td>
+                        </tr>
+
+                        index++;
+                    }
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@{
+    index = 1;
+}
+
+
+<div class="container-fluid">
+    <div class="panel panel-default" style="width:900px;">
+        <div class="panel-heading">
+            <h4><i>Remaining Criteria - Admission Level Intermediate</i></h4>
+        </div>
+        <div class="panel-body">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Count</th>
+                        <th>Category</th>
+                        <th>Field</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Items.Where(p => p.Category == "INT" && p.Positive == false))
+                    {
+                        <tr>
+                            <td>@(index)</td>
+                            <td>@item.SectionLabel</td>
+                            <td>@item.Label</td>
+
+                        </tr>
+
+                        index++;
+                    }
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@{
+    index = 1;
+}
+
+
+<div class="container-fluid">
+    <div class="panel panel-default" style="width:900px;">
+        <div class="panel-heading">
+            <h4><i>Criteria Results - Admission Level Med Surg</i></h4>
+        </div>
+        <div class="panel-body">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Count</th>
+                        <th>Category</th>
+                        <th>Field</th>
+                        <th>Field Result</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Items.Where(p => p.Category == "MED" && p.Positive == true))
+                    {
+                        <tr>
+                            <td>@(index)</td>
+                            <td>@item.SectionLabel</td>
+                            <td>@item.Label</td>
+                            <td>@item.Value</td>
+                        </tr>
+
+                        index++;
+                    }
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@{
+    index = 1;
+}
+
+
+<div class="container-fluid">
+    <div class="panel panel-default" style="width:900px;">
+        <div class="panel-heading">
+            <h4><i>Remaining Criteria - Admission Level Med Surg</i></h4>
+        </div>
+        <div class="panel-body">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Count</th>
+                        <th>Category</th>
+                        <th>Field</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Items.Where(p => p.Category == "MED" && p.Positive == false))
+                    {
+                        <tr>
+                            <td>@(index)</td>
+                            <td>@item.SectionLabel</td>
+                            <td>@item.Label</td>
+
+                        </tr>
+
+                        index++;
+                    }
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@{
+    index = 1;
+}

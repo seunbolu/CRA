@@ -1,0 +1,321 @@
+﻿@{
+    ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<div id="divActionBar" class="container-fluid action-bar">
+    <div class="row">
+        <div class="col-xs-6">
+            <button class="btn btn-default">@Html.ActionLink("Back to CHG Sites", "Index")</button>
+        </div>
+        <div class="col-xs-6">
+            <button id="btnSaveGeneral" class="btn btn-primary pull-right">Save</button>
+        </div>
+    </div>
+</div>
+
+
+<div class="panel panel-default">
+    <div class="panel-heading pointer">
+        General
+    </div>
+    <div class="panel-body">
+        <form id="frmGeneral">
+            <div class="form-horizontal">
+                <div class="form-group">
+                    <div class="col-xs-12">
+                        <label class="col-xs-12 control-label">
+                            Full Name
+                            <input name="txtFullName" type="text" class="form-control" data-bind="value:data.fullName" />
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+
+                    <div class="col-xs-12">
+                        <label class="col-xs-12 control-label">
+                            Short Name
+                            <input name="txtShortName" type="text" class="form-control" data-bind="value:data.shortName" />
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+
+
+                    <div class="col-xs-12">
+                        <label class="col-xs-12 control-label">
+                            CHG Service
+                            <select id="lstServiceType" name="lstServiceType" class="form-control" data-bind="options: data.serviceTypes(), optionsText: 'Name',optionsValue:'ServiceTypeId',optionsCaption: '@Constant.DEFAULT_SELECTALL_OPTION',value:data.serviceTypeId"></select>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+
+                    <div class="col-xs-12">
+                        <label class="col-xs-12 control-label">
+                            Region
+                            <select name="lstRegionType" class="form-control" data-bind="options: data.regionTypes(), optionsText: 'Name',optionsValue:'RegionTypeId',optionsCaption: '@Constant.DEFAULT_SELECTALL_OPTION',value:data.regionTypeId"></select>
+                        </label>
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+
+                    <div class="col-xs-12">
+                        <label class="col-xs-12 control-label">
+                            Address
+                            <textarea name="txtAddress" class="form-control" data-bind="value:data.address"></textarea>
+                        </label>
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    <div class="col-xs-12">
+                        <label class="col-xs-12 control-label">
+                            Number of Operational ICU Beds
+                            <input name="txtOperationalICUBedCount" type="number" class="form-control" min="0" max="10000" data-bind="value:data.operationalICUBedCount" />
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-xs-12">
+                        <label class="col-xs-12 control-label">
+                            Total Number of Beds
+                            <input name="txtBedCount" type="number" class="form-control" min="0" max="10000" data-bind="value:data.bedCount" />
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group" data-bind="css:{hide:data.ltachId()!=model.data.serviceTypeId()}">
+                    <div class="col-xs-12">
+                        <label class="col-xs-12 control-label">
+                            Pre-Screen Update Type
+                            <select name="lstPreScreenUpdateType" class="form-control" data-bind="options: data.preScreenUpdateTypes(), optionsText: 'Name',optionsValue:'PreScreenUpdateTypeId',optionsCaption: '@Constant.DEFAULT_SELECTALL_OPTION',value:data.preScreenUpdateTypeId"></select>
+                        </label>
+                    </div>
+                </div>
+
+            </div>
+        </form>
+
+
+    </div>
+</div>
+
+
+
+
+@section scripts
+    {
+    <script>
+          //Initialize variables.
+        model.data.serviceTypes = ko.observableArray([]);
+        model.data.regionTypes = ko.observableArray([]);
+        model.data.preScreenUpdateTypes = ko.observableArray([]);
+
+        model.data.fullName = ko.observable("");
+        model.data.shortName = ko.observable("");
+        model.data.serviceTypeId = ko.observable("");
+        model.data.regionTypeId = ko.observable("");
+        model.data.address = ko.observable("");
+        model.data.operationalICUBedCount = ko.observable("");
+        model.data.bedCount = ko.observable("");
+        model.data.preScreenUpdateTypeId = ko.observable("");
+
+        model.data.ltachId= ko.observable(@ViewBag.ltachId);
+
+        //Functions to load the screen on first load.
+
+         function getServiceTypes() {
+            var promise = $.ajax({
+                dataType: 'json',
+                url: '@Url.Action("ServiceTypes","Base")',
+                type: "GET"
+            });
+
+            return promise;
+        }
+
+         function getRegionTypes(serviceTypeId) {
+            var promise = $.ajax({
+                dataType: 'json',
+                url: '@Url.Action("RegionTypes","Base")' + '?serviceTypeId=' + serviceTypeId,
+                type: "GET"
+            });
+
+            return promise;
+        }
+
+         function getPreScreenUpdateTypes() {
+            var promise = $.ajax({
+                dataType: 'json',
+                url: '@Url.Action("PreScreenUpdateTypes", "Base")',
+                type: "GET"
+            });
+
+            return promise;
+        }
+
+          function createCHGSite(data) {
+            var promise = $.ajax({
+                dataType: 'json',
+                url: '@Url.Action("Create","CHGSite")',
+                type: "POST",
+                data:data
+            });
+
+            return promise;
+        }
+
+
+        function loadData() {
+            model.ui.progress(true);
+            var promise = getServiceTypes();
+            $.when(getServiceTypes(), getPreScreenUpdateTypes()).then(function (serviceTypesData, preScreenUpdateTypesData) {
+                model.data.serviceTypes(serviceTypesData[0]);
+                model.data.preScreenUpdateTypes(preScreenUpdateTypesData[0]);
+                model.ui.progress(false);
+            }, handleError);
+
+        }
+
+        function handleError(errorData) {
+            model.ui.progress(false);
+            globalErrorHandler(errorData);
+        }
+
+
+        $("#lstServiceType").change(function () {
+
+            model.ui.progress(true);
+
+            var serviceTypeId = $(this).val();
+            if (serviceTypeId == "") {
+                serviceTypeId = 0;
+            }
+            var promise = getRegionTypes(serviceTypeId);
+            promise.then(function (data) {
+                model.data.regionTypes(data);
+
+                //Add code to get the grid data.
+                model.ui.progress(false);
+            }, handleError);
+
+        });
+
+        $("#btnSaveGeneral").click(function () {
+            submitForm('#frmGeneral');
+        });
+
+        //Validation logic goes here.
+        function validationSettings() {
+            $('#frmGeneral').validate({
+                rules: {
+                    txtFullName: 'required',
+                    txtShortName: 'required',
+                    txtAddress: 'required',
+                    lstServiceType: 'required',
+                    lstRegionType: 'required',
+                    lstPreScreenUpdateType :'required'
+                },
+                messages: {
+                    txtFullName: 'Full name is required.',
+                    txtShortName: 'Short name is required.',
+                    txtAddress: 'Address is required.',
+                    lstServiceType: 'Service type is required.',
+                    lstRegionType: 'Region is required.',
+                    lstPreScreenUpdateType: 'Pre screen update is required.'
+                },
+                submitHandler: function (form) {
+
+
+
+                    var data = {
+                        "FullName": model.data.fullName(),
+                        "ShortName": model.data.shortName(),
+                        "ServiceTypeId": model.data.serviceTypeId(),
+                        "RegionTypeId": model.data.regionTypeId(),
+                        "Address": model.data.address(),
+                        "OperationalICUBedCount": model.data.operationalICUBedCount(),
+                        "BedCount": model.data.bedCount(),
+                        "PreScreenUpdateTypeId": model.data.preScreenUpdateTypeId()
+                    };
+
+                    var promise = createCHGSite(data);
+                    promise.then(function (data) {
+                        var list = [];
+
+                        if (data && data.Status) {
+                            if (data.Status == '@Constant.RESPONSE_OK') {
+                                list.push({ "name": "Success", "description": data.Description });
+                                model.ui.successList(list);
+                                model.ui.success(true);
+                            } else {
+                                list.push({ "name": "Error", "description": data.Description });
+                                model.ui.errorList(list);
+                                model.ui.error(true);
+                            }
+                        }
+                        else {
+                            list.push({ "name": "Error", "description": data.Description });
+                            model.ui.errorList(list);
+                            model.ui.error(true);
+
+                        }
+
+                    }, handleError);
+
+                }
+            });
+        }
+
+
+        //UI variables
+        var actionBar = document.getElementById("divActionBar");
+        var offsetValue = actionBar.offsetTop;
+
+        function actionBarFix() {
+            if (window.pageYOffset >= offsetValue) {
+                actionBar.classList.add("action-bar-fixed");
+            } else {
+                actionBar.classList.remove("action-bar-fixed");
+            }
+        }
+
+
+        //function panelToggle() {
+        //    $(".panel")
+        //        .find(".panel-heading")
+        //        .each(function () {
+        //            $(this).click(function () {
+        //                $(this).siblings(".panel-body")
+        //                    .toggle();
+        //            });
+
+        //        });
+        //}
+
+        $(document).ready(function () {
+
+            model.ui.progress(true);
+            loadData();
+            validationSettings();
+
+            //UI Initializations.
+            //panelToggle();
+            window.onscroll = function () { actionBarFix() };
+
+
+
+        });
+
+    </script>
+
+}

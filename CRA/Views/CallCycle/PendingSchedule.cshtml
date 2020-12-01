@@ -1,0 +1,196 @@
+﻿@model CRA.Models.CallCycle.CallCycleModel
+@{
+
+
+    ViewBag.Title = "Call Cycle Admin";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <div class="row">
+            <div class="col-xs-12">
+                <h4 class="inline">Details</h4>
+                <button class="btn btn-primary pull-right" data-bind="click:data.approveDeny,css:{hide:!data.pendingTaskId()}">Approve / Deny</button>
+            </div>
+        </div>
+       
+    </div>
+    <div class="panel-body">
+        <form>
+            <div class="form-horizontal">
+                <div class="form-group">
+                    <div class="col-xs-12">
+                        <label class="control-label col-xs-12 ">
+                            User Name: <input type="text" class="form-control col-xs-12 " readonly="readonly" data-bind="value:data.userName" />
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-xs-12">
+                        <label class="control-label col-xs-12 ">
+                            Notes
+                            <textarea class="form-control col-xs-12 " data-bind="value:data.Notes" readonly="readonly"></textarea>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<div class="panel panel-default">
+    <div class="panel-body call-cycle-schedule-container">
+        <table class="table col-xs-12">
+            <thead>
+                <tr>
+                    <th class="call-cycle-table-header-width100px"></th>
+                    @foreach (var day in Model.DayHeaders)
+                    {
+                        <th class="call-cycle-table-header">@(day.Name)</th>
+                    }
+                    <th></th>
+
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var time in Model.TimeHeaders)
+                {
+                    <tr>
+                        <td>@time.Name</td>
+
+                        @foreach (var day in Model.DayHeaders)
+                        {
+                            <td>
+                                <table class="table call-cycle-table-header-width100pc">
+                                    <tbody data-bind="foreach:model.data.schedule.@(time.Name).@(day.Name)">
+                                        <tr>
+                                            <td style="height:20px;">
+                                                <button class="call-cycle-table-header-width100pc btn dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-bind="text:ContactName,css:{'btn-info':CategoryName=='New','btn-danger':CategoryName=='Challenge','btn-warning':CategoryName=='Influencer','btn-success':CategoryName=='Referring'}"></button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+
+                            </td>
+                        }
+                        <td></td>
+                    </tr>
+
+
+
+                }
+
+            </tbody>
+
+        </table>
+    </div>
+</div>
+
+
+
+
+
+
+@section scripts{
+    <script>
+
+        model.data.scheduleId = ko.observable(@ViewBag.ScheduleId);
+        model.data.userSchedule = ko.observableArray([]);
+        model.data.userName = ko.observable("");
+
+        model.data.Notes = ko.observable("");
+
+        model.data.pendingTaskId = ko.observable("");
+
+
+   function getSchedule(scheduleId) {
+    var promise = $.ajax({
+    dataType: 'json',
+        url: '@Url.Action("GetSchedule", "CallCycle")' + '?ScheduleId=' + scheduleId,
+    type: "GET"
+    });
+
+    return promise;
+    }
+
+
+        function GetItem(day, time) {
+            var list = [];
+            var items = model.data.userSchedule();
+            for (let item of items) {
+                if (item.Day == day && item.Time == time) {
+                    list.push(item);
+                }
+            }
+            return list;
+        }
+
+        function handleError(errorData) {
+            model.ui.progress(false);
+            globalErrorHandler(errorData);
+        }
+
+
+           model.data.schedule = {};
+
+
+        @foreach (var time in Model.TimeHeaders)
+        {
+            <text>
+        model.data.schedule.@(time.Name) = {};
+        @foreach (var day in Model.DayHeaders)
+{
+    <text>model.data.schedule.@(time.Name).@(day.Name) = ko.observableArray([]);</text>
+        }
+
+            </text>
+        }
+
+      
+
+        function loadData() {
+
+            getSchedule(model.data.scheduleId()).then(function (data) {
+                model.data.userSchedule(data.Items);
+                model.data.Notes(data.Notes);
+                model.data.userName(data.UserName);
+
+                //console.log(data.PendingTask);
+
+                if (data.PendingTask) {
+                    model.data.pendingTaskId(data.PendingTask.UserTaskId);
+                }
+               // model.data.pendingTask(data.PendingTask);
+
+                 var list = [];
+
+                    @foreach(var time in Model.TimeHeaders)
+                    {
+                        foreach(var day in Model.DayHeaders)
+                        {
+                            <text>
+                    list = GetItem('@day.Name', '@time.Name');
+                    model.data.schedule['@time.Name']['@day.Name'](list);
+
+                    </text>
+                        }
+                    }
+
+            }, handleError);
+
+        }
+
+        $(document).ready(function () {
+            loadData();
+        });
+
+
+        model.data.approveDeny = function () {
+            window.location.replace('@Url.Action("Resolve","Task")' + '/' + model.data.pendingTaskId());
+        }
+
+    </script>
+}

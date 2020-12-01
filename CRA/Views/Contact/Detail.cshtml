@@ -1,0 +1,308 @@
+﻿@{
+    ViewBag.Title = "Detail";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div id="divActionBar" class="container-fluid action-bar">
+    <div class="row">
+        <div class="col-xs-6">
+            <button class="btn btn-default">@Html.ActionLink("Back to Contacts", "Index")</button>
+            <div class="dropdown inline">
+                <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                    Action
+                    <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                    <li><a href='#' data-bind="click:data.editContact">Edit</a></li>
+                </ul>
+            </div>
+
+        </div>
+        <div class="col-xs-6">
+            <button class="btn btn-primary pull-right" data-bind="click:data.approveDeny,css:{hide:!data.pendingTaskId()}">Approve / Deny</button>
+        </div>
+    </div>
+</div>
+<form id="frmGeneral">
+    <div class="panel panel-default">
+        <div class="panel-heading pointer">
+            General
+        </div>
+        <div class="panel-body">
+
+            <div class="form-horizontal">
+
+                <div class="form-group">
+                    <div class="col-xs-12">
+                        <label class="col-xs-12 control-label">
+                            First Name
+                            <input type="text" name="txtFirstName" class="form-control" data-bind="value:data.firstName" readonly="readonly" />
+                        </label>
+
+                    </div>
+                </div>
+
+                <div class="form-group">
+
+                    <div class="col-xs-12">
+                        <label class="col-xs-12 control-label">
+                            Last Name
+                            <input type="text" name="txtLastName" class="form-control" data-bind="value:data.lastName" readonly="readonly" />
+                        </label>
+
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+
+                    <div class="col-xs-12">
+                        <label class="col-xs-12 control-label">
+                            Email
+                            <input type="text" name="txtEmail" class="form-control" data-bind="value:data.email" readonly="readonly" />
+                        </label>
+
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    <div class="col-xs-12">
+                        <label class="col-xs-12 control-label">
+                            Phone
+                            <input type="tel" class="form-control" data-bind="value:data.phone" readonly="readonly" />
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-xs-12">
+                        <label class="col-xs-12 control-label">
+                            Mobile
+                            <input type="tel" class="form-control" data-bind="value:data.mobile" readonly="readonly" />
+                        </label>
+
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+
+                    <div class="col-xs-12">
+                        <label class="col-xs-12 control-label">
+                            Location
+                            <textarea name="txtLocation" class="form-control" data-bind="value:data.location" readonly="readonly"></textarea>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+
+                    <div class="col-xs-12">
+                        <label class="col-xs-12 control-label">
+                            Notes
+                            <textarea name="txtNote" class="form-control" data-bind="value:data.note" readonly="readonly"></textarea>
+                        </label>
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    <div class="col-xs-12">
+                        <label class="col-xs-12 control-label">
+                            Category
+                            <input type="text" class="form-control" data-bind="value:data.categoryName" readonly="readonly" />
+                        </label>
+
+                    </div>
+                </div>
+
+
+            </div>
+
+
+        </div>
+    </div>
+
+
+    <div class="panel panel-default">
+        <div class="panel-heading pointer">
+            Referral Source Assignment
+        </div>
+        <div class="panel-body">
+
+            <div class="form-horizontal">
+                <div class="form-group">
+                    <div class="col-xs-12">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                 
+                                    <th class="name-column">Type</th>
+                                    <th>Full Name</th>
+                                </tr>
+                            </thead>
+                            <tbody data-bind="foreach: data.referralSources">
+                                <tr>
+                                  
+                                    <td data-bind="text:ReferralSourceTypeName"></td>
+                                    <td data-bind="text:FullName"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+
+
+
+            </div>
+        </div>
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-heading pointer">
+            Role Assignment
+        </div>
+        <div class="panel-body">
+
+            <div class="form-horizontal">
+                <div class="form-group">
+                    <div class="col-xs-12">
+                        <label class="col-xs-12 control-label">
+                            Role
+                            <input type="text" class="form-control" data-bind="value:data.contactRoleTypeName" readonly="readonly" />
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group" data-bind="css: { hide: data.contactRoleTypeName()!='Nurse Practitioner' && data.contactRoleTypeName()!='Physician' }">
+                    <div class="col-xs-12">
+                        <label class="col-xs-12 control-label">
+                            Speciality
+                            <input type="text" class="form-control" data-bind="value:data.specialityTypeName" readonly="readonly" />
+                        </label>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+
+</form>
+
+
+@section scripts{
+    <script>
+
+        var id = getUrlParameter("id");
+
+        //Initialize variables.
+        model.data.firstName = ko.observable("");
+        model.data.lastName = ko.observable("");
+        model.data.email = ko.observable("");
+        model.data.mobile = ko.observable("");
+        model.data.phone = ko.observable("");
+        model.data.location = ko.observable("");
+        model.data.note = ko.observable("");
+
+        model.data.categoryName = ko.observable("");
+        model.data.contactRoleTypeName = ko.observable("");
+        model.data.specialityTypeName = ko.observable("");
+
+        model.data.referralSources = ko.observableArray([]);
+
+        model.data.Notes = ko.observable("");
+
+        model.data.pendingTaskId = ko.observable("");
+
+
+        function handleError(errorData) {
+            model.ui.progress(false);
+            globalErrorHandler(errorData);
+        }
+
+
+        //UI variables
+        var actionBar = document.getElementById("divActionBar");
+        var offsetValue = actionBar.offsetTop;
+
+        function actionBarFix() {
+            if (window.pageYOffset >= offsetValue) {
+                actionBar.classList.add("action-bar-fixed");
+            } else {
+                actionBar.classList.remove("action-bar-fixed");
+            }
+        }
+
+         function getContact(id) {
+            var promise = $.ajax({
+                dataType: 'json',
+                url: '@Url.Action("DetailEntity","Contact")' + '?id=' + id,
+                type: "GET"
+            });
+
+            return promise;
+        }
+
+
+         function loadData(id) {
+            model.ui.progress(true);
+            var promise = getContact(id);
+            promise.then(function (viewModel) {
+
+                if (viewModel && viewModel.Status != '@Constant.RESPONSE_OK') {
+                    list.push({ "name": "Error", "description": viewModel.Description });
+                    model.ui.errorList(list);
+                    model.ui.error(true);
+                }
+
+                model.data.Notes(viewModel.Notes);
+
+
+                if (viewModel.PendingTask) {
+                    model.data.pendingTaskId(viewModel.PendingTask.UserTaskId);
+                }
+
+                model.data.firstName(viewModel.Data.FirstName);
+                model.data.lastName(viewModel.Data.LastName);
+                model.data.email(viewModel.Data.Email);
+                model.data.mobile(viewModel.Data.Mobile);
+                model.data.phone(viewModel.Data.Phone);
+                model.data.categoryName(viewModel.Data.CategoryName);
+                model.data.location(viewModel.Data.Location);
+                model.data.note(viewModel.Data.Note);
+                model.data.contactRoleTypeName(viewModel.Data.ContactRoleTypeName);
+                model.data.specialityTypeName(viewModel.Data.SpecialityTypeName);
+
+                model.data.referralSources(viewModel.Data.ReferralSources);
+
+                model.ui.progress(false);
+
+            }, handleError);
+        }
+
+
+        model.data.approveDeny = function () {
+            window.location.replace('@Url.Action("ResolveContact","Task")' + '/' + model.data.pendingTaskId());
+        }
+
+        $(document).ready(function () {
+
+            loadData(id);
+
+            model.data.editContact = function (data) {
+                window.location.href = '@Url.Action("Edit","Contact")' + "?id=" + id;
+                return false;
+            };
+
+            //UI Initializations.
+            window.onscroll = function () { actionBarFix() };
+        });
+
+    </script>
+
+
+}

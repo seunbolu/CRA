@@ -1,0 +1,255 @@
+﻿@{
+    ViewBag.Title = "Referrals";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        Filter
+    </div>
+    <div class="panel-body">
+        <div class="form-horizontal">
+
+            <div class="col-xs-12 col-md-12 col-lg-4">
+                <label>
+                    CHG Site:
+                </label>
+                <select class="form-control" data-bind="options: data.sites(), optionsText: 'FullName',optionsValue:'CHGSiteId',optionsCaption: '@Constant.DEFAULT_ALL_OPTION',value:data.siteId"></select>
+            </div>
+
+            <div class="separator col-xs-12 hidden visible-xs visible-sm visible-md"></div>
+
+            <div class="col-xs-12 col-md-12 col-lg-4">
+                <label>
+                    Status:
+                </label>
+                <select class="form-control">
+                    <option value="">All</option>
+                    <option value="Created" selected="selected">Created</option>
+
+                </select>
+
+            </div>
+
+            <div class="separator col-xs-12 hidden visible-xs visible-sm visible-md visible-lg"></div>
+
+            <div class="col-xs-12 col-md-12 col-lg-12">
+                <button type="submit" class="btn btn-primary separator-right" data-bind="click:data.searchClick" title="Search">Search</button>
+                <button type="submit" class="btn btn-default separator-right" data-bind="click:data.clearClick" title="Clear">Clear</button>
+                <a href='@Url.Action("Create","Referral")' class="pointer action-button green separator-left-4x" title="Create New"><span class="glyphicon glyphicon-plus "></span></a>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+
+<div class="panel">
+    <div class="panel-body">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th class="action-column">Action</th>
+                    <th class="id-column">
+                        ID
+                    </th>
+
+                    <th class="name-column">
+                        Patient Name
+                    </th>
+                    <th>
+                        Site Name
+                    </th>
+                    <th>
+                        Referral Source
+                    </th>
+                    <th class="name-column">
+                        Contact
+                    </th>
+                    <th class="name-column">
+                        Liaison
+                    </th>
+                    <th>
+                        Status
+                    </th>
+                    <th class="name-column">
+                        Date of Referral
+                    </th>
+                    <th class="name-column">
+                        Name of Referralsource
+                    </th>
+                    <th class="name-column">
+                        LastName
+                    </th>
+                    <th class="name-column">
+                        FirstName
+                    </th>
+                    <th class="name-column">
+                        Middle Initial
+                    </th>
+                    <th class="name-column">
+                        Time Pre-screen
+                    </th>
+                    <th class="name-column">
+                        Name of Liason
+                    </th>
+                    <th class="name-column">
+                        Name of AC
+                    </th>
+                    <th class="name-column">
+                        Name of PCN
+                    </th>
+                    <th class="name-column">
+                        Referral Status
+                    </th>
+                    <th class="name-column">
+                        Clinical Status
+                    </th>
+                    <th class="name-column">
+                        CHG Destination
+                    </th>
+                    <th class="name-column">
+                        How did we get the business
+                    </th>
+                    <th class="name-column">
+                        payor Name
+                    </th>
+                    <th class="name-column">
+                        Time of last Auth Attempt
+                    </th>
+                    <th class="name-column">
+                        SCA Requested
+                    </th>
+                    <th class="name-column">
+                        Peer to Peer
+                    </th>
+                    <th>
+                        EA
+                    </th>
+                    <th class="name-column">
+                        Admission Status 
+                    </th>
+                    
+                </tr>
+            </thead>
+            <tbody data-bind="foreach: data.referrals">
+                <tr>
+                    <td>
+                        <span data-bind="click:$root.data.detailClick" class="glyphicon glyphicon-pencil edit-action pointer" title="Edit Pre-Screen"></span>
+                    </td>
+                    <td data-bind="text:ReferralId" class="id-column"></td>
+
+                    <td><a href="#" data-bind="text:PatientName,click:$root.data.detailClick"></a></td>
+                    <td data-bind="text:SiteName"></td>
+                    <td data-bind="text:ReferralSourceName"></td>
+                    <td data-bind="text:ContactName"></td>
+                    <td data-bind="text:LiaisonName"></td>
+                    <td data-bind="text:StatusTypeName"></td>
+                    
+
+                </tr>
+
+            </tbody>
+
+
+        </table>
+    </div>
+</div>
+
+@section scripts
+    {
+
+    <script>
+        //Initialize variables.
+
+        model.data.sites = ko.observableArray([]);
+        model.data.referralStatusTypes = ko.observableArray([]);
+        model.data.referrals = ko.observableArray([]);
+
+
+        model.data.siteId = ko.observable("");
+        model.data.referralStatusType = ko.observable("");
+
+        //Functions to load the screen on first load.
+
+        function getReferrals() {
+            var promise = $.ajax({
+                dataType: 'json',
+                url: '@Url.Action("Referrals","Pending")' + '?siteId=' + model.data.siteId() + '&status=' + model.data.referralStatusType(),
+                type: "GET"
+            });
+            return promise;
+        }
+
+           function getSites() {
+            var promise = $.ajax({
+                dataType: 'json',
+                url: '@Url.Action("GetContextUserSites", "Base")',
+                type: "GET"
+            });
+            return promise;
+        }
+
+        function loadData() {
+            model.ui.progress(true);
+            $.when( getSites())
+                .then(function (sites) {
+                    model.data.sites(sites);
+
+
+                    getReferrals().then(function (data) {
+                        model.data.referrals(data);
+                        model.ui.progress(false);
+
+                    }, handleError);
+
+                }, handleError);
+        }
+
+
+
+
+        function handleError(errorData) {
+            model.ui.progress(false);
+            globalErrorHandler(errorData);
+        }
+
+        $(document).ready(function () {
+
+            model.ui.progress(true);
+
+
+            model.data.searchClick = function () {
+                model.ui.progress(true);
+                getReferrals().then(function (data) {
+                    model.data.referrals(data);
+                    model.ui.progress(false);
+
+                }, handleError);
+                return false;
+            };
+            model.data.clearClick = function () {
+                model.ui.progress(true);
+                model.data.siteId(null);
+                model.data.referralStatusTypeId(null);
+                getReferrals().then(function (data) {
+                    model.data.referrals(data);
+                    model.ui.progress(false);
+
+                }, handleError);
+                return false;
+            };
+
+
+         model.data.detailClick = function (data) {
+                window.location.href = '@Url.Action("Edit","PreScreen")' + "?id=" + data.PreScreenId;
+                return false;
+            };
+
+            loadData();
+        });
+
+    </script>
+}
+

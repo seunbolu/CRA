@@ -1,0 +1,40 @@
+﻿@model CRA.Models.Shared.ItemModel
+
+@switch (Model.ItemType)
+{
+
+    case "Text":
+        @Html.Partial("InputEditorText", Model)
+        break;
+    case "Number":
+        @Html.Partial("InputEditorNumber", Model)
+        break;
+    case "Option":
+        @Html.Partial("InputEditorOption", Model)
+        break;
+    case "TextArea":
+        @Html.Partial("InputEditorTextArea", Model)
+        break;
+    case "Date":
+        @Html.Partial("InputEditorDate", Model)
+        break;
+    case "Time":
+        @Html.Partial("InputEditorTime", Model)
+        break;
+    case "Dropdown":
+        @Html.Partial("InputEditorDropdown", Model)
+        break;
+    case "SSN":
+        @Html.Partial("InputEditorSSN", Model)
+        break;
+    case "Phone":
+        @Html.Partial("InputEditorPhone", Model)
+        break;
+    case "Table":
+        @Html.Partial("InputEditorTable", Model)
+        break;
+    case "Check":
+        @Html.Partial("InputEditorCheck", Model)
+        break;
+
+}

@@ -1,0 +1,19 @@
+﻿@model CRA.Models.Shared.SectionModel
+
+@foreach (var accordion in Model.Accordions)
+{
+    @Html.Partial("Accordion", accordion)
+}
+
+@foreach (var item in Model.Items.Where(p => p.ItemType == "Table"))
+{
+    @Html.Partial("InputEditorTableModal", item)
+    }
+<form class="form-horizontal">
+    @foreach (var item in Model.Items)
+    {
+        @Html.Partial("ItemModel", item)
+        <hr @if (!string.IsNullOrEmpty(item.DependsOnCode) && !string.IsNullOrEmpty(item.DependsOnAssertValue)) { <text> data-bind="css:{hide:@(item.GetParentDataBoundUniqueClientCode()).@(item.DependsOnCode)()!='@item.DependsOnAssertValue'}" </text> } />
+
+    }
+</form>

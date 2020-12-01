@@ -1,0 +1,8 @@
+﻿@model CRA.Models.Shared.ItemModel
+<select class="form-control" data-bind="value:@Model.GetDataBoundUniqueClientCode()" @(Model.Disabled==true?"Disabled='Disabled'":"") >
+    <option value="">-Select Option-</option>
+    @for (int i = 0; i < Model.LabelList.Length; i++)
+    {
+        <option value="@(Model.ValueList[i])">@(Model.LabelList[i])</option>
+    }
+</select>

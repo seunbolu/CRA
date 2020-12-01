@@ -1,0 +1,71 @@
+﻿<div class="modal fade" id="authApproved" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static"
+     data-keyboard="false">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <i class="fa fa-question-circle-o inline confirmation separator-right-4x" aria-hidden="true"></i>
+                <h2 class="modal-title inline" >Auth Approved</h2>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <label class="control-label col-xs-12">
+                            Status <span class="separator-right-2x"></span>
+                            <input type="radio" name="admissionStatus" data-bind="checked:data.workflow.admissionStatus" value="Pre Admit" /><span class="inline separator-right-2x">Pre Admit</span>
+
+                        </label>
+                    </div>
+
+                </div>
+                <div class="row">
+                    <div class="col-xs-12"></div>
+                </div>
+
+                <div class="row" data-bind="css:{hide:data.workflow.admissionStatus()!='Denial'}">
+                    <div class="col-xs-12">
+                        <label class="control-label col-xs-12">
+                            Denial Reason <span class="separator-right-2x"></span>
+                            @Html.Partial("DenialSelect")
+                        </label>
+                    </div>
+
+                </div>
+
+                <div class="row" data-bind="css:{hide:data.workflow.admissionStatus()!='Denial'}">
+                    <div class="col-xs-12"></div>
+                </div>
+
+
+                <div class="row" data-bind="css:{hide:data.workflow.admissionStatus()!='Non Admit'}">
+                    <div class="col-xs-12">
+                        <label class="control-label col-xs-12">
+                            Non Admit Reason <span class="separator-right-2x"></span>
+                            @Html.Partial("NonAdmitSelect")
+                        </label>
+                    </div>
+
+                </div>
+
+                <div class="row" data-bind="css:{hide:data.workflow.admissionStatus()!='Non Admit'}">
+                    <div class="col-xs-12"></div>
+                </div>
+
+
+
+                <div class="row">
+                    <div class="col-xs-12">
+                        <label class="control-label col-xs-12">
+                            Notes
+                            <textarea class="form-control col-xs-12" rows="5" data-bind="value:data.workflow.admissionNotes"></textarea>
+                        </label>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bind="click:data.authApproved">Ok</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

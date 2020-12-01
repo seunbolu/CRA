@@ -1,0 +1,93 @@
+﻿<div class="modal fade" id="userRoleModal" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static"
+     data-keyboard="false">
+    <form id="frmUpdateUserRoleData">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 class="modal-title inline">Manage User Roles</h2>
+                </div>
+                <div class="modal-body">
+                    <div class='row'>
+
+                        <div class="form-group">
+                            <div class="col-xs-12">
+                                <label class="col-xs-12 control-label">
+                                    Select User Role
+                                    <select name="lstUserRoleType" class="form-control" data-bind="options: data.userRoleTypes(), optionsText: 'Name',optionsValue:'Name',optionsCaption: '@Constant.DEFAULT_SELECTALL_OPTION',value:data.userRoleName"></select>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="form-group" data-bind="css: { hide: data.userRoleName()!='CL'}">
+                            <div class="col-xs-12">
+                                <label class="col-xs-12 control-label">
+                                    Select Pre-Screen Types
+                                </label>
+                                <ul data-bind="foreach: data.preScreenOptions" class="list">
+                                    <li>
+                                        <input type="checkbox" data-bind="checked:Selected" /><span class="inline" data-bind="text:Name"></span>
+                                    </li>
+                                </ul>
+
+                            </div>
+                        </div>
+
+                        <div class="form-group" data-bind="css: { hide: data.userRoleName()!='SLH' }">
+                            <div class="col-xs-12">
+                                <label class="col-xs-12 control-label">
+                                    Select Services
+                                </label>
+                                <ul data-bind="foreach: data.serviceOptions" class="list">
+                                    <li>
+                                        <input type="checkbox" data-bind="checked:Selected" /><span class="inline" data-bind="text:Name"></span>
+                                    </li>
+                                </ul>
+
+                            </div>
+                        </div>
+
+
+                        <div class="form-group" data-bind="css: { hide: data.userRoleName()!='AVP' }">
+                            <div class="col-xs-12">
+                                <label class="col-xs-12 control-label">
+                                    Select Service Regions
+                                </label>
+                                <ul data-bind="foreach: data.serviceRegionOptions" class="list">
+                                    <li>
+                                        <input type="checkbox" data-bind="checked:Selected" /><span class="inline" data-bind="text:ServiceName"></span> - <span class="inline" data-bind="text:RegionName"></span>
+                                    </li>
+                                </ul>
+
+                            </div>
+                        </div>
+
+
+                        <div class="form-group" data-bind="css: { hide: data.userRoleName()!='CEO' && data.userRoleName()!='DBD' && data.userRoleName()!='CL'  && data.userRoleName()!='NCM'  }">
+                            <div class="col-xs-12">
+                                <label class="col-xs-12 control-label">
+                                    Select CHG Sites
+                                </label>
+                                <ul data-bind="foreach: data.siteOptions" class="list">
+                                    <li>
+                                        <input type="checkbox" data-bind="checked:Selected" /><span class="inline" data-bind="text:ServiceName"></span> - <span class="inline" data-bind="text:RegionName"></span> - <span class="inline" data-bind="text:FullName"></span>
+                                    </li>
+                                </ul>
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-bind="click:data.updateRoleData">Save</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+
+
+
+

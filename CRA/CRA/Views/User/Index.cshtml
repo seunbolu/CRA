@@ -1,0 +1,237 @@
+﻿@{
+    ViewBag.Title = "User";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="panel panel-default">
+    <div class="panel-heading">
+        Filter
+    </div>
+    <div class="panel-body">
+        <div class="form-horizontal">
+            <div class="col-xs-12 col-md-12 col-lg-4">
+                <label>
+                    Role:
+                </label>
+                <select class="form-control" data-bind="options: data.userRoleTypes(), optionsText: 'Name',optionsValue:'UserRoleTypeId',optionsCaption: '@Constant.DEFAULT_ALL_OPTION',value:data.userRoleTypeId"></select>
+            </div>
+
+            <div class="separator col-xs-12 hidden visible-xs visible-sm visible-md"></div>
+
+            <div class="col-xs-12 col-md-12 col-lg-4">
+                <label>
+                    Keyword:
+                </label>
+                <input type="text" class="form-control" name="keyword" data-bind="value:data.keyword" />
+            </div>
+
+            <div class="separator col-xs-12 hidden visible-xs visible-sm visible-md visible-lg"></div>
+
+            <div class="col-xs-12 col-md-12 col-lg-12">
+                <button type="submit" class="btn btn-primary separator-right" data-bind="click:data.searchClick" title="Search">Search</button>
+                <button type="submit" class="btn btn-default separator-right" data-bind="click:data.clearClick" title="Clear">Clear</button>
+                <a href='@Url.Action("Create","User")' class="pointer action-button green separator-left-4x" title="Create New"><span class="glyphicon glyphicon-plus "></span></a>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+
+<div class="panel">
+    <div class="panel-body">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th class="action-column">Action</th>
+                    <th class="id-column">
+                        ID
+                    </th>
+                    <th class="name-column">
+                        User
+                    </th>
+                    <th class="short-column">
+                        Domain
+                    </th>
+                    <th class="name-column">
+                        First Name
+                    </th>
+                    <th class="name-column">
+                        Last Name
+                    </th>
+                    <th class="email-column">
+                        Email
+                    </th>
+
+                    <th class="name-column">
+                        Title
+                    </th>
+                    <th class="name-column">
+                        Role
+                    </th>
+                    <th class="phone-column">
+                        Phone
+                    </th>
+
+                </tr>
+            </thead>
+            <tbody data-bind="foreach: data.users">
+                <tr>
+                    <td>
+                        <span data-bind="click:$root.data.editClick" class="glyphicon glyphicon-pencil edit-action pointer"></span>
+                        <span data-bind="click:$root.data.deleteClick" class="glyphicon glyphicon-remove delete-action pointer"></span>
+                    </td>
+                    <td><a href="#" data-bind="text:UserId,click:$root.data.detailClick"></a></td>
+                    <td><a href="#" data-bind="text:UserName,click:$root.data.detailClick"></a></td>
+                    <td data-bind="text:DomainName"></td>
+                    <td data-bind="text:FirstName"></td>
+                    <td data-bind="text:LastName"></td>
+                    <td data-bind="text:Email"></td>
+                    <td data-bind="text:Title"></td>
+                    <td data-bind="text:Role"></td>
+                    <td data-bind="text:Phone"></td>
+
+
+                </tr>
+
+            </tbody>
+
+
+        </table>
+    </div>
+</div>
+
+@section scripts
+    {
+
+    <script>
+        //Initialize variables.
+    
+        model.data.users = ko.observableArray([]);
+        model.data.keyword = ko.observable("");
+        model.data.userRoleTypes = ko.observableArray([]);
+        model.data.userRoleTypeId = ko.observableArray("");
+
+        //Functions to load the screen on first load.
+
+        function getUsers() {
+            var timestamp = new Date().getTime();
+            var promise = $.ajax({
+                dataType: 'json',
+                url: '@Url.Action("Users","User")' + "?keyword=" + encodeURI(model.data.keyword()) + "&userRoleTypeId=" + model.data.userRoleTypeId() + "&timestamp=" + timestamp,
+                type: "GET"
+            });
+
+            return promise;
+        }
+
+
+        function getUserRoleTypes() {
+            var promise = $.ajax({
+                dataType: 'json',
+                url: '@Url.Action("UserRoleTypes","Base")',
+                type: "GET"
+            });
+
+            return promise;
+        }
+
+        function loadData() {
+
+            model.ui.progress(true);
+         
+            var promiseGrid = getUsers();
+
+            getUserRoleTypes().then(function (userRoleTypes) {
+                model.data.userRoleTypes(userRoleTypes);
+
+                promiseGrid.then(function (data) {
+                    model.data.users(data);
+                    model.ui.progress(false);
+                }, handleError);
+            }, handleError);
+
+            
+
+      
+
+        }
+
+        function handleError(errorData) {
+            model.ui.progress(false);
+            globalErrorHandler(errorData);
+        }
+
+         function deleteUser() {
+            model.ui.progress(true);
+            var promise = $.ajax({
+                dataType: 'json',
+                url: '@Url.Action("Delete","User")' + "/" +  model.data.context.UserId,
+                type: "POST"
+            });
+
+            promise.then(function(data) {
+                if (data.Status == "@Constant.RESPONSE_OK") {
+                    var errorList = [];
+                    errorList.push({ "name": "Success", "description": "User successfully deleted." });
+                    model.ui.successList(errorList);
+                    model.ui.success(true);
+                    loadData();
+                    model.ui.progress(false);
+                }
+                else {
+                    handleError({
+                        status: @Constant.CUSTOM_ERROR_CODE,
+                        description: data.Description
+                    });
+                }
+            }, handleError);
+        }
+
+        $(document).ready(function () {
+
+            model.ui.progress(true);
+
+            model.ui.modalDeleteClick = function () {
+                $("#responseModal").modal('hide');
+                deleteUser();
+            };
+
+            model.data.searchClick = function () {
+                model.ui.progress(true);
+                loadData();
+                return false;
+            };
+            model.data.clearClick = function () {
+                model.ui.progress(true);
+                model.data.keyword("");
+                model.data.userRoleTypeId("");
+                loadData();
+                return false;
+            };
+
+            model.data.deleteClick = function (data) {
+                model.ui.modalTitle("Confirmation");
+                model.ui.modalBody("Are you sure you want to delete the selected user?");
+                model.data.context = data;
+                $("#responseModal").modal('show');
+                return false;
+            };
+           
+            model.data.editClick = function (data)
+            {
+                window.location.href = '@Url.Action("Edit","User")' + "?id=" + data.UserId;
+                return false;
+            };
+
+             model.data.detailClick = function (data) {
+                window.location.href = '@Url.Action("Detail","User")' + "?id=" + data.UserId;
+                return false;
+            };
+
+            loadData();
+        });
+
+    </script>
+}
+

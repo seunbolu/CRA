@@ -1,0 +1,152 @@
+﻿@model CRA.Models.Shared.ReportModel
+@using System.Linq;
+@{
+    ViewBag.Title = "IVF Report";
+    Layout = "~/Views/Shared/_ReportLayout.cshtml";
+}
+<div class="container-fluid">
+    <h3>IVF Report - @DateTime.Now.ToString()</h3>
+</div>
+<div class="container-fluid">
+
+    @foreach (var section in Model.Sections.Where(p => p.DisplaySeparate == true))
+    {
+        if (section.Items.Count() > 0)
+        {
+
+
+        <div class="panel panel-default" style="width:900px;">
+            <div class="panel-heading">
+                <h4>@(section.Label)</h4>
+            </div>
+            <div class="panel-body">
+                <table class="table">
+                    <tbody>
+                        @foreach (var item in section.Items)
+                        {
+                            <tr>
+                                <td class="col-xs-4">@(item.Label)</td>
+
+                                <td class="col-xs-8">
+                                    @if (item.Type != "Table")
+                                    {
+                                        @(item.Value)
+                                    }
+                                    else
+                                    {
+                                        <table class="table">
+                                            <thead>
+                                                <tr>
+                                                    @foreach (var header in item.HeaderList)
+                                                    {
+                                                        <th>
+                                                            @header
+                                                        </th>
+                                                    }
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @if (item.Table.CellValues != null)
+                                                {
+                                                    for (int i = 0; i < item.Table.CellValues.Length; i++)
+                                                    {
+                                                        <tr>
+
+                                                            @foreach (var cellValue in item.Table.CellValues[i])
+                                                            {
+                                                                <td>
+                                                                    @cellValue
+                                                                </td>
+                                                            }
+                                                        </tr>
+                                                    }
+                                                }
+
+
+                                            </tbody>
+                                        </table>
+                                    }
+
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        }
+    }
+
+
+        <div class="panel panel-default" style="width:900px;">
+            <div class="panel-heading">
+                <h4>IVF Fields</h4>
+            </div>
+            <div class="panel-body">
+                <table class="table">
+                    <tbody>
+                        @foreach (var section in Model.Sections.Where(p => p.DisplaySeparate == false))
+                        {
+
+                            foreach (var item in section.Items)
+                            {
+                                <tr>
+                                    <td class="col-xs-4">@(item.Label)</td>
+
+                                    <td class="col-xs-8">
+                                        @if (item.Type != "Table")
+                                        {
+                                            @(item.Value)
+                                        }
+                                        else
+                                        {
+                                            <table class="table">
+                                                <thead>
+                                                    <tr>
+                                                        @foreach (var header in item.HeaderList)
+                                                        {
+                                                            <th>
+                                                                @header
+                                                            </th>
+                                                        }
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @if (item.Table.CellValues != null)
+                                                    {
+                                                        for (int i = 0; i < item.Table.CellValues.Length; i++)
+                                                        {
+                                                            <tr>
+
+                                                                @foreach (var cellValue in item.Table.CellValues[i])
+                                                                {
+                                                                    <td>
+                                                                        @cellValue
+                                                                    </td>
+                                                                }
+                                                            </tr>
+                                                        }
+                                                    }
+
+
+                                                </tbody>
+                                            </table>
+                                        }
+
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+
+
+
+
+
+
+</div>

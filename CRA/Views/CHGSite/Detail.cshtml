@@ -1,0 +1,205 @@
+﻿@{
+    ViewBag.Title = "Detail";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<div id="divActionBar" class="container-fluid action-bar">
+    <div class="row">
+        <div class="col-xs-6">
+            <button class="btn btn-default">@Html.ActionLink("Back to CHG Sites", "Index")</button>
+        </div>
+        <div class="col-xs-6">
+
+        </div>
+    </div>
+</div>
+
+<div class="panel panel-default">
+    <div class="panel-heading pointer">
+        General
+    </div>
+    <div class="panel-body">
+        <form id="frmGeneral">
+            <div class="form-horizontal">
+                <div class="form-group">
+                    <div class="col-xs-12">
+                        <label class="col-xs-12 control-label">
+                            Full Name
+                            <input  type="text" class="form-control" data-bind="value:data.fullName" readonly="readonly" />
+                        </label>
+                       
+                    </div>
+                </div>
+
+                <div class="form-group">
+
+                    <div class="col-xs-12">
+                        <label class="col-xs-12 control-label">
+                            Short Name
+                            <input  type="text" class="form-control" data-bind="value:data.shortName" readonly="readonly" />
+                        </label>
+                       
+                    </div>
+                </div>
+
+                <div class="form-group">
+
+
+                    <div class="col-xs-12">
+                        <label class="col-xs-12 control-label">
+                            CHG Service
+                            <input type="text" class="form-control" data-bind="value:data.serviceTypeName" readonly="readonly" />
+                        </label>
+                       
+                    </div>
+                </div>
+
+                <div class="form-group">
+
+                    <div class="col-xs-12">
+                        <label class="col-xs-12 control-label">
+                            Region
+                            <input type="text" class="form-control" data-bind="value:data.regionTypeName" readonly="readonly" />
+                        </label>
+                 
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+
+                    <div class="col-xs-12">
+                        <label class="col-xs-12 control-label">
+                            Address
+                            <textarea class="form-control" data-bind="value:data.address" readonly="readonly"></textarea>
+                        </label>            
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    <div class="col-xs-12">
+                        <label class="col-xs-12 control-label">
+                            Number of Operational ICU Beds
+                            <input type="text" class="form-control" data-bind="value:data.operationalICUBedCount" readonly="readonly" />
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-xs-12">
+                        <label class="col-xs-12 control-label">
+                            Total Number of Beds
+                            <input type="text" class="form-control" data-bind="value:data.bedCount" readonly="readonly" />
+                        </label>
+                       
+                    </div>
+                </div>
+
+                <div class="form-group" data-bind="css:{hide:'LTACH'!=model.data.serviceTypeName()}">
+                    <div class="col-xs-12">
+                        <label class="col-xs-12 control-label">
+                            Pre-Screen Update Type
+                            <input type="text" class="form-control" data-bind="value:data.preScreenUpdateTypeName" readonly="readonly" />
+                        </label>
+                       
+                    </div>
+                </div>
+
+            </div>
+        </form>
+
+    </div>
+</div>
+
+@section scripts{
+    <script>
+
+        var id = getUrlParameter("id");
+
+        //Initialize variables.
+        model.data.serviceTypes = ko.observableArray([]);
+        model.data.regionTypes = ko.observableArray([]);
+        model.data.preScreenUpdateTypes = ko.observableArray([]);
+
+        model.data.fullName = ko.observable("");
+        model.data.shortName = ko.observable("");
+        model.data.serviceTypeName = ko.observable("");
+        model.data.regionTypeName = ko.observable("");
+        model.data.address = ko.observable("");
+        model.data.operationalICUBedCount = ko.observable("");
+        model.data.bedCount = ko.observable("");
+        model.data.preScreenUpdateTypeName = ko.observable("");
+
+         model.data.ltachId= ko.observable(@ViewBag.ltachId);
+
+
+         function getCHGSite(id) {
+            var promise = $.ajax({
+                dataType: 'json',
+                url: '@Url.Action("DetailEntity","CHGSite")' + '?id=' + id,
+                type: "GET"
+            });
+
+            return promise;
+        }
+
+        function handleError(errorData) {
+            model.ui.progress(false);
+            globalErrorHandler(errorData);
+        }
+
+        function loadData(id) {
+            model.ui.progress(true);
+            var promise = getCHGSite(id);
+            promise.then(function (viewModel) {
+
+                if (viewModel && viewModel.Status != '@Constant.RESPONSE_OK') {
+                    list.push({ "name": "Error", "description": viewModel.Description });
+                    model.ui.errorList(list);
+                    model.ui.error(true);
+                }
+
+                model.data.fullName(viewModel.Data.FullName);
+                model.data.shortName(viewModel.Data.ShortName);
+                model.data.serviceTypeName(viewModel.Data.ServiceName);
+                model.data.regionTypeName(viewModel.Data.RegionName);
+                model.data.address(viewModel.Data.Address);
+                model.data.operationalICUBedCount(viewModel.Data.OperationalICUBedCount);
+                model.data.bedCount(viewModel.Data.BedCount);
+                model.data.preScreenUpdateTypeName(viewModel.Data.PreScreenUpdateTypeName);
+                model.ui.progress(false);
+
+            }, handleError);
+        }
+
+
+
+        //UI variables
+        var actionBar = document.getElementById("divActionBar");
+        var offsetValue = actionBar.offsetTop;
+
+        function actionBarFix() {
+            if (window.pageYOffset >= offsetValue) {
+                actionBar.classList.add("action-bar-fixed");
+            } else {
+                actionBar.classList.remove("action-bar-fixed");
+            }
+        }
+
+
+        $(document).ready(function () {
+
+            model.ui.progress(true);
+            loadData(id);
+           
+
+            //UI Initializations.
+            window.onscroll = function () { actionBarFix() };
+        });
+
+    </script>
+
+
+}

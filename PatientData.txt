@@ -1,0 +1,7 @@
+--Code process to filter dependent object values.
+--Enhance the code with table item type.
+--Enhance the code with calculated item type.
+--Enhance the code to inject custom drop downs.
+--Enhance the code to get the section values from the code.
+--Enhance the code to post the file contents to the server.
+

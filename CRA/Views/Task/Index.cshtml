@@ -1,0 +1,235 @@
+﻿@{
+    ViewBag.Title = "Tasks";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="panel panel-default">
+    <div class="panel-heading">
+        Filter
+    </div>
+    <div class="panel-body">
+        <div class="form-horizontal">
+            <div class="col-xs-12 ">
+                <label>
+                    Task Type:
+                </label>
+                <select class="form-control" data-bind="options: data.taskTypes(), optionsText: 'text',optionsValue:'value',value:data.taskType"></select>
+            </div>
+
+            <div class="separator col-xs-12 "></div>
+
+            <div class="col-xs-12 inline">
+                <label class="task-label">
+                    Status:
+                </label>
+                <select class="form-control" data-bind="options: data.status(), optionsText: 'text',optionsValue:'value',value:data.statusType"></select>
+            </div>
+
+            <div class="separator col-xs-12 "></div>
+
+            <div class="col-xs-12 inline">
+                <label class="task-label">
+                    Sub Status:
+                </label>
+                <select class="form-control" data-bind="options: data.subStatus(), optionsText: 'text',optionsValue:'value',value:data.subStatusType"></select>
+            </div>
+
+            <div class="separator col-xs-12 hidden visible-xs visible-sm visible-md visible-lg"></div>
+
+            <div class="col-xs-12 col-md-12 col-lg-12">
+                <button type="submit" class="btn btn-primary separator-right" title="Search" data-bind="click:data.search">Search</button>
+                <button type="reset" class="btn btn-default separator-right" title="Clear" data-bind="click:data.clear">Clear</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="panel">
+    <div class="panel-body">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th class="action-column">Action</th>
+                    <th class="id-column">
+                        ID
+                    </th>
+                    <th>
+                        Task Type
+                    </th>
+                    <th>
+                        Status
+                    </th>
+                    <th>
+                        Sub Status
+                    </th>
+                    <th>
+                        Description
+                    </th>
+                    <th>
+                        Created
+                    </th>
+                    <th>
+                        Modified
+                    </th>
+
+                </tr>
+            </thead>
+            <tbody data-bind="foreach:model.data.tasks">
+                <tr>
+                    <td>
+                        <span data-bind="click:$root.data.resolveClick" class="glyphicon glyphicon-check edit-action pointer" title="Resolve"></span>
+                    </td>
+                    <td data-bind="text:UserTaskId"></td>
+                    <td data-bind="text:TaskType"></td>
+                    <td data-bind="text:Status"></td>
+                    <td data-bind="text:SubStatus"></td>
+                    <td data-bind="text:Description"></td>
+                    <td data-bind="text:Created"></td>
+                    <td data-bind="text:Modified"></td>
+                </tr>
+
+            </tbody>
+
+
+        </table>
+    </div>
+</div>
+
+@section scripts{
+
+    <script>
+
+        model.data.tasks = ko.observableArray([]);
+
+        model.data.taskTypes = ko.observableArray([]);
+        model.data.taskType = ko.observable("");
+
+        model.data.status = ko.observableArray([]);
+        model.data.statusType = ko.observable("");
+
+        model.data.subStatus = ko.observableArray([]);
+        model.data.subStatusType = ko.observable("");
+
+
+        model.data.resolveClick = function (data) {
+            if (data.TaskType == "Call Cycle Approval") {
+                window.location.href = '@Url.Action("Resolve","Task")' + '/' + data.UserTaskId;
+            }
+
+              if (data.TaskType == "Referral Source Approval") {
+                window.location.href = '@Url.Action("ResolveReferralSource","Task")' + '/' + data.UserTaskId;
+            }
+
+               if (data.TaskType == "Contact Approval") {
+                window.location.href = '@Url.Action("ResolveContact","Task")' + '/' + data.UserTaskId;
+            }
+
+            if (data.TaskType == "New Referral Completion") {
+                window.location.href = '@Url.Action("ResolveNewReferralCompletion","Task")' + '/' + data.UserTaskId;
+            }
+
+            if (data.TaskType == "Pre-Screen Approval") {
+                window.location.href = '@Url.Action("ResolvePreScreenApproval", "Task")' + '/' + data.UserTaskId;
+            }
+
+            if (data.TaskType == "Pre-Screen SCA Requested") {
+                window.location.href = '@Url.Action("ResolveSCARequested", "Task")' + '/' + data.UserTaskId;
+            }
+
+
+
+            //Pre-Screen SCA Requested
+
+        }
+
+        model.data.taskType.subscribe(function (value) {
+
+            var subStatus = [];
+            subStatus.push({ value: "", text: "All" });
+
+            if (value == "Call Cycle Approval" || value == "Referral Source Approval" || value == "Contact Approval" || value=="Pre-Screen Approval") {
+
+                subStatus.push({ value: "Approved", text: "Approved", context: "Call Cycle Approval" });
+                subStatus.push({ value: "Rejected", text: "Rejected", context: "Call Cycle Approval" });
+            }
+
+            if (value == "Pre-Screen SCA Requested" ) {
+
+                subStatus.push({ value: "Acknoweledged", text: "Acknoweledged", context: "Pre-Screen SCA Requested" });
+            }
+          
+            model.data.subStatus(subStatus);
+        });
+
+
+        model.data.search = function () {
+            loadData();
+        }
+
+        model.data.clear = function () {
+            model.data.taskType("");
+            model.data.statusType("");
+            model.data.subStatusType("");
+
+            loadData();
+
+
+        }
+
+
+          function getCurrentTasks() {
+            var promise = $.ajax({
+                dataType: 'json',
+                url: '@Url.Action("GetCurrentTasks", "Task")' + "?taskType=" + model.data.taskType() + "&status=" + model.data.statusType() + "&subStatus=" + model.data.subStatusType() ,
+                type: "GET"
+            });
+
+            return promise;
+        }
+
+        function handleError(errorData) {
+            model.ui.progress(false);
+            globalErrorHandler(errorData);
+        }
+
+
+        function loadData() {
+            getCurrentTasks().then(function (data) {
+
+
+                model.data.tasks(data);
+            }, handleError);
+
+        }
+
+        $(document).ready(function () {
+            var taskTypes = [];
+            taskTypes.push({ value: "", text: "All" });
+            taskTypes.push({ value: "Call Cycle Approval", text: "Call Cycle Approval" });
+            taskTypes.push({ value: "Referral Source Approval", text: "Referral Source Approval" });
+            taskTypes.push({ value: "Contact Approval", text: "Contact Approval" });
+            taskTypes.push({ value: "New Referral Completion", text: "New Referral Completion" });
+            taskTypes.push({ value: "Pre-Screen Approval", text: "Pre-Screen Approval" });
+            taskTypes.push({ value: "Pre-Screen SCA Requested", text: "Pre-Screen SCA Requested" });
+
+            model.data.taskTypes(taskTypes);
+
+
+            var status = [];
+            status.push({ value: "", text: "All" });
+            status.push({ value: "Created", text: "Created" });
+            status.push({ value: "Completed", text: "Completed" });
+            model.data.status(status);
+
+            var subStatus = [];
+            subStatus.push({ value: "", text: "All" });
+            model.data.subStatus(subStatus);
+
+            loadData();
+
+            window.setInterval(function () {
+                loadData();
+            }, 10000);
+        });
+    </script>
+}

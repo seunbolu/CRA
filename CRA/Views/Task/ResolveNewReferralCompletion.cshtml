@@ -1,0 +1,123 @@
+﻿@model CRA.Models.Task.TaskModel
+@{
+    /**/
+
+    ViewBag.Title = "Resolve Task";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div id="divActionBar" class="container-fluid action-bar">
+    <div class="row">
+        <div class="col-xs-6">
+            <button class="btn btn-default">@Html.ActionLink("Back to Tasks", "Index")</button>
+        </div>
+        <div class="col-xs-6">
+         
+            <button class="btn btn-success pull-right separator-right-2x" data-bind="css:{hide:data.preScreenId==0 || model.data.status()=='Completed'},click:data.viewModal">View Complete Pre-Screen Request</button>
+
+        </div>
+    </div>
+</div>
+
+<form id="frmGeneral">
+    <div class="panel panel-default">
+        <div class="panel-heading pointer">
+            Resolve Task
+        </div>
+        <div class="panel-body">
+
+            <div class="form-horizontal">
+                <div class="form-group">
+                    <div class="col-xs-12">
+                        <label class="col-xs-12 control-label">
+                            Task ID
+                            @Html.TextBoxFor(p => p.UserTaskId, new { disabled = "disabled", @class = "form-control" })
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-xs-12">
+                        <label class="col-xs-12 control-label">
+                            Task Type
+                            @Html.TextBoxFor(p => p.TaskType, new { disabled = "disabled", @class = "form-control" })
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-xs-12">
+                        <label class="col-xs-12 control-label">
+                            Description
+                            @Html.TextBoxFor(p => p.Description, new { disabled = "disabled", @class = "form-control" })
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-xs-12">
+                        <label class="col-xs-12 control-label">
+                            Task Status
+                            <input type="text" class="form-control" disabled="disabled" data-bind="value:data.status" />
+
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-xs-12">
+                        <label class="col-xs-12 control-label">
+                            Sub Status
+                            <input type="text" class="form-control" disabled="disabled" data-bind="value:data.subStatus" />
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-xs-12">
+                        <label class="col-xs-12 control-label">
+                            Notes
+                            <textarea class="form-control" disabled="disabled" data-bind="value:data.notes"></textarea>
+                         
+                        </label>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+
+
+</form>
+
+@section scripts{
+
+    <script>
+        model.data.preScreenId = ko.observable(@Model.PreScreenId);
+        model.data.notes = ko.observable("");
+
+        model.data.status = ko.observable('@Model.Status');
+        model.data.subStatus = ko.observable('@Model.SubStatus');
+        model.data.notes = ko.observable('@Model.Notes');
+
+        model.data.viewModal = function () {
+            window.location.replace('@Url.Action("Edit","PreScreen")' + '?id=' + model.data.preScreenId());
+        }
+
+
+        model.data.context = ko.observable(""); 
+
+        function handleError(errorData) {
+            model.ui.progress(false);
+            globalErrorHandler(errorData);
+        }
+
+        model.data.save = function () {
+            model.ui.actionClick();
+        }
+
+     
+    </script>
+}

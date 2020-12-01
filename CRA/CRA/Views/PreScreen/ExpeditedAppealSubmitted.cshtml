@@ -1,0 +1,25 @@
+﻿<div class="modal fade" id="eaSubmitted" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static"
+     data-keyboard="false">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <i class="fa fa-question-circle-o inline confirmation separator-right-4x" aria-hidden="true"></i>
+                <h2 class="modal-title inline" >Expedited Appeal Submitted</h2>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <label class="control-label col-xs-12">
+                            <input type="checkbox" class="separator-right-2x" data-bind="checked:data.agree" /> <span>By checking this checkbox, I understand that I have submitted the documents.</span>
+                        </label>
+                    </div>
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bind="click:data.eaSubmitted,enable:data.agree">Ok</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

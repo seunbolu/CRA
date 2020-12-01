@@ -1,0 +1,131 @@
+﻿@{
+    ViewBag.Title = "Dashboard";
+}
+
+<div class="jumbotron">
+    <h1>Dashboard elements</h1>
+</div>
+
+
+<div class="jumbotron">
+    <h2>Charts and Graphs</h2>
+</div>
+
+
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <div class="row">
+            <div class="col-xs-6"><h4>Recent Tasks</h4></div>
+            <div class="col-xs-6"><a href='@Url.Action("Index","Task")' class="btn btn-success separator-right-2x pull-right"> All Tasks</a></div>
+        </div>
+
+    </div>
+    <div class="panel-body">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th class="action-column">Action</th>
+                    <th class="id-column">
+                        ID
+                    </th>
+                    <th>
+                        Task Type
+                    </th>
+                    <th>
+                        Status
+                    </th>
+                    <th>
+                        Sub Status
+                    </th>
+                    <th>
+                        Description
+                    </th>
+                    <th>
+                        Created
+                    </th>
+                    <th>
+                        Modified
+                    </th>
+
+                </tr>
+            </thead>
+            <tbody data-bind="foreach:model.data.tasks">
+                <tr>
+                    <td>
+                        <span data-bind="click:$root.data.resolveClick" class="glyphicon glyphicon-check edit-action pointer" title="Resolve"></span>
+                    </td>
+                    <td data-bind="text:UserTaskId"></td>
+                    <td data-bind="text:TaskType"></td>
+                    <td data-bind="text:Status"></td>
+                    <td data-bind="text:SubStatus"></td>
+                    <td data-bind="text:Description"></td>
+                    <td data-bind="text:Created"></td>
+                    <td data-bind="text:Modified"></td>
+                </tr>
+
+            </tbody>
+
+
+        </table>
+    </div>
+</div>
+
+@section scripts{
+
+    <script>
+        model.data.tasks = ko.observableArray([]);
+
+        function handleError(errorData) {
+            model.ui.progress(false);
+            globalErrorHandler(errorData);
+        }
+
+         function getCurrentTasks() {
+            var promise = $.ajax({
+                dataType: 'json',
+                url: '@Url.Action("GetTopCurrentTasks", "Task")',
+                type: "GET"
+            });
+
+            return promise;
+        }
+
+        function loadData() {
+            getCurrentTasks().then(function (data) {
+                model.data.tasks(data);
+            }, handleError);
+
+        }
+
+         model.data.resolveClick = function (data) {
+            if (data.TaskType == "Call Cycle Approval") {
+                window.location.href = '@Url.Action("Resolve","Task")' + '/' + data.UserTaskId;
+            }
+
+              if (data.TaskType == "Referral Source Approval") {
+                window.location.href = '@Url.Action("ResolveReferralSource","Task")' + '/' + data.UserTaskId;
+            }
+
+               if (data.TaskType == "Contact Approval") {
+                window.location.href = '@Url.Action("ResolveContact","Task")' + '/' + data.UserTaskId;
+            }
+
+        }
+
+
+        $(document).ready(function () {
+            loadData();
+            window.setInterval(function () {
+                loadData();
+            }, 10000);
+        });
+
+    </script>
+}
+
+
+
+
+
+

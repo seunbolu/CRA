@@ -1,0 +1,98 @@
+﻿<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ output extension=".txt" #>
+<#
+
+string subSectionCaption ="pain scale";
+
+string mainSection ="psstatus";
+string subSection ="painscale";
+string mainSectionUpper ="PSStatus";
+string subSectionUpper ="PainScale";
+
+
+List<Item> items = new List<Item>();
+
+items.Add(new Item(){Label="Pain Scale",TypeName="Number",Code="PS"});
+items.Add(new Item(){Label="Location of Pain",TypeName="Text",Code="LOP"});
+items.Add(new Item(){Label="Pain Management",TypeName="Option",Code="PM"});
+
+
+
+
+
+#>
+
+<#foreach(var item in items){
+#>
+
+
+ <hr  <#if(item.Dep!=null){#>data-bind="css:{hide:data.<#=mainSection#>.<#=subSection#>.<#=item.Dep#>()!='<#=item.DepValue#>'}" <#}#>/>
+
+   
+ <div class="form-group" <#if(item.Dep!=null){#>data-bind="css:{hide:data.<#=mainSection#>.<#=subSection#>.<#=item.Dep#>()!='<#=item.DepValue#>'}" <#}#>>
+        <div class="col-xs-12">
+            <label class="col-xs-12 control-label">
+               <#=item.Label#>
+            </label>
+            <p class="input-p">
+			<#switch(item.TypeName){
+			case "Option":
+			#>
+				<input type="radio" id="<#=mainSection#>_<#=subSection#>_<#=item.Code#>_1" name="<#=mainSection#>_<#=subSection#>_<#=item.Code#>" class="radio-inline" value="Yes" data-bind="checked:data.<#=mainSection#>.<#=subSection#>.<#=item.Code#>" /><span class="inline separator-right-2x">Yes</span>
+                <input type="radio" id="<#=mainSection#>_<#=subSection#>_<#=item.Code#>_2" name="<#=mainSection#>_<#=subSection#>_<#=item.Code#>" class="radio-inline" value="No" data-bind="checked:data.<#=mainSection#>.<#=subSection#>.<#=item.Code#>" /><span class="inline separator-right-2x">No</span>
+                <input type="radio" id="<#=mainSection#>_<#=subSection#>_<#=item.Code#>_3" name="<#=mainSection#>_<#=subSection#>_<#=item.Code#>" class="radio-inline" value="N/A" data-bind="checked:data.<#=mainSection#>.<#=subSection#>.<#=item.Code#>" /><span class="inline separator-right-2x">N/A</span>
+			<#
+			break;
+			case "TextArea":
+			#>
+			<textarea class="form-control" rows="5" data-bind="value:data.<#=mainSection#>.<#=subSection#>.<#=item.Code#>"></textarea>
+			<#
+			break;
+			case "Text":
+			#>
+			<input type="text" class="form-control" data-bind="value:data.<#=mainSection#>.<#=subSection#>.<#=item.Code#>"/>
+			<#
+			break;
+			case "Date":
+			#>
+			<input type="text" class="form-control date-control" data-bind="value:data.<#=mainSection#>.<#=subSection#>.<#=item.Code#>"/>
+			<#
+			break;
+			case "Number":
+			#>
+			<input type="number" step="0.01" class="form-control" data-bind="value:data.<#=mainSection#>.<#=subSection#>.<#=item.Code#>"/>
+			<#
+			break;
+				case "Check":
+			#>
+			<input type="checkbox"  data-bind="checked:data.<#=mainSection#>.<#=subSection#>.<#=item.Code#>"/>
+			<#
+			break;
+
+			}
+			#>
+            </p>
+        </div>
+    </div>
+
+
+<#
+}
+#>
+
+
+	<#+
+
+	class Item{
+	public string Code {get;set;}
+	public string Label {get;set;}
+	public string TypeName {get;set;}
+	public string Dep {get;set;}
+	public string DepValue {get;set;}
+	}
+
+	#>

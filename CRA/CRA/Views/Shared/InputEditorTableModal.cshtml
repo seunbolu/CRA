@@ -1,0 +1,55 @@
+﻿@model CRA.Models.Shared.ItemModel
+<div class="modal fade" id='modal_@Model.GetUniqueClientCode().Replace(".","_")' tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static"
+     data-keyboard="false">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Enter @Model.Label</h2>
+            </div>
+            <div class="modal-body">
+
+                <form id="modal_form_@Model.GetUniqueClientCode().Replace(".","_")">
+                    <div class="form-horizontal">
+
+                        @for (int i = 0; i < Model.LabelList.Count(); i++)
+                        {
+                            <div class="row">
+                                <div class="form-group">
+                                    <div class="col-xs-12">
+                                        <label class="col-xs-12 control-label">
+                                            @Model.LabelList[i]
+                                            @switch (Model.TypeList[i])
+                                            {
+
+                                                case "Date":
+                                                    <input name="@Model.CodeList[i]" type="text" class="form-control date-control" data-bind="value:@(Model.GetParentDataBoundUniqueClientCode()).modal@(Model.ClientCode).@Model.CodeList[i]" />
+                                                    break;
+                                                case "Number":
+                                                    <input name="@Model.CodeList[i]" type="number" class="form-control" data-bind="value:@(Model.GetParentDataBoundUniqueClientCode()).modal@(Model.ClientCode).@Model.CodeList[i]" />
+                                                    break;
+                                                case "Time":
+                                                    <input name="@Model.CodeList[i]" type="time" class="form-control" data-bind="value:@(Model.GetParentDataBoundUniqueClientCode()).modal@(Model.ClientCode).@Model.CodeList[i]" />
+                                                    break;
+                                                default:
+                                                    <input name="@Model.CodeList[i]" type="text" class="form-control" data-bind="value:@(Model.GetParentDataBoundUniqueClientCode()).modal@(Model.ClientCode).@Model.CodeList[i]" />
+                                                    break;
+
+                                            }
+
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+
+                    </div>
+                </form>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bind="click:@(Model.GetParentDataBoundUniqueClientCode()).ok@(Model.ClientCode)">Ok</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

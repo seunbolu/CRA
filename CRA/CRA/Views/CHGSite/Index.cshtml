@@ -1,0 +1,223 @@
+﻿@{
+    ViewBag.Title = "CHG Site";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="panel panel-default">
+    <div class="panel-heading">
+        Filter
+    </div>
+    <div class="panel-body">
+        <div class="form-horizontal">
+
+            <div class="col-xs-12 col-md-12 col-lg-4">
+                <label>
+                    Service:
+                </label>
+                <select class="form-control" data-bind="options: data.serviceTypes(), optionsText: 'Name',optionsValue:'ServiceTypeId',optionsCaption: '@Constant.DEFAULT_ALL_OPTION',value:data.serviceTypeId"></select>
+            </div>
+
+            <div class="separator col-xs-12 hidden visible-xs visible-sm visible-md"></div>
+
+            <div class="col-xs-12 col-md-12 col-lg-4">
+                <label>
+                    Keyword:
+                </label>
+                <input type="text" class="form-control" name="keyword" data-bind="value:data.keyword" />
+            </div>
+
+            <div class="separator col-xs-12 hidden visible-xs visible-sm visible-md visible-lg"></div>
+
+            <div class="col-xs-12 col-md-12 col-lg-12">
+                <button type="submit" class="btn btn-primary separator-right" data-bind="click:data.searchClick" title="Search">Search</button>
+                <button type="submit" class="btn btn-default separator-right" data-bind="click:data.clearClick" title="Clear">Clear</button>
+                <a href='@Url.Action("Create","CHGSite")' class="pointer action-button green separator-left-4x" title="Create New"><span class="glyphicon glyphicon-plus "></span></a>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+
+<div class="panel">
+    <div class="panel-body">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th class="action-column">Action</th>
+                    <th class="id-column">
+                        ID
+                    </th>
+                    <th>
+                        CHG Site
+                    </th>
+                    <th>
+                        CHG Location
+                    </th>
+                    <th>
+                        CHG Service
+                    </th>
+                    <th>
+                        CHG Region
+                    </th>
+                    <th>
+                        Total Beds
+                    </th>
+                </tr>
+            </thead>
+            <tbody data-bind="foreach: data.sites">
+                <tr>
+                    <td>
+                        <span data-bind="click:$root.data.editClick" class="glyphicon glyphicon-pencil edit-action pointer"></span>
+                        <span data-bind="click:$root.data.deleteClick" class="glyphicon glyphicon-remove delete-action pointer"></span>
+                    </td>
+                    <td><a href="#" data-bind="text:CHGSiteId,click:$root.data.detailClick"></a></td>
+                    <td><a href="#" data-bind="text:FullName,click:$root.data.detailClick"></a></td>
+                    <td data-bind="text:Address"></td>
+                    <td data-bind="text:ServiceName"></td>
+                    <td data-bind="text:RegionName"></td>
+                    <td data-bind="text:BedCount"></td>
+                </tr>
+
+            </tbody>
+
+
+        </table>
+    </div>
+</div>
+
+@section scripts
+    {
+
+    <script>
+        //Initialize variables.
+        model.data.serviceTypes = ko.observableArray([]);
+        model.data.sites = ko.observableArray([]);
+        model.data.serviceTypeId = ko.observable("");
+        model.data.keyword = ko.observable("");
+
+        //Functions to load the screen on first load.
+
+        function getServiceTypes() {
+            var promise = $.ajax({
+                dataType: 'json',
+                url: '@Url.Action("ServiceTypes","Base")',
+                type: "GET"
+            });
+
+            return promise;
+        }
+
+        function getCHGSites() {
+
+            var serviceTypeId = model.data.serviceTypeId();
+            if (!serviceTypeId) {
+                serviceTypeId = "";
+            }
+
+            var timestamp = new Date().getTime();
+
+            var promise = $.ajax({
+                dataType: 'json',
+                url: '@Url.Action("CHGSites","CHGSite")' + "?serviceTypeId=" + encodeURI(serviceTypeId) + "&keyword=" + encodeURI(model.data.keyword()) + "&timestamp=" + timestamp,
+                type: "GET"
+            });
+
+            return promise;
+
+        }
+
+        function loadData() {
+            model.ui.progress(true);
+            var promise = getServiceTypes();
+            promise.then(function (data) {
+                model.data.serviceTypes(data);
+                //Add code to get the grid data.
+                var promiseGrid = getCHGSites();
+                promiseGrid.then(function (data) {
+                    model.data.sites(data);
+                    model.ui.progress(false);
+                }, handleError);
+            }, handleError);
+        }
+
+        function deleteCHGSite() {
+            model.ui.progress(true);
+            var promise = $.ajax({
+                dataType: 'json',
+                url: '@Url.Action("Delete","CHGSite")' + "/" +  model.data.context.CHGSiteId,
+                type: "POST"
+            });
+
+            promise.then(function(data) {
+                if (data.Status == "@Constant.RESPONSE_OK") {
+                    var errorList = [];
+                    errorList.push({ "name": "Success", "description": "CHG site successfully deleted." });
+                    model.ui.successList(errorList);
+                    model.ui.success(true);
+                    loadData();
+                    model.ui.progress(false);
+                }
+                else {
+                    handleError({
+                        status: @Constant.CUSTOM_ERROR_CODE,
+                        description: data.Description
+                    });
+                }
+            }, handleError);
+        }
+
+        function handleError(errorData) {
+            model.ui.progress(false);
+            globalErrorHandler(errorData);
+        }
+
+        $(document).ready(function () {
+
+            model.ui.progress(true);
+
+            //Define the functions that get data binded to individual rows here.
+            model.ui.modalDeleteClick = function () {
+                $("#responseModal").modal('hide');
+                deleteCHGSite();
+            };
+            model.data.createClick = function () {
+                alert(this.data.serviceTypeId());
+                alert(this.data.keyword());
+            };
+            model.data.searchClick = function () {
+                model.ui.progress(true);
+                loadData();
+                return false;
+            };
+            model.data.clearClick = function () {
+                model.ui.progress(true);
+                model.data.serviceTypeId(null);
+                model.data.keyword("");
+                loadData();
+                return false;
+            };
+            model.data.deleteClick = function (data) {
+                model.ui.modalTitle("Confirmation");
+                model.ui.modalBody("Are you sure you want to delete the selected site?");
+                model.data.context = data;
+                $("#responseModal").modal('show');
+                return false;
+            };
+            model.data.editClick = function (data)
+            {
+                window.location.href = '@Url.Action("Edit","CHGSite")' + "?id=" + data.CHGSiteId;
+                return false;
+            };
+
+             model.data.detailClick = function (data) {
+                window.location.href = '@Url.Action("Detail","CHGSite")' + "?id=" + data.CHGSiteId;
+                return false;
+            };
+
+            loadData();
+        });
+
+    </script>
+}
+

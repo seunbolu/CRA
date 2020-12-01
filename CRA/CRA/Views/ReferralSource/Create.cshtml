@@ -1,0 +1,543 @@
+﻿@{
+    ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div id="divActionBar" class="container-fluid action-bar">
+    <div class="row">
+        <div class="col-xs-6">
+            <button class="btn btn-default">@Html.ActionLink("Back to Referral Sources", "Index")</button>
+        </div>
+        <div class="col-xs-6">
+            <button id="btnSaveGeneral" class="btn btn-primary pull-right">Save</button>
+        </div>
+    </div>
+</div>
+
+<form id="frmGeneral">
+    <div class="panel panel-default">
+        <div class="panel-heading pointer">
+            General
+        </div>
+        <div class="panel-body">
+
+            <div class="form-horizontal">
+                <div class="form-group">
+                    <div class="col-xs-12">
+                        <label class="col-xs-12 control-label">
+                            Full Name
+                            <input name="txtFullName" type="text" class="form-control" data-bind="value:data.fullName" />
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+
+                    <div class="col-xs-12">
+                        <label class="col-xs-12 control-label">
+                            Short Name
+                            <input name="txtShortName" type="text" class="form-control" data-bind="value:data.shortName" />
+                        </label>
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+
+
+                    <div class="col-xs-12">
+                        <label class="col-xs-12 control-label">
+                            Referral Source Type
+                            <select id="lstReferralSourceType" name="lstReferralSourceType" class="form-control" data-bind="options: data.referralSourceTypes(), optionsText: 'Name',optionsValue:'ReferralSourceTypeId',optionsCaption: '@Constant.DEFAULT_SELECTALL_OPTION',value:data.referralSourceTypeId"></select>
+                        </label>
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    <div class="col-xs-12">
+                        <label class="col-xs-12 control-label">
+                            Number of Operational ICU Beds
+                            <input name="txtOperationalICUBedCount" type="number" class="form-control" min="0" max="10000" data-bind="value:data.operationalICUBedCount" />
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-xs-12">
+                        <label class="col-xs-12 control-label">
+                            Total Number of Beds
+                            <input name="txtBedCount" type="number" class="form-control" min="0" max="10000" data-bind="value:data.bedCount" />
+                        </label>
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    <div class="col-xs-12">
+                        <label class="col-xs-12 control-label">
+                            ICU Bed Count
+                            <input type="number" name="txtICUBedCount" class="form-control" min="0" max="10000" data-bind="value:data.icuBedCount" />
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-xs-12">
+                        <label class="col-xs-12 control-label">
+                            CCU Bed Count
+                            <input type="number" name="txtCCUBedCount" class="form-control" min="0" max="10000" data-bind="value:data.ccuBedCount" />
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-xs-12">
+                        <label class="col-xs-12 control-label">
+                            SICU Bed Count
+                            <input type="number" name="txtSICUBedCount" class="form-control" min="0" max="10000" data-bind="value:data.sicuBedCount" />
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-xs-12">
+                        <label class="col-xs-12 control-label">
+                            MICU Bed Count
+                            <input type="number" name="txtMICUBedCount" class="form-control" min="0" max="10000" data-bind="value:data.micuBedCount" />
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-xs-12">
+                        <label class="col-xs-12 control-label">
+                            Neuro ICU Bed Count
+                            <input type="number" name="txtNICUBedCount" class="form-control" min="0" max="10000" data-bind="value:data.neuroICUBedCount" />
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-xs-12">
+                        <label class="col-xs-12 control-label">
+                            Rehab Bed Count
+                            <input type="number" name="txtRehabBedCount" class="form-control" min="0" max="10000" data-bind="value:data.rehabBedCount" />
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-xs-12">
+                        <label class="col-xs-12 control-label">
+                            Skilled Nursing Bed Count
+                            <input type="number" name="txtSkilledNursingCount" class="form-control" min="0" max="10000" data-bind="value:data.skilledNursingBedCount" />
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-xs-12">
+                        <label class="col-xs-12 control-label">
+                            LTACH Bed Count
+                            <input type="number" name="txtLTACHBedCount" class="form-control" min="0" max="10000" data-bind="value:data.ltachBedCount" />
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-xs-12">
+                        <label class="col-xs-12 control-label">
+                            Confirmed Beds Coding ICU Rev Codes
+
+                            <input type="checkbox" class="block" data-bind="checked:data.confirmedBedsCodingICURevCodes" />
+                        </label>
+                    </div>
+                </div>
+
+            </div>
+
+
+        </div>
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-heading pointer">
+            CHG Site Assignment
+        </div>
+        <div class="panel-body">
+            <div class="form-group">
+                <div class="col-xs-12">
+                    <label class="col-xs-12 control-label">
+                        Select CHG Sites
+                    </label>
+                    <ul data-bind="foreach: data.siteOptions" class="list">
+                        <li>
+                            <input type="checkbox" data-bind="checked:Selected" /><span class="inline" data-bind="text:ServiceName"></span> - <span class="inline" data-bind="text:RegionName"></span> - <span class="inline" data-bind="text:FullName"></span>
+                        </li>
+                    </ul>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+    <div class="panel panel-default">
+        <div class="panel-heading pointer">
+            Electronic Referral Types
+        </div>
+        <div class="panel-body">
+            <div class="form-group">
+                <div class="col-xs-12">
+                    <label class="col-xs-12 control-label">
+                        Select Electronic Referral Types
+                    </label>
+                    <ul data-bind="foreach: data.electronicReferralTypesOptions" class="list">
+                        <li>
+                            <input type="checkbox" data-bind="checked:Selected" /><span class="inline" data-bind="text:Name"></span>
+                        </li>
+                    </ul>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="panel panel-default">
+        <div class="panel-heading pointer">
+            Commercial Payor Types
+        </div>
+        <div class="panel-body">
+            <div class="form-group">
+                <div class="col-xs-12">
+                    <label class="col-xs-12 control-label">
+                        Select Commercial Payors
+                    </label>
+                    <ul data-bind="foreach: data.commercialPayorTypesOptions" class="list">
+                        <li>
+                            <input type="checkbox" data-bind="checked:Selected" /><span class="inline" data-bind="text:Name"></span>
+                        </li>
+                    </ul>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="panel panel-default">
+        <div class="panel-heading pointer">
+            Managed Medicare Payor Types
+        </div>
+        <div class="panel-body">
+            <div class="form-group">
+                <div class="col-xs-12">
+                    <label class="col-xs-12 control-label">
+                        Select Managed Medicare Payors
+                    </label>
+                    <ul data-bind="foreach: data.managedMedicarePayorTypesOptions" class="list">
+                        <li>
+                            <input type="checkbox" data-bind="checked:Selected" /><span class="inline" data-bind="text:Name"></span>
+                        </li>
+                    </ul>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+</form>
+
+
+@section scripts
+    {
+    <script>
+          //Initialize variables.
+        model.data.referralSourceTypes = ko.observableArray([]);
+
+        model.data.fullName = ko.observable("");
+        model.data.shortName = ko.observable("");
+        model.data.referralSourceTypeId = ko.observable("");
+
+        model.data.operationalICUBedCount = ko.observable("");
+        model.data.bedCount = ko.observable("");
+        model.data.icuBedCount = ko.observable("");
+        model.data.ccuBedCount = ko.observable("");
+        model.data.micuBedCount = ko.observable("");
+        model.data.sicuBedCount = ko.observable("");
+        model.data.neuroICUBedCount = ko.observable("");
+        model.data.rehabBedCount = ko.observable("");
+        model.data.skilledNursingBedCount = ko.observable("");
+        model.data.ltachBedCount = ko.observable("");
+        model.data.confirmedBedsCodingICURevCodes = ko.observable(false);
+
+        model.data.siteOptions = ko.observableArray([]);
+        model.data.electronicReferralTypesOptions = ko.observableArray([]);
+        model.data.commercialPayorTypesOptions = ko.observableArray([]);
+        model.data.managedMedicarePayorTypesOptions = ko.observableArray([]);
+
+        //Functions to load the screen on first load.
+
+         function getReferralSourceTypes() {
+            var promise = $.ajax({
+                dataType: 'json',
+                url: '@Url.Action("ReferralSourceTypes","Base")',
+                type: "GET"
+            });
+
+            return promise;
+        }
+
+
+
+         function getElectronicReferralTypes() {
+            var promise = $.ajax({
+                dataType: 'json',
+                url: '@Url.Action("ElectronicReferralTypes","Base")',
+                type: "GET"
+            });
+
+            return promise;
+        }
+
+
+        function getCommercialPayorTypes() {
+            var promise = $.ajax({
+                dataType: 'json',
+                url: '@Url.Action("CommercialPayorTypes","Base")',
+                type: "GET"
+            });
+
+            return promise;
+        }
+
+           function getManagedMedicarePayorTypes() {
+            var promise = $.ajax({
+                dataType: 'json',
+                url: '@Url.Action("ManagedMedicarePayorTypes", "Base")',
+                type: "GET"
+            });
+
+            return promise;
+        }
+
+          function createReferralSource(data) {
+            var promise = $.ajax({
+                dataType: 'json',
+                url: '@Url.Action("Create","ReferralSource")',
+                type: "POST",
+                data:data
+            });
+
+            return promise;
+        }
+
+          function getSites() {
+            var promise = $.ajax({
+                dataType: 'json',
+                url: '@Url.Action("Sites", "Base")'
+            });
+
+            return promise;
+        }
+
+
+        function loadData() {
+            model.ui.progress(true);
+            var promise = getReferralSourceTypes();
+            $.when(getReferralSourceTypes(), getElectronicReferralTypes(), getCommercialPayorTypes(), getManagedMedicarePayorTypes(), getSites()).then(function (referralSourceTypesData, electronicReferralTypes, commercialPayorTypes,managedMedicarePayorTypes, sites) {
+                model.data.referralSourceTypes(referralSourceTypesData[0]);
+
+
+                var items = [];
+
+                for (let item of sites[0]) {
+
+                    var siteItem = {
+                        CHGSiteId: item.CHGSiteId,
+                        Selected: false,
+                        FullName: item.FullName,
+                        ServiceName: item.ServiceName,
+                        RegionName: item.RegionName,
+                        RegionTypeId: item.RegionTypeId,
+                        ServiceTypeId: item.ServiceTypeId
+                    };
+
+
+                    items.push(siteItem);
+
+                }
+                model.data.siteOptions(items);
+
+                items = [];
+
+                for (let item of electronicReferralTypes[0]) {
+
+                    var electronicReferralTypeItem = {
+                        ElectronicReferralTypeId: item.ElectronicReferralTypeId,
+                        Selected: false,
+                        Name: item.Name
+                    };
+                    items.push(electronicReferralTypeItem);
+
+                }
+
+                model.data.electronicReferralTypesOptions(items);
+
+
+
+                items = [];
+
+                for (let item of commercialPayorTypes[0]) {
+
+                    var commercialPayorTypeItem = {
+                        CommercialPayorTypeId: item.CommercialPayorTypeId,
+                        Selected: false,
+                        Name: item.Name
+                    };
+                    items.push(commercialPayorTypeItem);
+
+                }
+
+                model.data.commercialPayorTypesOptions(items);
+
+
+                items = [];
+
+                for (let item of managedMedicarePayorTypes[0]) {
+
+                    var managedMedicarePayorTypeItem = {
+                        ManagedMedicarePayorTypeId: item.ManagedMedicarePayorTypeId,
+                        Selected: false,
+                        Name: item.Name
+                    };
+                    items.push(managedMedicarePayorTypeItem);
+
+                }
+
+                model.data.managedMedicarePayorTypesOptions(items);
+
+
+
+                model.ui.progress(false);
+            }, handleError);
+
+        }
+
+        function handleError(errorData) {
+            model.ui.progress(false);
+            globalErrorHandler(errorData);
+        }
+
+
+
+
+        $("#btnSaveGeneral").click(function () {
+            submitForm('#frmGeneral');
+        });
+
+        //Validation logic goes here.
+        function validationSettings() {
+            $('#frmGeneral').validate({
+                rules: {
+                    txtFullName: 'required',
+                    txtShortName: 'required',
+                    lstReferralSourceType: 'required',
+
+                },
+                messages: {
+                    txtFullName: 'Full name is required.',
+                    txtShortName: 'Short name is required.',
+                    lstReferralSourceType: 'Referral source type is required.',
+
+                },
+                submitHandler: function (form) {
+
+                    var data = {
+                        "FullName": model.data.fullName(),
+                        "ShortName": model.data.shortName(),
+                        "ReferralSourceTypeId": model.data.referralSourceTypeId(),
+                        "OperationalICUBedCount": model.data.operationalICUBedCount(),
+                        "BedCount": model.data.bedCount(),
+                        "ICUBedCount": model.data.icuBedCount(),
+                        "CCUBedCount": model.data.ccuBedCount(),
+                        "MICUBedCount": model.data.micuBedCount(),
+                        "SICUBedCount": model.data.sicuBedCount(),
+                        "NeuroICUBedCount": model.data.neuroICUBedCount(),
+                        "RehabBedCount": model.data.rehabBedCount(),
+                        "SkilledNursingBedCount": model.data.skilledNursingBedCount(),
+                        "LTACHBedCount": model.data.ltachBedCount(),
+                        "ConfirmedBedsCodingICURevCodes": model.data.confirmedBedsCodingICURevCodes(),
+                        "Sites": model.data.siteOptions(),
+                        "ElectronicReferralTypes": model.data.electronicReferralTypesOptions(),
+                        "CommercialPayorTypes": model.data.commercialPayorTypesOptions(),
+                        "ManagedMedicarePayorTypes": model.data.managedMedicarePayorTypesOptions()
+                    };
+
+
+                    
+
+                    var promise = createReferralSource(data);
+                    promise.then(function (data) {
+                        var list = [];
+
+                        if (data && data.Status) {
+                            if (data.Status == '@Constant.RESPONSE_OK') {
+                                list.push({ "name": "Success", "description": data.Description });
+                                model.ui.successList(list);
+                                model.ui.success(true);
+                            } else {
+                                list.push({ "name": "Error", "description": data.Description });
+                                model.ui.errorList(list);
+                                model.ui.error(true);
+                            }
+                        }
+                        else {
+                            list.push({ "name": "Error", "description": data.Description });
+                            model.ui.errorList(list);
+                            model.ui.error(true);
+
+                        }
+
+                    }, handleError);
+
+                }
+            });
+        }
+
+
+        //UI variables
+        var actionBar = document.getElementById("divActionBar");
+        var offsetValue = actionBar.offsetTop;
+
+        function actionBarFix() {
+            if (window.pageYOffset >= offsetValue) {
+                actionBar.classList.add("action-bar-fixed");
+            } else {
+                actionBar.classList.remove("action-bar-fixed");
+            }
+        }
+
+
+        $(document).ready(function () {
+
+            model.ui.progress(true);
+            loadData();
+            validationSettings();
+
+            //UI Initializations.
+            //panelToggle();
+            window.onscroll = function () { actionBarFix() };
+
+
+
+        });
+
+    </script>
+
+}

@@ -1,0 +1,2027 @@
+﻿@model CRA.Models.PreScreen.PreScreenModel
+@{
+    /**/
+
+    ViewBag.Title = "Edit Pre-Screen";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@Html.Partial("ResponseModal")
+@Html.Partial("ValidationErrorModal")
+@Html.Partial("MedicareModal")
+
+@Html.Partial("CEOApproval")
+@Html.Partial("OverrideAdmissionStatus")
+
+@Html.Partial("AuthInitiated")
+@Html.Partial("AuthSubmitted")
+@Html.Partial("AuthApproved")
+@Html.Partial("AuthDenied")
+
+
+@Html.Partial("SCASubmitted")
+@Html.Partial("SCAApproved")
+@Html.Partial("SCADenied")
+
+@Html.Partial("PeerToPeerSubmitted")
+@Html.Partial("PeerToPeerApproved")
+@Html.Partial("PeerToPeerDenied")
+
+@Html.Partial("MaximusSubmitted")
+@Html.Partial("MaximusApproved")
+@Html.Partial("MaximusDenied")
+
+
+@Html.Partial("ExpeditedAppealSubmitted")
+@Html.Partial("ExpeditedAppealApproved")
+@Html.Partial("ExpeditedAppealDenied")
+@Html.Partial("Admit")
+
+
+<div id="divActionBar" class="container-fluid action-bar">
+    <div class="row">
+        <div class="col-xs-4">
+            <button class="btn btn-default">@Html.ActionLink("Back to Referrals", "Index", "Referral")</button>
+        </div>
+        <div class="col-xs-8">
+            <button class="btn btn-primary pull-right" data-bind="click:data.clickSubmit">Submit</button>
+            <button class="btn btn-default pull-right separator-right-2x" data-bind="click:data.performValidationResult">Validate Fields</button>
+            <button class="btn btn-primary pull-right separator-right-2x" data-bind="click:data.approveDeny,css:{hide:!data.pendingTaskId()}">Go To Task</button>
+
+            <div class="dropdown inline pull-right separator-right-2x">
+                <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                    Workflow
+                    <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                    <li data-bind="css:{hide:!data.transition('Verification Complete')}"><a href='#' data-bind="click:data.clickVerificationComplete">Verification Complete</a></li>
+                    <li data-bind="css:{hide:!data.transition('Verification Complete')}" class="divider" role="separator"></li>
+
+                    <li data-bind="css:{hide:!data.transition('CEO Approval Request')}"><a href='#' data-bind="click:data.ceoApprovalModal">Request CEO Approval</a></li>
+                    <li data-bind="css:{hide:!data.transition('CEO Approval Request')}" class="divider" role="separator"></li>
+
+                    <li data-bind="css:{hide:!data.transition('Override Admission Status')}"><a href='#' data-bind="click:data.overrideAdmissionStatusModal">Override Admission Status</a></li>
+                    <li data-bind="css:{hide:!data.transition('Override Admission Status')}" class="divider" role="separator"></li>
+
+                    <li data-bind="css:{hide:!data.transition('Medicare')}"><a href='#' data-bind="click:data.medicareModal">Medicare</a></li>
+                    <li data-bind="css:{hide:!data.transition('Medicare')}" class="divider" role="separator"></li>
+
+                    <li data-bind="css:{hide:!data.transition('Auth Initiated')}"><a href='#' data-bind="click:data.authInitiatedModal">Auth Initiated</a></li>
+                    <li data-bind="css:{hide:!data.transition('Auth Initiated')}" class="divider" role="separator"></li>
+
+                    <li data-bind="css:{hide:!data.transition('Auth Submitted')}"><a href='#' data-bind="click:data.authSubmittedModal">Auth Submitted</a></li>
+                    <li data-bind="css:{hide:!data.transition('Auth Submitted')}" class="divider" role="separator"></li>
+
+                    <li data-bind="css:{hide:!data.transition('Auth Approved')}"><a href='#' data-bind="click:data.authApprovedModal">Auth Approved</a></li>
+                    <li data-bind="css:{hide:!data.transition('Auth Approved')}" class="divider" role="separator"></li>
+
+                    <li data-bind="css:{hide:!data.transition('Auth Denied')}"><a href='#' data-bind="click:data.authDeniedModal">Auth Denied</a></li>
+                    <li data-bind="css:{hide:!data.transition('Auth Denied')}" class="divider" role="separator"></li>
+
+                    <li data-bind="css:{hide:!data.transition('SCA Submitted')}"><a href='#' data-bind="click:data.scaSubmittedModal">SCA Submitted</a></li>
+                    <li data-bind="css:{hide:!data.transition('SCA Submitted')}" class="divider" role="separator"></li>
+
+                    <li data-bind="css:{hide:!data.transition('SCA Approved')}"><a href='#' data-bind="click:data.scaApprovedModal">SCA Approved</a></li>
+                    <li data-bind="css:{hide:!data.transition('SCA Approved')}" class="divider" role="separator"></li>
+
+                    <li data-bind="css:{hide:!data.transition('SCA Denied')}"><a href='#' data-bind="click:data.scaDeniedModal">SCA Denied</a></li>
+                    <li data-bind="css:{hide:!data.transition('SCA Denied')}" class="divider" role="separator"></li>
+
+
+                    <li data-bind="css:{hide:!data.transition('Peer To Peer Submitted')}"><a href='#' data-bind="click:data.p2pSubmittedModal">Peer To Peer Submitted</a></li>
+                    <li data-bind="css:{hide:!data.transition('Peer To Peer Submitted')}" class="divider" role="separator"></li>
+                    <li data-bind="css:{hide:!data.transition('Peer To Peer Approved')}"><a href='#' data-bind="click:data.p2pApprovedModal">Peer To Peer Approved</a></li>
+                    <li data-bind="css:{hide:!data.transition('Peer To Peer Approved')}" class="divider" role="separator"></li>
+                    <li data-bind="css:{hide:!data.transition('Peer To Peer Denied')}"><a href='#' data-bind="click:data.p2pDeniedModal">Peer To Peer Denied</a></li>
+                    <li data-bind="css:{hide:!data.transition('Peer To Peer Denied')}" class="divider" role="separator"></li>
+
+                    <li data-bind="css:{hide:!data.transition('Maximus Submitted')}"><a href='#' data-bind="click:data.mxSubmittedModal">Maximus Submitted</a></li>
+                    <li data-bind="css:{hide:!data.transition('Maximus Submitted')}" class="divider" role="separator"></li>
+                    <li data-bind="css:{hide:!data.transition('Maximus Approved')}"><a href='#' data-bind="click:data.mxApprovedModal">Maximus Approved</a></li>
+                    <li data-bind="css:{hide:!data.transition('Maximus Approved')}" class="divider" role="separator"></li>
+                    <li data-bind="css:{hide:!data.transition('Maximus Denied')}"><a href='#' data-bind="click:data.mxDeniedModal">Maximus Denied</a></li>
+                    <li data-bind="css:{hide:!data.transition('Maximus Denied')}" class="divider" role="separator"></li>
+
+                    <li data-bind="css:{hide:!data.transition('Expedited Appeal Submitted')}"><a href='#' data-bind="click:data.eaSubmittedModal">Expedited Appeal Submitted</a></li>
+                    <li data-bind="css:{hide:!data.transition('Expedited Appeal Submitted')}" class="divider" role="separator"></li>
+                    <li data-bind="css:{hide:!data.transition('Expedited Appeal Approved')}"><a href='#' data-bind="click:data.eaApprovedModal">Expedited Appeal Approved</a></li>
+                    <li data-bind="css:{hide:!data.transition('Expedited Appeal Approved')}" class="divider" role="separator"></li>
+                    <li data-bind="css:{hide:!data.transition('Expedited Appeal Denied')}"><a href='#' data-bind="click:data.eaDeniedModal">Expedited Appeal Denied</a></li>
+
+                    <li data-bind="css:{hide:data.previousAdmissionStatus()!='Pre Admit'}"><a href='#' data-bind="click:data.admit">Admission</a></li>
+
+
+
+
+
+                </ul>
+            </div>
+            <div class="dropdown inline pull-right separator-right-2x">
+                <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                    Reports
+                    <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                    <li><a target="_blank" href='@Url.Action("Report",new { id=HttpContext.Current.Request.QueryString["id"]})'>Pre-Screen</a></li>
+                    <li class="divider" role="separator"></li>
+                    <li><a target="_blank" href='@Url.Action("PatientSummary",new { id=HttpContext.Current.Request.QueryString["id"]})'>Patient Summary</a></li>
+                    <li class="divider" role="separator"></li>
+                    <li><a target="_blank" href='@Url.Action("Acuity",new { id=HttpContext.Current.Request.QueryString["id"]})'>Acuity</a></li>
+                    <li class="divider" role="separator"></li>
+                    <li><a target="_blank" href='@Url.Action("IVF",new { id=HttpContext.Current.Request.QueryString["id"]})'>IVF</a></li>
+
+                </ul>
+            </div>
+            <label class="status-label pull-right separator-right-4x" data-bind="text:'Status: ' + data.status()"></label>
+        </div>
+    </div>
+</div>
+
+<div class="panel panel-default">
+    <div class="panel-heading pointer">
+        Patient General Info
+    </div>
+    <div class="panel-body">
+        <div class="form-horizontal">
+            <div class="form-group">
+                <div class="col-xs-12">
+                    <div class="col-xs-4">
+                        <label class="control-label">
+                            Patient Name:
+                            <span class="separator-left-4x" data-bind="text:data.firstName"></span>&nbsp;
+                            <span data-bind="text:data.lastName"></span>
+                        </label>
+                    </div>
+                    <div class="col-xs-4"></div>
+                    <div class="col-xs-4">
+
+                    </div>
+
+
+
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-xs-12">
+                    <div class="col-xs-4">
+                        <label class="control-label">
+                            SSN:
+                            <span class="separator-left-4x" data-bind="text:data.ssn"></span>
+                        </label>
+                    </div>
+                    <div class="col-xs-4"></div>
+                    <div class="col-xs-4">
+
+
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-xs-12">
+                    <div class="col-xs-4">
+                        <label class="control-label">
+                            DOB:
+                            <span class="separator-left-4x" data-bind="text:data.dob"></span>
+                        </label>
+                    </div>
+                    <div class="col-xs-4"></div>
+                    <div class="col-xs-4"></div>
+                </div>
+
+
+            </div>
+
+           
+        </div>
+    </div>
+</div>
+
+<div class="panel panel-default">
+    <div class="panel-body">
+
+        <div class="col-xs-3 pre-screen-links-panel">
+            <ul class="nav nav-pills nav-stacked">
+                @foreach (var tab in Model.Tabs)
+                {
+                    <li class="@(tab.Active?"active":"")" @(tab.Active ? "class= \"active\"" : "") data-bind="css:{'nav-active-success':data.common.validations.@(tab.ClientCode)()=='True'}">
+                        <a data-toggle="pill" href='#tab_@tab.ClientId'>@tab.Label</a>
+                    </li>
+                }
+                <li class="" >
+                    <a data-toggle="pill" href='#tab_referral_attachments'>Referral Attachments</a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="col-xs-9">
+            <div class="tab-content">
+                @foreach (var tab in Model.Tabs)
+                {
+                    <div id="tab_@tab.ClientId" class='tab-pane fade in @(tab.Active?"active":"")'>
+                        @foreach (var accordion in tab.Accordions)
+                        {
+                            @Html.Partial("Accordion", accordion)
+                        }
+                    </div>
+                }
+
+                <div id="tab_referral_attachments" class='tab-pane fade in'>
+                   @Html.Partial("PreScreenAttachments")
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+@section scripts{
+    <script id="common">
+
+        var id = getUrlParameter("id");
+
+        function handleError(errorData) {
+            model.ui.progress(false);
+            globalErrorHandler(errorData);
+        }
+
+        model.data.previousAdmissionStatus = ko.observable("@Model.AdmissionStatus");
+    </script>
+
+    <script id="patient_section">
+
+
+        model.data.patientId = ko.observable(@ViewBag.PatientId);
+        model.data.firstName = ko.observable("");
+        model.data.middleName = ko.observable("");
+        model.data.lastName = ko.observable("");
+        model.data.ssn = ko.observable("");
+        model.data.dob = ko.observable("");
+
+        model.data.hours = ko.observable("");
+        model.data.lastSubmitted = ko.observable("");
+        model.data.status = ko.observable("");
+
+
+        function getPatient() {
+            var promise = $.ajax({
+                dataType: 'json',
+                url: '@Url.Action("GetPatientRecord", "PreScreen")' + '?patientId=' + model.data.patientId(),
+                type: "GET"
+            });
+
+            return promise;
+        }
+
+
+
+        function getPreScreen() {
+            var promise = $.ajax({
+                dataType: 'json',
+                url: '@Url.Action("PreScreen","PreScreen")' + '?preScreenId=' + id,
+                type: "GET"
+            });
+
+            return promise;
+        }
+
+
+
+        function handleError(errorData) {
+            model.ui.progress(false);
+            globalErrorHandler(errorData);
+        }
+
+
+        function loadData() {
+            model.ui.progress(true);
+            getPreScreen().then(function (preScreen) {
+                //model.data.patientId(preScreen.PatientId);
+                model.data.lastSubmitted(preScreen.LastSubmitted);
+
+                model.data.hours(preScreen.Hours);
+                model.data.status(preScreen.Status);
+                getPatient().then(function (patientData) {
+                    model.data.firstName(patientData.FirstName);
+                    model.data.middleName(patientData.MiddleName);
+                    model.data.lastName(patientData.LastName);
+                    model.data.ssn(patientData.SSN);
+                    model.data.dob(patientData.DateOfBirth);
+                    model.ui.progress(false);
+                }, handleError);
+
+            }, handleError);
+        }
+
+        $(document).ready(function () {
+            loadData();
+
+        });
+
+    </script>
+
+    <script id="validations">
+
+
+        model.data.common = {};
+        model.data.common.validations = {};
+
+        @foreach(var tab in Model.Tabs)
+        {
+            <text>model.data.common.validations.@(tab.ClientCode)=ko.observable("False");</text>
+        }
+
+        function getValidations() {
+            var promise = $.ajax({
+                dataType: 'json',
+                url: '@Url.Action("ValidateTabs","PreScreen")' + "?id=" + id,
+                type: "GET"
+            });
+
+            return promise;
+        }
+
+
+           function getValidationResult() {
+            var promise = $.ajax({
+                dataType: 'json',
+                url: '@Url.Action("ValidationResult","PreScreen")' + "?id=" + id,
+                type: "GET"
+            });
+
+            return promise;
+        }
+
+        model.data.common.validations.getItemValue=function(key,data){
+            for (let item of data) {
+                if (item.Key == key) {
+                    return item.Value;
+                }
+            }
+        }
+
+        model.data.common.validations.validate = function (cb) {
+         model.ui.progress(true);
+         getValidations().then(function (data) {
+             model.ui.progress(false);
+             @foreach(var tab in Model.Tabs)
+             {
+                 <text>
+                model.data.common.validations.@(tab.ClientCode)(model.data.common.validations.getItemValue("@(tab.ClientCode)",data));
+
+             if (cb) {
+                 cb();
+             }
+             </text>
+
+             }
+
+            }, handleError);
+        }
+
+        $(document).ready(function () {
+            model.data.common.validations.validate();
+        });
+
+
+        model.data.performValidations = function () {
+            model.ui.success(false);
+            model.ui.error(false);
+            model.data.common.validations.validate();
+        }
+
+
+        model.data.validationErrors = ko.observableArray([]);
+
+        model.data.performValidationResult = function () {
+            model.ui.success(false);
+            model.ui.error(false);
+            getValidationResult().then(function (data) {
+                model.data.validationErrors(data);
+                console.log(data);
+                if (model.data.validationErrors().length > 0) {
+                    $("#validationError").modal("show");
+                }
+
+
+            }, handleError);
+
+        }
+    </script>
+
+    <script id="intialize_parent_containers">
+     @foreach(var tab in Model.Tabs)
+        {
+            if (!string.IsNullOrEmpty(tab.ClientCode))
+            {
+                <text>if (!@tab.GetUniqueClientCode()) {@tab.GetUniqueClientCode()={ };}</text>
+
+
+            }
+        }
+    </script>
+
+
+    @foreach (var tab in Model.Tabs)
+    {
+        if (!string.IsNullOrEmpty(tab.ClientCode))
+        {
+
+            foreach (var accordion in tab.Accordions)
+            {
+                foreach (var sec in accordion.Sections)
+                {
+                    @Html.Partial("SectionModelJs", sec)
+                }
+            }
+        }
+    }
+
+
+
+
+    <script id="common_load_complete">
+
+
+        //UI variables
+        var actionBar = document.getElementById("divActionBar");
+        var offsetValue = actionBar.offsetTop;
+
+        function actionBarFix() {
+            if (window.pageYOffset >= offsetValue) {
+                actionBar.classList.add("action-bar-fixed");
+            } else {
+                actionBar.classList.remove("action-bar-fixed");
+            }
+        }
+
+        $(document).ready(function () {
+            window.onscroll = function () { actionBarFix() };
+        });
+
+
+
+
+    </script>
+
+
+    <script id="override_scripts">
+
+            function getTimeRemaining() {
+            var promise = $.ajax({
+                dataType: 'json',
+                url: '@Url.Action("TimeRemainingForPreScreen","PreScreen")' + '?preScreenId=' + id,
+                type: "GET"
+            });
+
+            return promise;
+        }
+
+
+        model.data.admissionStatus = ko.observable("");
+        model.data.admissionType = ko.observable("");
+        model.data.admissionNotes = ko.observable("");
+
+        function getTimeRemainingHeartBeat() {
+            getTimeRemaining().then(function (data) {
+
+
+                if (model.data.referralsourceinfo.general.timeprescreenremaining) model.data.referralsourceinfo.general.timeprescreenremaining(data.TimeRemaining);
+                if (model.data.referralsourceinfo.general.referralstatus) model.data.referralsourceinfo.general.referralstatus(data.Status);
+                if (model.data.referralsourceinfo.general.referralsourcename) model.data.referralsourceinfo.general.referralsourcename(data.ReferralSourceName);
+
+                model.data.status(data.Status);
+
+               // model.data.admissionStatus(data.AdmissionStatus);
+               // model.data.admissionType(data.AdmissionType);
+                //model.data.admissionNotes(data.AdmissionNotes);
+
+
+
+            });
+        }
+        window.setInterval(function () {
+
+
+
+
+            getTimeRemainingHeartBeat();
+
+
+        }, 5000);
+
+
+        function setMedicareDaysLeft() {
+            if (model.data.payorinfo.primary.medicare.medicaredaysleftstartdate && model.data.payorinfo.primary.medicare.medicaredaysleftenddate) {
+                if (model.data.payorinfo.primary.medicare.medicaredaysleftstartdate() && model.data.payorinfo.primary.medicare.medicaredaysleftenddate()) {
+
+
+                    var days = new Date(model.data.payorinfo.primary.medicare.medicaredaysleftenddate()) - new Date(model.data.payorinfo.primary.medicare.medicaredaysleftstartdate());
+
+                    days = Math.round(days / 1000 / 60 / 60 / 24);
+                    model.data.payorinfo.primary.medicare.medicaredaysleft(days);
+
+                }
+                else {
+                    model.data.payorinfo.primary.medicare.medicaredaysleft("");
+                }
+            }
+
+        }
+
+
+        if (model.data.payorinfo.primary.medicare.medicaredaysleftstartdate) {
+            model.data.payorinfo.primary.medicare.medicaredaysleftstartdate.subscribe(function (value) {
+
+                setMedicareDaysLeft();
+            });
+        }
+
+
+        if (model.data.payorinfo.primary.medicare.medicaredaysleftenddate) {
+            model.data.payorinfo.primary.medicare.medicaredaysleftenddate.subscribe(function (value) {
+
+                setMedicareDaysLeft();
+            });
+        }
+
+
+        $(document).ready(function () {
+            setMedicareDaysLeft();
+        });
+
+        var modalContext = "";
+
+        model.data.clickVerificationComplete = function () {
+            model.ui.modalTitle("Confirm Verification Complete");
+            model.ui.modalBody("Are you sure you want to mark the Pre-Screen as Verification Complete?");
+            modalContext = "Verification Complete";
+            $("#responseModal").modal("show");
+        }
+
+        function verificationComplete() {
+
+              var promise = $.ajax({
+                dataType: 'json',
+                url: '@Url.Action("VerificationComplete","PreScreen")' + "?preScreenId=" + id,
+                type: "POST"
+            });
+
+            promise.then(function (data) {
+
+                var list = [];
+                model.ui.error(false);
+                model.ui.success(false);
+                list = [];
+
+                   if (data && data.Status) {
+                            if (data.Status == '@Constant.RESPONSE_OK') {
+                                list.push({ "name": "Success", "description": data.Description });
+                                model.ui.successList(list);
+                                model.ui.success(true);
+                            } else {
+                                list.push({ "name": "Error", "description": data.Description });
+                                model.ui.errorList(list);
+                                model.ui.error(true);
+                            }
+                        }
+                        else {
+                            list.push({ "name": "Error", "description": data.Description });
+                            model.ui.errorList(list);
+                            model.ui.error(true);
+
+                        }
+
+
+            }, handleError);
+        }
+
+        model.ui.modalDeleteClick = function () {
+            $("#responseModal").modal("hide");
+            switch (modalContext) {
+                case "Verification Complete":
+                    verificationComplete();
+                    break;
+                case "Submit":
+                    submit();
+                    break;
+            }
+        }
+
+
+
+        model.data.clickSubmit = function () {
+            model.ui.modalTitle("Confirm Submit");
+            model.ui.modalBody("Are you sure you want to submit the Pre-Screen?");
+            modalContext = "Submit";
+            $("#responseModal").modal("show");
+        }
+
+
+        model.data.workflow = {};
+
+        model.data.workflow.PayorType = ko.observable("");
+        model.data.workflow.PayorCategory = ko.observable("");
+        model.data.workflow.medicareNotes = ko.observable("");
+        model.data.workflow.admissionStatus = ko.observable("Pre Admit");
+
+
+        function GetCompletePrescreenFields() {
+             var promise = $.ajax({
+                dataType: 'json',
+                url: '@Url.Action("GetCompletePrescreenFields", "PreScreen")' + "?preScreenId=" + id,
+                type: "POST"
+            });
+
+
+            promise.then(function (data) {
+                var preScreenItems = data.PreScreenItems;
+                var patientItems = data.PatientItems;
+
+                for (let item of patientItems) {
+                    if (item.SectionCode == "payorinfo.primary.all" && item.ItemCode == "payortype") {
+                        model.data.workflow.PayorType(item.Value);
+                    }
+
+                    if (item.SectionCode == "payorinfo.primary.all" && item.ItemCode == "payorcategory") {
+                        model.data.workflow.PayorCategory(item.Value);
+                    }
+                }
+
+
+            }, handleError);
+
+        }
+
+          function submit() {
+              model.ui.progress(true);
+              var promise = $.ajax({
+                dataType: 'json',
+                url: '@Url.Action("Submit","PreScreen")' + "?preScreenId=" + id,
+                type: "POST"
+            });
+
+            promise.then(function (data) {
+
+                model.data.status(data.PSStatus);
+                model.data.previousAdmissionStatus(data.AdmissionStatus);
+
+                model.data.common.validations.validate(function () {
+                   var list = [];
+                model.ui.error(false);
+                    model.ui.success(false);
+                    model.ui.progress(false);
+
+
+                list = [];
+
+                   if (data && data.Status) {
+                            if (data.Status == '@Constant.RESPONSE_OK') {
+                                list.push({ "name": "Success", "description": data.Description });
+                                model.ui.successList(list);
+                                model.ui.success(true);
+                            } else {
+                                list.push({ "name": "Error", "description": data.Description });
+                                model.ui.errorList(list);
+                                model.ui.error(true);
+                            }
+                        }
+                        else {
+                            list.push({ "name": "Error", "description": data.Description });
+                            model.ui.errorList(list);
+                            model.ui.error(true);
+
+                        }
+                });
+
+
+
+
+
+            }, handleError);
+        }
+
+        $(document).ready(function () {
+            GetCompletePrescreenFields();
+            getTimeRemainingHeartBeat();
+        });
+
+
+        model.data.medicareModal = function () {
+            model.data.workflow.admissionStatus("Pre Admit");
+            model.data.workflow.medicareNotes("");
+            model.data.nonAdmitReason("");
+            model.data.denialReason("");
+            $("#medicareModal").modal("show");
+        }
+
+
+
+        model.data.workflow.admissionNotes = ko.observable("");
+
+        function SetMedicareStatus() {
+
+            var data = {};
+            data.AdmissionStatus = model.data.workflow.admissionStatus();
+            data.AdmissionNotes = model.data.workflow.medicareNotes();
+            data.DenialReason = model.data.denialReason();
+            data.NonAdmitReason = model.data.nonAdmitReason();
+
+            model.ui.error(false);
+            model.ui.success(false);
+
+            var promise = $.ajax({
+                dataType: 'json',
+                url: '@Url.Action("Medicare", "PreScreen")' + "?preScreenId=" + id,
+                type: "POST",
+                data:data
+            });
+
+
+            promise.then(function (data) {
+
+
+
+                var list = [];
+
+                   if (data && data.Status) {
+                       if (data.Status == '@Constant.RESPONSE_OK') {
+                           $("#medicareModal").modal("hide");
+                           model.data.status(data.PSStatus);
+                           model.data.previousAdmissionStatus(data.AdmissionStatus);
+                                list.push({ "name": "Success", "description": data.Description });
+                                model.ui.successList(list);
+                                model.ui.success(true);
+                            } else {
+                                list.push({ "name": "Error", "description": data.Description });
+                                model.ui.errorList(list);
+                                model.ui.error(true);
+                            }
+                        }
+                        else {
+                            list.push({ "name": "Error", "description": data.Description });
+                            model.ui.errorList(list);
+                            model.ui.error(true);
+
+                        }
+
+
+            }, handleError);
+
+        }
+
+
+        model.data.setMedicareStatus = function () {
+            SetMedicareStatus();
+
+        }
+
+
+        //Workflow code.
+
+           function SetAuthInitiated() {
+
+               var data = {};
+               data.AuthReference = model.data.authReference();
+
+            var promise = $.ajax({
+                dataType: 'json',
+                url: '@Url.Action("AuthInitiated", "PreScreen")' + "?preScreenId=" + id,
+                type: "POST",
+                data:data
+            });
+
+
+            promise.then(function (data) {
+                var list = [];
+
+                   if (data && data.Status) {
+                       if (data.Status == '@Constant.RESPONSE_OK') {
+                           $("#authInitiated").modal("hide");
+                           model.data.status(data.PSStatus);
+                           model.data.previousAdmissionStatus(data.AdmissionStatus);
+                                list.push({ "name": "Success", "description": data.Description });
+                                model.ui.successList(list);
+                                model.ui.success(true);
+                            } else {
+                                list.push({ "name": "Error", "description": data.Description });
+                                model.ui.errorList(list);
+                                model.ui.error(true);
+                            }
+                        }
+                        else {
+                            list.push({ "name": "Error", "description": data.Description });
+                            model.ui.errorList(list);
+                            model.ui.error(true);
+
+                        }
+
+
+            }, handleError);
+
+        }
+
+
+        model.data.agree = ko.observable(false);
+
+          function SetAuthSubmitted() {
+
+              var data = {};
+              data.Agree = model.data.agree();
+
+            var promise = $.ajax({
+                dataType: 'json',
+                url: '@Url.Action("AuthSubmitted", "PreScreen")' + "?preScreenId=" + id,
+                type: "POST",
+                data:data
+            });
+
+
+            promise.then(function (data) {
+                var list = [];
+
+                   if (data && data.Status) {
+                       if (data.Status == '@Constant.RESPONSE_OK') {
+                           $("#authSubmitted").modal("hide");
+                           model.data.status(data.PSStatus);
+                           model.data.previousAdmissionStatus(data.AdmissionStatus);
+                                list.push({ "name": "Success", "description": data.Description });
+                                model.ui.successList(list);
+                                model.ui.success(true);
+                            } else {
+                                list.push({ "name": "Error", "description": data.Description });
+                                model.ui.errorList(list);
+                                model.ui.error(true);
+                            }
+                        }
+                        else {
+                            list.push({ "name": "Error", "description": data.Description });
+                            model.ui.errorList(list);
+                            model.ui.error(true);
+
+                        }
+
+
+            }, handleError);
+
+        }
+
+
+         function SetAuthApproved() {
+
+             var data = {};
+             data.AdmissionStatus = model.data.workflow.admissionStatus();
+             data.AdmissionNotes = model.data.workflow.admissionNotes();
+             data.DenialReason = model.data.denialReason();
+             data.NonAdmitReason = model.data.nonAdmitReason();
+
+
+            var promise = $.ajax({
+                dataType: 'json',
+                url: '@Url.Action("AuthApproved", "PreScreen")' + "?preScreenId=" + id,
+                type: "POST",
+                data:data
+            });
+
+
+            promise.then(function (data) {
+                var list = [];
+
+                   if (data && data.Status) {
+                       if (data.Status == '@Constant.RESPONSE_OK') {
+                           $("#authApproved").modal("hide");
+                           model.data.status(data.PSStatus);
+                           model.data.previousAdmissionStatus(data.AdmissionStatus);
+                                list.push({ "name": "Success", "description": data.Description });
+                                model.ui.successList(list);
+                                model.ui.success(true);
+                            } else {
+                                list.push({ "name": "Error", "description": data.Description });
+                                model.ui.errorList(list);
+                                model.ui.error(true);
+                            }
+                        }
+                        else {
+                            list.push({ "name": "Error", "description": data.Description });
+                            model.ui.errorList(list);
+                            model.ui.error(true);
+
+                        }
+
+
+            }, handleError);
+
+        }
+
+
+
+          function SetAuthDenied() {
+
+              var data = {};
+              data.AdmissionStatus = model.data.workflow.admissionStatus();
+              data.AdmissionNotes = model.data.workflow.admissionNotes();
+              data.DenialReason = model.data.denialReason();
+              data.NonAdmitReason = model.data.nonAdmitReason();
+
+            var promise = $.ajax({
+                dataType: 'json',
+                url: '@Url.Action("AuthDenied", "PreScreen")' + "?preScreenId=" + id,
+                type: "POST",
+                data:data
+            });
+
+
+            promise.then(function (data) {
+                var list = [];
+
+                   if (data && data.Status) {
+                       if (data.Status == '@Constant.RESPONSE_OK') {
+                           $("#authDenied").modal("hide");
+                           model.data.status(data.PSStatus);
+                           model.data.previousAdmissionStatus(data.AdmissionStatus);
+                                list.push({ "name": "Success", "description": data.Description });
+                                model.ui.successList(list);
+                                model.ui.success(true);
+                            } else {
+                                list.push({ "name": "Error", "description": data.Description });
+                                model.ui.errorList(list);
+                                model.ui.error(true);
+                            }
+                        }
+                        else {
+                            list.push({ "name": "Error", "description": data.Description });
+                            model.ui.errorList(list);
+                            model.ui.error(true);
+
+                        }
+
+
+            }, handleError);
+
+        }
+
+
+
+
+            function SetSCASubmitted() {
+                var data = {};
+                data.Agree = model.data.agree();
+
+            var promise = $.ajax({
+                dataType: 'json',
+                url: '@Url.Action("SCASubmitted", "PreScreen")' + "?preScreenId=" + id,
+                type: "POST",
+                data:data
+            });
+
+
+            promise.then(function (data) {
+                var list = [];
+
+                   if (data && data.Status) {
+                       if (data.Status == '@Constant.RESPONSE_OK') {
+                           $("#scaSubmitted").modal("hide");
+                           model.data.status(data.PSStatus);
+                           model.data.previousAdmissionStatus(data.AdmissionStatus);
+                                list.push({ "name": "Success", "description": data.Description });
+                                model.ui.successList(list);
+                                model.ui.success(true);
+                            } else {
+                                list.push({ "name": "Error", "description": data.Description });
+                                model.ui.errorList(list);
+                                model.ui.error(true);
+                            }
+                        }
+                        else {
+                            list.push({ "name": "Error", "description": data.Description });
+                            model.ui.errorList(list);
+                            model.ui.error(true);
+
+                        }
+
+
+            }, handleError);
+
+        }
+
+
+
+
+          function SetSCADenied() {
+
+              var data = {};
+              data.AdmissionStatus = model.data.workflow.admissionStatus();
+              data.AdmissionNotes = model.data.workflow.admissionNotes();
+              data.DenialReason = model.data.denialReason();
+              data.NonAdmitReason = model.data.nonAdmitReason();
+
+            var promise = $.ajax({
+                dataType: 'json',
+                url: '@Url.Action("SCADenied", "PreScreen")' + "?preScreenId=" + id,
+                type: "POST",
+                data:data
+            });
+
+
+            promise.then(function (data) {
+                var list = [];
+
+                   if (data && data.Status) {
+                       if (data.Status == '@Constant.RESPONSE_OK') {
+                           $("#scaDenied").modal("hide");
+                           model.data.status(data.PSStatus);
+                           model.data.previousAdmissionStatus(data.AdmissionStatus);
+                                list.push({ "name": "Success", "description": data.Description });
+                                model.ui.successList(list);
+                                model.ui.success(true);
+                            } else {
+                                list.push({ "name": "Error", "description": data.Description });
+                                model.ui.errorList(list);
+                                model.ui.error(true);
+                            }
+                        }
+                        else {
+                            list.push({ "name": "Error", "description": data.Description });
+                            model.ui.errorList(list);
+                            model.ui.error(true);
+
+                        }
+
+
+            }, handleError);
+
+        }
+
+
+
+
+
+
+          function SetSCAApproved() {
+
+              var data = {};
+              data.AdmissionStatus = model.data.workflow.admissionStatus();
+              data.AdmissionNotes = model.data.workflow.admissionNotes();
+              data.DenialReason = model.data.denialReason();
+              data.NonAdmitReason = model.data.nonAdmitReason();
+            var promise = $.ajax({
+                dataType: 'json',
+                url: '@Url.Action("SCAApproved", "PreScreen")' + "?preScreenId=" + id,
+                type: "POST",
+                data:data
+            });
+
+
+            promise.then(function (data) {
+                var list = [];
+
+                   if (data && data.Status) {
+                       if (data.Status == '@Constant.RESPONSE_OK') {
+                           $("#scaApproved").modal("hide");
+                           model.data.status(data.PSStatus);
+                           model.data.previousAdmissionStatus(data.AdmissionStatus);
+                                list.push({ "name": "Success", "description": data.Description });
+                                model.ui.successList(list);
+                                model.ui.success(true);
+                            } else {
+                                list.push({ "name": "Error", "description": data.Description });
+                                model.ui.errorList(list);
+                                model.ui.error(true);
+                            }
+                        }
+                        else {
+                            list.push({ "name": "Error", "description": data.Description });
+                            model.ui.errorList(list);
+                            model.ui.error(true);
+
+                        }
+
+
+            }, handleError);
+
+        }
+
+
+
+          function SetOverrideAdmission() {
+
+               var data = {};
+               data.AdmissionStatus = model.data.workflow.admissionStatus();
+               data.AdmissionNotes = model.data.workflow.admissionNotes();
+               data.DenialReason = model.data.denialReason();
+               data.NonAdmitReason = model.data.nonAdmitReason();
+
+            var promise = $.ajax({
+                dataType: 'json',
+                url: '@Url.Action("OverrideAdmission", "PreScreen")' + "?preScreenId=" + id,
+                type: "POST",
+                data:data
+            });
+
+
+            promise.then(function (data) {
+                var list = [];
+
+                   if (data && data.Status) {
+                       if (data.Status == '@Constant.RESPONSE_OK') {
+                           $("#overrideadmissionstatus").modal("hide");
+                           model.data.status(data.PSStatus);
+                           model.data.previousAdmissionStatus(data.AdmissionStatus);
+                                list.push({ "name": "Success", "description": data.Description });
+                                model.ui.successList(list);
+                                model.ui.success(true);
+                            } else {
+                                list.push({ "name": "Error", "description": data.Description });
+                                model.ui.errorList(list);
+                                model.ui.error(true);
+                            }
+                        }
+                        else {
+                            list.push({ "name": "Error", "description": data.Description });
+                            model.ui.errorList(list);
+                            model.ui.error(true);
+
+                        }
+
+
+            }, handleError);
+
+        }
+
+
+
+         function SetPeerToPeerSubmitted() {
+
+             var data = {};
+             data.Agree = model.data.agree();
+            var promise = $.ajax({
+                dataType: 'json',
+                url: '@Url.Action("PeerToPeerSubmitted", "PreScreen")' + "?preScreenId=" + id,
+                type: "POST",
+                data:data
+            });
+
+
+            promise.then(function (data) {
+                var list = [];
+
+                   if (data && data.Status) {
+                       if (data.Status == '@Constant.RESPONSE_OK') {
+                           $("#p2pSubmitted").modal("hide");
+                           model.data.status(data.PSStatus);
+                           model.data.previousAdmissionStatus(data.AdmissionStatus);
+                                list.push({ "name": "Success", "description": data.Description });
+                                model.ui.successList(list);
+                                model.ui.success(true);
+                            } else {
+                                list.push({ "name": "Error", "description": data.Description });
+                                model.ui.errorList(list);
+                                model.ui.error(true);
+                            }
+                        }
+                        else {
+                            list.push({ "name": "Error", "description": data.Description });
+                            model.ui.errorList(list);
+                            model.ui.error(true);
+
+                        }
+
+
+            }, handleError);
+
+        }
+
+
+
+
+           function SetPeerToPeerApproved() {
+
+               var data = {};
+               data.AdmissionStatus = model.data.workflow.admissionStatus();
+               data.AdmissionNotes = model.data.workflow.admissionNotes();
+               data.DenialReason = model.data.denialReason();
+               data.NonAdmitReason = model.data.nonAdmitReason();
+
+            var promise = $.ajax({
+                dataType: 'json',
+                url: '@Url.Action("PeerToPeerApproved", "PreScreen")' + "?preScreenId=" + id,
+                type: "POST",
+                data:data
+            });
+
+
+            promise.then(function (data) {
+                var list = [];
+
+                   if (data && data.Status) {
+                       if (data.Status == '@Constant.RESPONSE_OK') {
+                           $("#p2pApproved").modal("hide");
+                           model.data.status(data.PSStatus);
+                           model.data.previousAdmissionStatus(data.AdmissionStatus);
+                                list.push({ "name": "Success", "description": data.Description });
+                                model.ui.successList(list);
+                                model.ui.success(true);
+                            } else {
+                                list.push({ "name": "Error", "description": data.Description });
+                                model.ui.errorList(list);
+                                model.ui.error(true);
+                            }
+                        }
+                        else {
+                            list.push({ "name": "Error", "description": data.Description });
+                            model.ui.errorList(list);
+                            model.ui.error(true);
+
+                        }
+
+
+            }, handleError);
+
+        }
+
+
+
+           function SetPeerToPeerDenied() {
+
+               var data = {};
+               data.AdmissionStatus = model.data.workflow.admissionStatus();
+               data.AdmissionNotes = model.data.workflow.admissionNotes();
+               data.DenialReason = model.data.denialReason();
+               data.NonAdmitReason = model.data.nonAdmitReason();
+
+            var promise = $.ajax({
+                dataType: 'json',
+                url: '@Url.Action("PeerToPeerDenied", "PreScreen")' + "?preScreenId=" + id,
+                type: "POST",
+                data:data
+            });
+
+
+            promise.then(function (data) {
+                var list = [];
+
+                   if (data && data.Status) {
+                       if (data.Status == '@Constant.RESPONSE_OK') {
+                           $("#p2pDenied").modal("hide");
+                           model.data.status(data.PSStatus);
+                           model.data.previousAdmissionStatus(data.AdmissionStatus);
+                                list.push({ "name": "Success", "description": data.Description });
+                                model.ui.successList(list);
+                                model.ui.success(true);
+                            } else {
+                                list.push({ "name": "Error", "description": data.Description });
+                                model.ui.errorList(list);
+                                model.ui.error(true);
+                            }
+                        }
+                        else {
+                            list.push({ "name": "Error", "description": data.Description });
+                            model.ui.errorList(list);
+                            model.ui.error(true);
+
+                        }
+
+
+            }, handleError);
+
+        }
+
+
+
+
+         function ExpeditedAppealSubmitted() {
+
+             var data = {};
+             data.Agree = model.data.agree();
+            var promise = $.ajax({
+                dataType: 'json',
+                url: '@Url.Action("ExpeditedAppealSubmitted", "PreScreen")' + "?preScreenId=" + id,
+                type: "POST",
+                data:data
+            });
+
+
+            promise.then(function (data) {
+                var list = [];
+
+                   if (data && data.Status) {
+                       if (data.Status == '@Constant.RESPONSE_OK') {
+                           $("#eaSubmitted").modal("hide");
+                           model.data.status(data.PSStatus);
+                           model.data.previousAdmissionStatus(data.AdmissionStatus);
+                                list.push({ "name": "Success", "description": data.Description });
+                                model.ui.successList(list);
+                                model.ui.success(true);
+                            } else {
+                                list.push({ "name": "Error", "description": data.Description });
+                                model.ui.errorList(list);
+                                model.ui.error(true);
+                            }
+                        }
+                        else {
+                            list.push({ "name": "Error", "description": data.Description });
+                            model.ui.errorList(list);
+                            model.ui.error(true);
+
+                        }
+
+
+            }, handleError);
+
+        }
+
+
+
+
+          function ExpeditedAppealApproved() {
+
+              var data = {};
+              data.AdmissionStatus = model.data.workflow.admissionStatus();
+              data.AdmissionNotes = model.data.workflow.admissionNotes();
+              data.DenialReason = model.data.denialReason();
+              data.NonAdmitReason = model.data.nonAdmitReason();
+
+            var promise = $.ajax({
+                dataType: 'json',
+                url: '@Url.Action("ExpeditedAppealApproved", "PreScreen")' + "?preScreenId=" + id,
+                type: "POST",
+                data:data
+            });
+
+
+            promise.then(function (data) {
+                var list = [];
+
+                   if (data && data.Status) {
+                       if (data.Status == '@Constant.RESPONSE_OK') {
+                           $("#eaApproved").modal("hide");
+                           model.data.status(data.PSStatus);
+                           model.data.previousAdmissionStatus(data.AdmissionStatus);
+                                list.push({ "name": "Success", "description": data.Description });
+                                model.ui.successList(list);
+                                model.ui.success(true);
+                            } else {
+                                list.push({ "name": "Error", "description": data.Description });
+                                model.ui.errorList(list);
+                                model.ui.error(true);
+                            }
+                        }
+                        else {
+                            list.push({ "name": "Error", "description": data.Description });
+                            model.ui.errorList(list);
+                            model.ui.error(true);
+
+                        }
+
+
+            }, handleError);
+
+        }
+
+
+
+           function ExpeditedAppealDenied() {
+
+
+               var data = {};
+               data.AdmissionStatus = model.data.workflow.admissionStatus();
+               data.AdmissionNotes = model.data.workflow.admissionNotes();
+               data.DenialReason = model.data.denialReason();
+               data.NonAdmitReason = model.data.nonAdmitReason();
+            var promise = $.ajax({
+                dataType: 'json',
+                url: '@Url.Action("ExpeditedAppealDenied", "PreScreen")' + "?preScreenId=" + id,
+                type: "POST",
+                data:data
+            });
+
+
+            promise.then(function (data) {
+                var list = [];
+
+                   if (data && data.Status) {
+                       if (data.Status == '@Constant.RESPONSE_OK') {
+                           $("#eaDenied").modal("hide");
+                           model.data.status(data.PSStatus);
+                           model.data.previousAdmissionStatus(data.AdmissionStatus);
+                                list.push({ "name": "Success", "description": data.Description });
+                                model.ui.successList(list);
+                                model.ui.success(true);
+                            } else {
+                                list.push({ "name": "Error", "description": data.Description });
+                                model.ui.errorList(list);
+                                model.ui.error(true);
+                            }
+                        }
+                        else {
+                            list.push({ "name": "Error", "description": data.Description });
+                            model.ui.errorList(list);
+                            model.ui.error(true);
+
+                        }
+
+
+            }, handleError);
+
+        }
+
+
+
+         function SetMaximusSubmitted() {
+
+             var data = {};
+             data.Agree = model.data.agree();
+            var promise = $.ajax({
+                dataType: 'json',
+                url: '@Url.Action("MaximusSubmitted", "PreScreen")' + "?preScreenId=" + id,
+                type: "POST",
+                data:data
+            });
+
+
+            promise.then(function (data) {
+                var list = [];
+
+                   if (data && data.Status) {
+                       if (data.Status == '@Constant.RESPONSE_OK') {
+                           $("#mxSubmitted").modal("hide");
+                           model.data.status(data.PSStatus);
+                           model.data.previousAdmissionStatus(data.AdmissionStatus);
+                                list.push({ "name": "Success", "description": data.Description });
+                                model.ui.successList(list);
+                                model.ui.success(true);
+                            } else {
+                                list.push({ "name": "Error", "description": data.Description });
+                                model.ui.errorList(list);
+                                model.ui.error(true);
+                            }
+                        }
+                        else {
+                            list.push({ "name": "Error", "description": data.Description });
+                            model.ui.errorList(list);
+                            model.ui.error(true);
+
+                        }
+
+
+            }, handleError);
+
+        }
+
+
+
+         function SetMaximusApproved() {
+
+             var data = {};
+             data.AdmissionStatus = model.data.workflow.admissionStatus();
+             data.AdmissionNotes = model.data.workflow.admissionNotes();
+             data.DenialReason = model.data.denialReason();
+             data.NonAdmitReason = model.data.nonAdmitReason();
+
+            var promise = $.ajax({
+                dataType: 'json',
+                url: '@Url.Action("MaximusApproved", "PreScreen")' + "?preScreenId=" + id,
+                type: "POST",
+                data:data
+            });
+
+
+            promise.then(function (data) {
+                var list = [];
+
+                   if (data && data.Status) {
+                       if (data.Status == '@Constant.RESPONSE_OK') {
+                           $("#mxApproved").modal("hide");
+                           model.data.status(data.PSStatus);
+                           model.data.previousAdmissionStatus(data.AdmissionStatus);
+                                list.push({ "name": "Success", "description": data.Description });
+                                model.ui.successList(list);
+                                model.ui.success(true);
+                            } else {
+                                list.push({ "name": "Error", "description": data.Description });
+                                model.ui.errorList(list);
+                                model.ui.error(true);
+                            }
+                        }
+                        else {
+                            list.push({ "name": "Error", "description": data.Description });
+                            model.ui.errorList(list);
+                            model.ui.error(true);
+
+                        }
+
+
+            }, handleError);
+
+        }
+
+
+         function SetMaximusDenied() {
+
+             var data = {};
+             data.AdmissionStatus = model.data.workflow.admissionStatus();
+             data.AdmissionNotes = model.data.workflow.admissionNotes();
+             data.DenialReason = model.data.denialReason();
+             data.NonAdmitReason = model.data.nonAdmitReason();
+
+            var promise = $.ajax({
+                dataType: 'json',
+                url: '@Url.Action("MaximusDenied", "PreScreen")' + "?preScreenId=" + id,
+                type: "POST",
+                data:data
+            });
+
+
+            promise.then(function (data) {
+                var list = [];
+
+                   if (data && data.Status) {
+                       if (data.Status == '@Constant.RESPONSE_OK') {
+                           $("#mxDenied").modal("hide");
+                           model.data.status(data.PSStatus);
+                           model.data.previousAdmissionStatus(data.AdmissionStatus);
+                                list.push({ "name": "Success", "description": data.Description });
+                                model.ui.successList(list);
+                                model.ui.success(true);
+                            } else {
+                                list.push({ "name": "Error", "description": data.Description });
+                                model.ui.errorList(list);
+                                model.ui.error(true);
+                            }
+                        }
+                        else {
+                            list.push({ "name": "Error", "description": data.Description });
+                            model.ui.errorList(list);
+                            model.ui.error(true);
+
+                        }
+
+
+            }, handleError);
+
+        }
+
+
+
+
+
+        function SetAdmit() {
+
+
+
+            var promise = $.ajax({
+                dataType: 'json',
+                url: '@Url.Action("Admit", "PreScreen")' + "?preScreenId=" + id,
+                type: "POST"
+            });
+
+
+            promise.then(function (data) {
+                var list = [];
+
+                   if (data && data.Status) {
+                       if (data.Status == '@Constant.RESPONSE_OK') {
+                           $("#admit").modal("hide");
+                           model.data.status(data.PSStatus);
+                           model.data.previousAdmissionStatus(data.AdmissionStatus);
+                                list.push({ "name": "Success", "description": data.Description });
+                                model.ui.successList(list);
+                                model.ui.success(true);
+                            } else {
+                                list.push({ "name": "Error", "description": data.Description });
+                                model.ui.errorList(list);
+                                model.ui.error(true);
+                            }
+                        }
+                        else {
+                            list.push({ "name": "Error", "description": data.Description });
+                            model.ui.errorList(list);
+                            model.ui.error(true);
+
+                        }
+
+
+            }, handleError);
+
+        }
+
+        model.data.authInitiatedModal = function () {
+            model.data.authReference("");
+            $("#authInitiated").modal("show");
+        }
+
+        model.data.authSubmittedModal = function () {
+            model.data.agree(false);
+            $("#authSubmitted").modal("show");
+        }
+
+
+        model.data.authApprovedModal = function () {
+
+            model.data.workflow.admissionStatus("Pre Admit");
+            model.data.workflow.admissionNotes("");
+            model.data.nonAdmitReason("");
+            model.data.denialReason("");
+
+
+            $("#authApproved").modal("show");
+        }
+
+        model.data.authDeniedModal = function () {
+            model.data.workflow.admissionStatus("Denial");
+            model.data.workflow.admissionNotes("");
+            model.data.nonAdmitReason("");
+            model.data.denialReason("");
+
+            $("#authDenied").modal("show");
+        }
+
+        model.data.scaSubmittedModal = function () {
+            model.data.agree(false);
+            $("#scaSubmitted").modal("show");
+        }
+
+
+        model.data.scaApprovedModal = function () {
+
+            model.data.workflow.admissionStatus("Pre Admit");
+            model.data.workflow.admissionNotes("");
+            model.data.nonAdmitReason("");
+            model.data.denialReason("");
+
+            $("#scaApproved").modal("show");
+        }
+
+        model.data.scaDeniedModal = function () {
+            model.data.workflow.admissionStatus("Denial");
+            model.data.workflow.admissionNotes("");
+            model.data.nonAdmitReason("");
+            model.data.denialReason("");
+
+            $("#scaDenied").modal("show");
+        }
+
+
+
+        model.data.p2pSubmittedModal = function () {
+            model.data.agree(false);
+            $("#p2pSubmitted").modal("show");
+        }
+
+
+        model.data.p2pApprovedModal = function () {
+            model.data.workflow.admissionStatus("Pre Admit");
+            model.data.workflow.admissionNotes("");
+            model.data.nonAdmitReason("");
+            model.data.denialReason("");
+            $("#p2pApproved").modal("show");
+        }
+
+        model.data.p2pDeniedModal = function () {
+            model.data.workflow.admissionStatus("Denial");
+            model.data.workflow.admissionNotes("");
+            model.data.nonAdmitReason("");
+            model.data.denialReason("");
+            $("#p2pDenied").modal("show");
+        }
+
+
+
+
+        model.data.eaSubmittedModal = function () {
+            model.data.agree(false);
+            $("#eaSubmitted").modal("show");
+        }
+
+
+        model.data.eaApprovedModal = function () {
+            model.data.workflow.admissionStatus("Pre Admit");
+            model.data.workflow.admissionNotes("");
+            model.data.nonAdmitReason("");
+            model.data.denialReason("");
+            $("#eaApproved").modal("show");
+        }
+
+        model.data.eaDeniedModal = function () {
+            model.data.workflow.admissionStatus("Denial");
+            model.data.workflow.admissionNotes("");
+            model.data.nonAdmitReason("");
+            model.data.denialReason("");
+            $("#eaDenied").modal("show");
+        }
+
+
+        model.data.mxSubmittedModal = function () {
+            model.data.agree(false);
+            $("#mxSubmitted").modal("show");
+        }
+
+
+        model.data.mxApprovedModal = function () {
+            model.data.workflow.admissionStatus("Pre Admit");
+            model.data.workflow.admissionNotes("");
+            model.data.nonAdmitReason("");
+            model.data.denialReason("");
+            $("#mxApproved").modal("show");
+        }
+
+        model.data.mxDeniedModal = function () {
+            model.data.workflow.admissionStatus("Denial");
+            model.data.workflow.admissionNotes("");
+            model.data.nonAdmitReason("");
+            model.data.denialReason("");
+            $("#mxDenied").modal("show");
+        }
+
+
+        model.data.ceoApprovalModal = function () {
+            model.data.workflow.ceoApprovalNotes("");
+            $("#ceoApproval").modal("show");
+        }
+
+
+        model.data.overrideAdmissionStatusModal = function () {
+            model.data.workflow.admissionStatus("Pre Admit");
+            model.data.workflow.admissionNotes("");
+            model.data.nonAdmitReason("");
+            model.data.denialReason("");
+            $("#overrideAdmissionStatus").modal("show");
+        }
+
+
+        model.data.admit = function () {
+            $("#admit").modal("show");
+        }
+        //Workflow code 2
+
+        model.data.authInitiated = function () {
+            SetAuthInitiated();
+        }
+
+        model.data.authSubmitted = function () {
+            SetAuthSubmitted();
+        }
+
+        model.data.authApproved= function () {
+            SetAuthApproved();
+        }
+
+        model.data.authDenied = function () {
+            SetAuthDenied();
+        }
+
+
+
+        model.data.scaSubmitted = function () {
+            SetSCASubmitted();
+        }
+
+        model.data.scaApproved = function () {
+            SetSCAApproved();
+        }
+
+        model.data.scaDenied = function () {
+            SetSCADenied();
+        }
+
+
+
+        model.data.p2pSubmitted = function () {
+            SetPeerToPeerSubmitted();
+
+        }
+
+        model.data.p2pApproved = function () {
+            SetPeerToPeerApproved();
+        }
+
+        model.data.p2pDenied = function () {
+            SetPeerToPeerDenied();
+        }
+
+        model.data.eaSubmitted = function () {
+            ExpeditedAppealSubmitted();
+        }
+
+        model.data.eaApproved = function () {
+            ExpeditedAppealApproved();
+        }
+
+        model.data.eaDenied = function () {
+            ExpeditedAppealDenied();
+        }
+
+
+
+        model.data.mxSubmitted = function () {
+            SetMaximusSubmitted();
+        }
+
+        model.data.mxApproved = function () {
+            SetMaximusApproved();
+        }
+
+        model.data.mxDenied = function () {
+            SetMaximusDenied();
+        }
+
+
+        model.data.admitted = function () {
+            SetAdmit();
+        }
+
+
+
+        model.data.workflow.ceoApprovalNotes = ko.observable("");
+
+
+
+       model.data.clickVerificationComplete = function () {
+            model.ui.modalTitle("Confirm Verification Complete");
+            model.ui.modalBody("Are you sure you want to mark the Pre-Screen as Verification Complete?");
+            modalContext = "Verification Complete";
+            $("#responseModal").modal("show");
+        }
+
+        function ceoApprovalRequest() {
+
+            var data = {};
+            data.CEOApprovalNotes = model.data.workflow.ceoApprovalNotes();
+
+              var promise = $.ajax({
+                dataType: 'json',
+                url: '@Url.Action("CEOApprovalRequest","PreScreen")' + "?preScreenId=" + id,
+                  type: "POST",
+                data:data
+            });
+
+            promise.then(function (data) {
+
+
+                var list = [];
+                model.ui.error(false);
+                model.ui.success(false);
+                list = [];
+
+                   if (data && data.Status) {
+                       if (data.Status == '@Constant.RESPONSE_OK') {
+                           $("#ceoApproval").modal("hide");
+                                list.push({ "name": "Success", "description": data.Description });
+                                model.ui.successList(list);
+                                model.ui.success(true);
+                            } else {
+                                list.push({ "name": "Error", "description": data.Description });
+                                model.ui.errorList(list);
+                                model.ui.error(true);
+                            }
+                        }
+                        else {
+                            list.push({ "name": "Error", "description": data.Description });
+                            model.ui.errorList(list);
+                            model.ui.error(true);
+
+                        }
+
+
+            }, handleError);
+        }
+
+
+        model.data.ceoApproval = function () {
+            ceoApprovalRequest();
+        }
+
+        model.data.nonAdmitReason = ko.observable("");
+        model.data.denialReason = ko.observable("");
+
+        model.data.authReference = ko.observable("");
+
+        model.data.overrideAdmissionStatus = function () {
+            SetOverrideAdmission();
+        }
+
+    </script>
+
+    <script>
+
+      
+        model.data.pendingTaskId = ko.observable(@Model.PendingTaskId);
+
+            model.data.approveDeny = function () {
+            window.location.replace('@Url.Action(Model.ResolveLocation, "Task")' + '/' + model.data.pendingTaskId());
+        }
+
+        model.data.transition = function (state) {
+
+            if (state == 'Verification Complete' || state == 'CEO Approval Request' || state == "Override Admission Status") {
+                return true;
+            }
+
+            switch (model.data.status()) {
+
+                case "Created":
+                    break;
+
+                case "Pre-Screen In Progress":
+                    break;
+
+                case "Pre-Screen Complete":
+                    if (state == 'Medicare' || state == "Auth Initiated" || state == 'SCA Submitted') {
+                        return true;
+                    }
+                    break;
+
+
+                case "Auth Initiated":
+                    if (state == 'Auth Submitted') {
+                        return true;
+                    }
+                    break;
+
+                case "Auth Submitted":
+                    if (state == 'Auth Approved' || state == 'Auth Denied') {
+                        return true;
+                    }
+                    break;
+
+                case "Auth Denied":
+                    if (state == 'SCA Submitted' || state == 'Peer To Peer Submitted' || state == "Maximus Submitted" || state == "Auth Submitted" || state == "Medicare") {
+                        return true;
+                    }
+                    break;
+
+                case "SCA Denied":
+                    if (state == 'Auth Submitted' || state == 'Peer To Peer Submitted' || state == "Maximus Submitted" || state == "Medicare") {
+                        return true;
+                    }
+                    break;
+
+                case "SCA Submitted":
+                    if (state == 'SCA Denied' || state == 'SCA Approved') {
+                        return true;
+                    }
+                    break;
+
+                case "Peer To Peer Denied":
+                    if (state == 'Auth Submitted' || state == 'Expedited Appeal Submitted' || state == "Medicare") {
+                        return true;
+                    }
+                    break;
+
+                case "Peer To Peer Submitted":
+                    if (state == 'Peer To Peer Denied' || state == 'Peer To Peer Approved') {
+                        return true;
+                    }
+                    break;
+
+
+                case "Expedited Appeal Submitted":
+                    if (state == 'Expedited Appeal Denied' || state == 'Expedited Appeal Approved') {
+                        return true;
+                    }
+                    break;
+
+
+                case "Maximus Submitted":
+                    if (state == 'Maximus Denied' || state == 'Maximus Approved') {
+                        return true;
+                    }
+                    break;
+
+                case "Expedited Appeal Denied":
+                    if (state == 'Auth Submitted' || state == "Medicare" ) {
+                        return true;
+                    }
+                    break;
+
+                case "Medicare Denial":
+                    if (state == "Auth Initiated" || state== "SCA Submitted") {
+                        return true;
+                    }
+                    break;
+
+
+
+            }
+            return false;
+        }
+
+
+
+      
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            $("#files").kendoUpload({
+                async: {
+                    saveUrl: "save",
+                    removeUrl: "remove",
+                    autoUpload: true
+                }
+            });
+        });
+    </script>
+}

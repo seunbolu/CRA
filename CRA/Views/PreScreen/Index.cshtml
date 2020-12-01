@@ -1,0 +1,216 @@
+﻿@{
+    ViewBag.Title = "Pre Screens";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        Filter
+    </div>
+    <div class="panel-body">
+        <div class="form-horizontal">
+
+            <div class="col-xs-12 col-md-12 col-lg-4">
+                <label>
+                    Service:
+                </label>
+                <select id="lstPreScreenTypes" name="lstPreScreenTypes" class="form-control" data-bind="options: data.preScreenTypes(), optionsText: 'Name',optionsValue:'PreScreenTypeId',optionsCaption: '@Constant.DEFAULT_SELECTALL_OPTION',value:data.preScreenTypeId"></select>
+            </div>
+
+            <div class="separator col-xs-12 hidden visible-xs visible-sm visible-md"></div>
+
+            <div class="col-xs-12 col-md-12 col-lg-4">
+                <label>
+                    Keyword:
+                </label>
+                <input type="text" class="form-control" name="keyword" data-bind="value:data.keyword" />
+            </div>
+
+            <div class="separator col-xs-12 hidden visible-xs visible-sm visible-md visible-lg"></div>
+
+            <div class="col-xs-12 col-md-12 col-lg-12">
+                <button type="submit" class="btn btn-primary separator-right" data-bind="click:data.searchClick" title="Search">Search</button>
+                <button type="submit" class="btn btn-default separator-right" data-bind="click:data.clearClick" title="Clear">Clear</button>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+
+<div class="panel">
+    <div class="panel-body">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th class="action-column">Action</th>
+                    <th class="id-column">
+                        ID
+                    </th>
+                    <th>
+                        Pre-Screen Type
+                    </th>
+                    <th>
+                        Patient Name
+                    </th>
+                    <th>
+                        SSN
+                    </th>
+                    <th>
+                        DOB
+                    </th>
+                    <th>
+                        Created
+                    </th>
+                    <th>
+                        Modified
+                    </th>
+
+                </tr>
+            </thead>
+            <tbody data-bind="foreach: data.preScreens">
+                <tr>
+                    <td>
+                        <span data-bind="click:$root.data.editClick" class="glyphicon glyphicon-pencil edit-action pointer"></span>
+                        <span data-bind="click:$root.data.deleteClick" class="glyphicon glyphicon-remove delete-action pointer"></span>
+                    </td>
+                    <td data-bind="text:PreScreenId"></td>
+                    <td data-bind="text:PreScreenTypeName"></td>
+                    <td data-bind="text:PatientName"></td>
+
+                    <td data-bind="text:SSN"></td>
+                    <td data-bind="text:DateOfBirth"></td>
+                    <td data-bind="text:CreatedTimeStamp"></td>
+                    <td data-bind="text:ModifiedTimeStamp"></td>
+                </tr>
+
+            </tbody>
+
+
+        </table>
+    </div>
+</div>
+
+
+@section scripts
+    {
+
+    <script>
+        model.data.preScreens = ko.observableArray([]);
+
+        model.data.preScreenTypes = ko.observableArray([]);
+        model.data.preScreenTypeId = ko.observable("");
+        model.data.keyword = ko.observable("");
+
+
+           function getPreScreens() {
+            var promise = $.ajax({
+                dataType: 'json',
+                url: '@Url.Action("PreScreens", "PreScreen")' + "?preScreenTypeId=" + encodeURI(model.data.preScreenTypeId()) + "&keyword=" + encodeURI(model.data.keyword()) ,
+                type: "GET"
+            });
+
+            return promise;
+        }
+
+            function getPreScreenTypes() {
+            var promise = $.ajax({
+                dataType: 'json',
+                url: '@Url.Action("PreScreenTypes","Base")',
+                type: "GET"
+            });
+
+            return promise;
+        }
+
+        function loadData() {
+            model.ui.progress(true);
+
+            $.when(getPreScreens(), getPreScreenTypes())
+                .then(function (preScreens,preScreenTypes) {
+
+                    model.data.preScreens(preScreens[0]);
+                    model.data.preScreenTypes(preScreenTypes[0]);
+
+
+                    model.ui.progress(false);
+                }, handleError);
+        }
+
+
+        function handleError(errorData) {
+            model.ui.progress(false);
+            globalErrorHandler(errorData);
+        }
+
+        model.data.searchClick = function () {
+            model.ui.progress(true);
+            loadData();
+            return false;
+        };
+
+        model.data.clearClick = function () {
+            model.ui.progress(true);
+            model.data.preScreenTypeId(null);
+            model.data.keyword("");
+            loadData();
+            return false;
+        };
+
+         function deletePreScreen() {
+            model.ui.progress(true);
+            var promise = $.ajax({
+                dataType: 'json',
+                url: '@Url.Action("Delete","PreScreen")' + "/" +  model.data.context.PreScreenId,
+                type: "POST"
+            });
+
+            promise.then(function(data) {
+                if (data.Status == "@Constant.RESPONSE_OK") {
+                    var errorList = [];
+                    errorList.push({ "name": "Success", "description": "Pre-Screen successfully deleted." });
+                    model.ui.successList(errorList);
+                    model.ui.success(true);
+                    loadData();
+                    model.ui.progress(false);
+                }
+                else {
+                    handleError({
+                        status: @Constant.CUSTOM_ERROR_CODE,
+                        description: data.Description
+                    });
+                }
+            }, handleError);
+
+         }
+
+
+
+        $(document).ready(function () {
+            loadData();
+
+
+              model.ui.modalDeleteClick = function () {
+                  $("#responseModal").modal('hide');
+                  deletePreScreen();
+              };
+
+
+              model.data.deleteClick = function (data) {
+                  model.ui.modalTitle("Confirmation");
+                  model.ui.modalBody("Are you sure you want to delete the selected pre-screen?");
+                  model.data.context = data;
+                  $("#responseModal").modal('show');
+                  return false;
+              };
+
+               model.data.editClick = function (data)
+            {
+                window.location.href = '@Url.Action("Edit","PreScreen")' + "?id=" + data.PreScreenId;
+                return false;
+            };
+        });
+
+    </script>
+}

@@ -1,0 +1,90 @@
+﻿
+
+<script id="psstatus_painscale_script">
+
+    model.data.psstatus.painscale = {};
+
+    //Declare the variables.
+			 model.data.psstatus.painscale.PS = ko.observable("");
+
+	 				 model.data.psstatus.painscale.LOP = ko.observable("");
+
+	 				 model.data.psstatus.painscale.PM = ko.observable("");
+
+	 		   
+   
+
+
+        model.data.psstatus.painscale.getEntity = function () {
+             var promise = $.ajax({
+                dataType: 'json',
+                url: '@Url.Action("PSStatusPainScale", "PreScreen")' + '?preScreenId=' + id,
+                type: "GET"
+            });
+
+            return promise;
+        }
+
+        model.data.psstatus.painscale.loadData = function () {
+            model.data.psstatus.painscale.getEntity()
+                .then(function (data) {
+                    if (data) {
+										model.data.psstatus.painscale.PS(data.PS);
+										model.data.psstatus.painscale.LOP(data.LOP);
+										model.data.psstatus.painscale.PM(data.PM);
+					                    }
+
+                }, handleError);
+        }
+
+
+        model.data.psstatus.painscale.saveEntity = function () {
+              var data = {};
+  
+										    data.PS = model.data.psstatus.painscale.PS();
+											    data.LOP = model.data.psstatus.painscale.LOP();
+											    data.PM = model.data.psstatus.painscale.PM();
+						
+          
+              var promise = $.ajax({
+                dataType: 'json',
+                url: '@Url.Action("PSStatusPainScale", "PreScreen")' + '?preScreenId=' + id,
+                type: "POST",
+                data:data
+            });
+
+            promise.then(function (data) {
+
+                   var list = [];
+
+                        if (data && data.Status) {
+                            if (data.Status == '@Constant.RESPONSE_OK') {
+                                list.push({ "name": "Success", "description": data.Description });
+                                model.ui.successList(list);
+                                model.ui.success(true);
+                            } else {
+                                list.push({ "name": "Error", "description": data.Description });
+                                model.ui.errorList(list);
+                                model.ui.error(true);
+                            }
+                        }
+                        else {
+                            list.push({ "name": "Error", "description": data.Description });
+                            model.ui.errorList(list);
+                            model.ui.error(true);
+
+                        }
+            }, handleError);
+        }
+
+
+        $(document).ready(function () {
+            model.data.psstatus.painscale.loadData();
+        });
+
+
+</script>
+
+
+
+	

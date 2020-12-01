@@ -1,0 +1,26 @@
+﻿<div class="modal fade" id="authInitiated" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static"
+     data-keyboard="false">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <i class="fa fa-question-circle-o inline confirmation separator-right-4x" aria-hidden="true"></i>
+                <h2 class="modal-title inline" >Auth Initiated</h2>
+            </div>
+            <div class="modal-body">
+                 <div class="row">
+                    <div class="col-xs-12">
+                        <label class="control-label col-xs-12">
+                            Auth Reference Number <span class="separator-right-2x"></span>
+                          <input type="text" class="form-control" data-bind="value:data.authReference"/>                           
+                        </label>
+                    </div>
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bind="click:data.authInitiated">Ok</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

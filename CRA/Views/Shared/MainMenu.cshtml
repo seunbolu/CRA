@@ -1,0 +1,47 @@
+﻿@{
+    var controllerName = HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString();
+    var actionName = HttpContext.Current.Request.RequestContext.RouteData.Values["action"].ToString();
+
+}
+<div class="container-fluid">
+    <div class="navbar navbar-inverse">
+
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+
+        </div>
+        <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+
+                <li class='@UIHelper.GetActiveClass(controllerName, actionName, "Dashboard")'>@Html.ActionLink("DASHBOARD", "Index", "Dashboard")</li>
+                <li class='@UIHelper.GetActiveClass(controllerName, actionName, "Tasks")'>@Html.ActionLink("TASKS", "Index", "Task")</li>
+                <li class='@UIHelper.GetActiveClass(controllerName, actionName, "Referral")'>@Html.ActionLink("REFERRALS", "Index", "Referral")</li>
+                <li class='@UIHelper.GetActiveClass(controllerName, actionName, "Pending")'>@Html.ActionLink("PENDING", "Index", "Pending")</li>
+            
+
+                <li class='@UIHelper.GetActiveClass(controllerName, actionName, "Reports")'>@Html.ActionLink("REPORTS", "Index", "Report")</li>
+                <li class='@UIHelper.GetActiveClass(controllerName, actionName, "CallCycle")'>@Html.ActionLink("CALL CYCLE", "Index", "CallCycle")</li>
+
+                <li class='dropdown @UIHelper.GetActiveClass(controllerName, actionName, "Admin")'>
+                    <a href="#" data-toggle="dropdown" class="dropdown-toggle">ADMIN <b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#">@Html.ActionLink("CHG Sites", "Index", "CHGSite")</a></li>
+                        <li class="divider"></li>
+                        <li><a href="#">@Html.ActionLink("Referral Sources", "Index", "ReferralSource")</a></li>
+                        <li class="divider"></li>
+                        <li><a href="#">@Html.ActionLink("Contacts", "Index", "Contact")</a></li>
+                        <li class="divider"></li>
+                        <li><a href="#">@Html.ActionLink("Users", "Index", "User")</a></li>
+                        <li class="divider"></li>
+                        <li><a href="#">@Html.ActionLink("Call Cycle Admin", "Admin", "CallCycle")</a></li>
+                    </ul>
+                </li>
+
+            </ul>
+        </div>
+    </div>
+</div>

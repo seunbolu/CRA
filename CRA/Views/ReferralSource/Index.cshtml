@@ -1,0 +1,239 @@
+﻿@{
+    ViewBag.Title = "Referral Source";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="panel panel-default">
+    <div class="panel-heading">
+        Filter
+    </div>
+    <div class="panel-body">
+        <div class="form-horizontal">
+
+            <div class="col-xs-12 col-md-12 col-lg-4">
+                <label>
+                    Service:
+                </label>
+                <select class="form-control" data-bind="options: data.referralSourceTypes(), optionsText: 'Name',optionsValue:'ReferralSourceTypeId',optionsCaption: '@Constant.DEFAULT_ALL_OPTION',value:data.referralSourceTypeId"></select>
+            </div>
+
+            <div class="separator col-xs-12 hidden visible-xs visible-sm visible-md"></div>
+
+            <div class="col-xs-12 col-md-12 col-lg-4">
+                <label>
+                    Keyword:
+                </label>
+                <input type="text" class="form-control" name="keyword" data-bind="value:data.keyword" />
+            </div>
+
+            <div class="separator col-xs-12 hidden visible-xs visible-sm visible-md visible-lg"></div>
+
+            <div class="col-xs-12 col-md-12 col-lg-12">
+                <button type="submit" class="btn btn-primary separator-right" data-bind="click:data.searchClick" title="Search">Search</button>
+                <button type="submit" class="btn btn-default separator-right" data-bind="click:data.clearClick" title="Clear">Clear</button>
+                <a href='@Url.Action("Create","ReferralSource")' class="pointer action-button green separator-left-4x" title="Create New"><span class="glyphicon glyphicon-plus "></span></a>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+
+<div class="panel">
+    <div class="panel-body">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th class="action-column">Action</th>
+                    <th class="id-column">
+                        ID
+                    </th>
+                    <th>
+                        Name
+                    </th>
+                    <th>
+                        Type
+                    </th>
+                    <th>
+                        ICU
+                    </th>
+                    <th>
+                        CCU
+                    </th>
+                    <th>
+                        SICU
+                    </th>
+                    <th>
+                        MICU
+                    </th>
+                    <th>
+                        Neuro ICU
+                    </th>
+                    <th>
+                        Total Beds
+                    </th>
+                    <th>
+                       Approved
+                    </th>
+
+                </tr>
+            </thead>
+            <tbody data-bind="foreach: data.referralSources">
+                <tr>
+                    <td>
+                        <span data-bind="click:$root.data.editClick" class="glyphicon glyphicon-pencil edit-action pointer"></span>
+                        <span data-bind="click:$root.data.deleteClick" class="glyphicon glyphicon-remove delete-action pointer"></span>
+                    </td>
+                    <td><a href="#" data-bind="text:ReferralSourceId,click:$root.data.detailClick"></a></td>
+                    <td><a href="#" data-bind="text:FullName,click:$root.data.detailClick"></a></td>
+                    <td data-bind="text:ReferralSourceTypeName"></td>
+                    <td data-bind="text:ICUBedCount"></td>
+                    <td data-bind="text:CCUBedCount"></td>
+                    <td data-bind="text:SICUBedCount"></td>
+                    <td data-bind="text:MICUBedCount"></td>
+                    <td data-bind="text:NeuroICUBedCount"></td>
+                    <td data-bind="text:BedCount"></td>
+                    <td data-bind="text:IsApproved?'Yes':'No'"></td>
+                </tr>
+
+            </tbody>
+
+
+        </table>
+    </div>
+</div>
+
+@section scripts
+    {
+
+    <script>
+        //Initialize variables.
+        model.data.referralSourceTypes = ko.observableArray([]);
+        model.data.referralSources = ko.observableArray([]);
+        model.data.referralSourceTypeId = ko.observable("");
+        model.data.keyword = ko.observable("");
+
+        //Functions to load the screen on first load.
+
+        function getReferralSourceTypes() {
+            var promise = $.ajax({
+                dataType: 'json',
+                url: '@Url.Action("ReferralSourceTypes","Base")',
+                type: "GET"
+            });
+
+            return promise;
+        }
+
+        function getReferralSources() {
+
+            var referralSourceTypeId = model.data.referralSourceTypeId();
+            if (!referralSourceTypeId) {
+                referralSourceTypeId = "";
+            }
+
+            var timestamp = new Date().getTime();
+
+            var promise = $.ajax({
+                dataType: 'json',
+                url: '@Url.Action("ReferralSources", "ReferralSource")' + "?referralSourceTypeId=" + encodeURI(referralSourceTypeId) + "&keyword=" + encodeURI(model.data.keyword()) + "&timestamp=" + timestamp,
+                type: "GET"
+            });
+
+            return promise;
+
+        }
+
+        function loadData() {
+           model.ui.progress(true);
+            var promise = getReferralSourceTypes();
+            promise.then(function (data) {
+                model.data.referralSourceTypes(data);
+
+                console.log(model.data.referralSourceTypeId());
+                //Add code to get the grid data.
+                var promiseGrid = getReferralSources();
+                promiseGrid.then(function (data) {
+                    model.data.referralSources(data);
+                    model.ui.progress(false);
+                }, handleError);
+            }, handleError);
+        }
+
+        function deleteReferralSource() {
+            model.ui.progress(true);
+            var promise = $.ajax({
+                dataType: 'json',
+                url: '@Url.Action("Delete","ReferralSource")' + "/" +  model.data.context.ReferralSourceId,
+                type: "POST"
+            });
+
+            promise.then(function(data) {
+                if (data.Status == "@Constant.RESPONSE_OK") {
+                    var errorList = [];
+                    errorList.push({ "name": "Success", "description": "Referral source successfully deleted." });
+                    model.ui.successList(errorList);
+                    model.ui.success(true);
+                    loadData();
+                    model.ui.progress(false);
+                }
+                else {
+                    handleError({
+                        status: @Constant.CUSTOM_ERROR_CODE,
+                        description: data.Description
+                    });
+                }
+            }, handleError);
+        }
+
+        function handleError(errorData) {
+            model.ui.progress(false);
+            globalErrorHandler(errorData);
+        }
+
+        $(document).ready(function () {
+
+           model.ui.progress(true);
+
+            //Define the functions that get data binded to individual rows here.
+            model.ui.modalDeleteClick = function () {
+                $("#responseModal").modal('hide');
+                deleteReferralSource();
+            };
+          
+            model.data.searchClick = function () {
+                model.ui.progress(true);
+                loadData();
+                return false;
+            };
+            model.data.clearClick = function () {
+                model.ui.progress(true);
+                model.data.referralSourceTypeId(null);
+                model.data.keyword("");
+                loadData();
+                return false;
+            };
+            model.data.deleteClick = function (data) {
+                model.ui.modalTitle("Confirmation");
+                model.ui.modalBody("Are you sure you want to delete the selected referral source?");
+                model.data.context = data;
+                $("#responseModal").modal('show');
+                return false;
+            };
+            model.data.editClick = function (data)
+            {
+                window.location.href = '@Url.Action("Edit","ReferralSource")' + "?id=" + data.ReferralSourceId;
+                return false;
+            };
+
+             model.data.detailClick = function (data) {
+                window.location.href = '@Url.Action("Detail","ReferralSource")' + "?id=" + data.ReferralSourceId;
+                return false;
+            };
+
+            loadData();
+        });
+
+    </script>
+}
+

@@ -1,0 +1,29 @@
+﻿
+<select class="form-control">
+<option value="">-Select Option-</option>
+<option value="Arabic">Arabic</option>
+<option value="Bengali">Bengali</option>
+<option value="Chinese">Chinese</option>
+<option value="Dutch">Dutch</option>
+<option value="English">English</option>
+<option value="French">French</option>
+<option value="German">German</option>
+<option value="Hindi">Hindi</option>
+<option value="Italian">Italian</option>
+<option value="Japanese">Japanese</option>
+<option value="Korean">Korean</option>
+<option value="Lahnda">Lahnda</option>
+<option value="Malay based">Malay based</option>
+<option value="Marathi">Marathi</option>
+<option value="Persian">Persian</option>
+<option value="Portuguese">Portuguese</option>
+<option value="Quechua">Quechua</option>
+<option value="Russian">Russian</option>
+<option value="Serbo-Croatian">Serbo-Croatian</option>
+<option value="Spanish">Spanish</option>
+<option value="Swahili">Swahili</option>
+<option value="Tamil">Tamil</option>
+<option value="Telugu">Telugu</option>
+<option value="Turkish">Turkish</option>
+<option value="Vietnamese">Vietnamese</option>
+</select>

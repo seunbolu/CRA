@@ -1,0 +1,6 @@
+﻿@model CRA.Models.Shared.ItemModel
+@if (!string.IsNullOrEmpty(Model.ClientCode) && !string.IsNullOrEmpty(Model.ParentClientCode))
+{
+    <text>@Model.GetUniqueClientCode() = ko.observable("");</text>
+
+}

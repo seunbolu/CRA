@@ -1,0 +1,6 @@
+﻿<div class="alert alert-success error-alert alert-dismissible hide" role="alert" data-bind="css: { hide: !ui.success() }">
+    <button type="button" class="close"  aria-label="Close" data-bind="click:model.ui.successDismissedClick"><span aria-hidden="true">&times;</span></button>
+    <div data-bind="foreach: ui.successList">
+        <strong data-bind="text:name"></strong>: <span data-bind="text:description"></span> <br />
+    </div>
+</div>

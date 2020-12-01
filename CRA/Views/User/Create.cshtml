@@ -1,0 +1,569 @@
+﻿@{
+    ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div id="divActionBar" class="container-fluid action-bar">
+    <div class="row">
+        <div class="col-xs-6">
+            <button class="btn btn-default inline">@Html.ActionLink("Back to Users", "Index")</button>
+
+        </div>
+        <div class="col-xs-6">
+            <button id="btnSaveGeneral" class="btn btn-primary pull-right">Save</button>
+        </div>
+    </div>
+</div>
+<form id="frmGeneral">
+    <div class="panel panel-default">
+        <div class="panel-heading pointer">
+            General
+        </div>
+        <div class="panel-body">
+
+            <div class="form-horizontal">
+                <div class="form-group">
+
+                    <div class="col-xs-12">
+                        <label class="col-xs-12 control-label">
+                            User Name
+                            <input name="txtUserName" id="autoCompleteUsers" type="text" class="form-control" data-bind="value:data.userName" />
+                        </label>
+
+                    </div>
+                </div>
+
+
+
+                <div class="form-group">
+                    <div class="col-xs-12">
+                        <label class="col-xs-12 control-label">
+                            Domain Name
+                            <input name="txtDomainName" type="text" class="form-control" data-bind="value:data.domainName" readonly="readonly" />
+                        </label>
+
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+
+
+                    <div class="col-xs-12">
+                        <label class="col-xs-12 control-label">
+                            First Name
+                            <input type="text" class="form-control" data-bind="value:data.firstName" readonly="readonly" />
+                        </label>
+
+                    </div>
+                </div>
+
+                <div class="form-group">
+
+                    <div class="col-xs-12">
+                        <label class="col-xs-12 control-label">
+                            Last Name
+                            <input type="text" class="form-control" data-bind="value:data.lastName" readonly="readonly" />
+                        </label>
+
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+
+                    <div class="col-xs-12">
+                        <label class="col-xs-12 control-label">
+                            Email
+                            <input type="text" class="form-control" data-bind="value:data.email" readonly="readonly" />
+                        </label>
+
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    <div class="col-xs-12">
+                        <label class="col-xs-12 control-label">
+                            Phone
+                            <input type="tel" class="form-control phone-mask" data-bind="value:data.phone" />
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-xs-12">
+                        <label class="col-xs-12 control-label">
+                            Mobile
+                            <input type="tel" class="form-control phone-mask" data-bind="value:data.mobile" />
+                        </label>
+
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-xs-12">
+                        <label class="col-xs-12 control-label">
+                            Title
+                            <input type="tel" class="form-control phone-mask" data-bind="value:data.Title" readonly="readonly" />
+                        </label>
+
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-xs-12">
+                        <label class="col-xs-12 control-label">
+                            Role
+                            <input type="tel" class="form-control phone-mask" data-bind="value:data.Role" readonly="readonly" />
+                        </label>
+
+                    </div>
+                </div>
+
+            </div>
+
+
+        </div>
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-heading pointer">
+            Role Assignment
+        </div>
+        <div class="panel-body">
+
+            <div class="form-horizontal">
+                <div class="form-group">
+                    <div class="col-xs-12">
+                        <label class="col-xs-12 control-label">
+                            Select User Role
+                            <select name="lstUserRoleType" class="form-control" data-bind="options: data.userRoleTypes(), optionsText: 'Name',optionsValue:'Name',optionsCaption: '@Constant.DEFAULT_SELECTALL_OPTION',value:data.userRoleName"></select>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group" data-bind="css: { hide: data.userRoleName()!='CL'}">
+                    <div class="col-xs-12">
+                        <label class="col-xs-12 control-label">
+                            Select Pre-Screen Types
+                            <select class="form-control" data-bind="options: data.preScreenOptions(), optionsText: 'Name',optionsValue:'PreScreenTypeId',optionsCaption: '@Constant.DEFAULT_SELECTALL_OPTION',value:data.preScreenTypeId"></select>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group" data-bind="css: { hide: data.userRoleName()!='SLH' }">
+                    <div class="col-xs-12">
+                        <label class="col-xs-12 control-label">
+                            Select Services
+                        </label>
+                        <ul data-bind="foreach: data.serviceOptions" class="list">
+                            <li>
+                                <input type="checkbox" data-bind="checked:Selected" /><span class="inline" data-bind="text:Name"></span>
+                            </li>
+                        </ul>
+
+                    </div>
+                </div>
+
+
+                <div class="form-group" data-bind="css: { hide: data.userRoleName()!='AVP' }">
+                    <div class="col-xs-12">
+                        <label class="col-xs-12 control-label">
+                            Select Service Regions
+                        </label>
+                        <ul data-bind="foreach: data.serviceRegionOptions" class="list">
+                            <li>
+                                <input type="checkbox" data-bind="checked:Selected" /><span class="inline" data-bind="text:ServiceName"></span> - <span class="inline" data-bind="text:RegionName"></span>
+                            </li>
+                        </ul>
+
+                    </div>
+                </div>
+
+
+                <div class="form-group" data-bind="css: { hide: data.userRoleName()!='CEO' && data.userRoleName()!='DBD' && data.userRoleName()!='CL'  && data.userRoleName()!='NCM'  }">
+                    <div class="col-xs-12">
+                        <label class="col-xs-12 control-label">
+                            Select CHG Sites
+                        </label>
+                        <ul data-bind="foreach: data.siteOptions" class="list">
+                            <li>
+                                <input type="checkbox" data-bind="checked:Selected" /><span class="inline" data-bind="text:ServiceName"></span> - <span class="inline" data-bind="text:RegionName"></span> - <span class="inline" data-bind="text:FullName"></span>
+                            </li>
+                        </ul>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</form>
+
+@section scripts{
+
+    <script>
+
+        model.data.userRoleTypes = ko.observableArray([]);
+        model.data.userRoleName = ko.observable("");
+
+        model.data.serviceTypes = ko.observableArray([]);
+        model.data.serviceTypeId = ko.observable("");
+
+        model.data.regionTypes = ko.observableArray([]);
+        model.data.regionTypeId = ko.observable("");
+
+        model.data.serviceOptions = ko.observableArray([]);
+        model.data.serviceRegionOptions = ko.observableArray([]);
+        model.data.siteOptions = ko.observableArray([]);
+        model.data.preScreenOptions = ko.observableArray([]);
+
+        model.data.preScreenTypeId = ko.observableArray("");
+
+
+          function getUserRoleTypes() {
+            var promise = $.ajax({
+                dataType: 'json',
+                url: '@Url.Action("UserRoleTypes", "Base")',
+                type: "GET"
+            });
+
+            return promise;
+        }
+
+
+        function getServiceTypes() {
+            var promise = $.ajax({
+                dataType: 'json',
+                url: '@Url.Action("ServiceTypes", "Base")',
+                type: "GET"
+            });
+
+            return promise;
+        }
+
+         function getRegionTypes(serviceTypeId) {
+            var promise = $.ajax({
+                dataType: 'json',
+                url: '@Url.Action("RegionTypes", "Base")' + '?serviceTypeId=' + serviceTypeId,
+                type: "GET"
+            });
+
+            return promise;
+        }
+
+         function getRegionServiceTypes() {
+            var promise = $.ajax({
+                dataType: 'json',
+                url: '@Url.Action("RegionServiceTypes", "Base")'
+            });
+
+            return promise;
+        }
+
+
+            function getPreScreenTypes() {
+            var promise = $.ajax({
+                dataType: 'json',
+                url: '@Url.Action("PreScreenTypes", "Base")'
+            });
+
+            return promise;
+        }
+
+           function getSites() {
+            var promise = $.ajax({
+                dataType: 'json',
+                url: '@Url.Action("Sites", "Base")'
+            });
+
+            return promise;
+        }
+
+
+        $("#lstServiceType").change(function () {
+            var serviceTypeId = $("#lstServiceType").val();
+            if (serviceTypeId == null || serviceTypeId == "") {
+                serviceTypeId = 0;
+            }
+
+            getRegionTypes(serviceTypeId).then(
+                function (regionTypes) {
+                    model.data.regionTypes(regionTypes);
+                }, handleError
+            );
+
+        });
+
+    </script>
+
+    <script>
+
+        var id;
+
+        //Initialize variables.
+        model.data.domainName = ko.observable("");
+        model.data.userName = ko.observable("");
+        model.data.firstName = ko.observable("");
+        model.data.lastName = ko.observable("");
+        model.data.email = ko.observable("");
+        model.data.mobile = ko.observable("");
+        model.data.phone = ko.observable("");
+        model.data.Title = ko.observable("");
+        model.data.Role = ko.observable("");
+
+        model.data.contextId = ko.observable(null);
+
+
+
+        function handleError(errorData) {
+            model.ui.progress(false);
+            globalErrorHandler(errorData);
+        }
+
+        $("#btnSaveGeneral").click(function () {
+            submitForm('#frmGeneral');
+        });
+
+        //UI variables
+        var actionBar = document.getElementById("divActionBar");
+        var offsetValue = actionBar.offsetTop;
+
+        function actionBarFix() {
+            if (window.pageYOffset >= offsetValue) {
+                actionBar.classList.add("action-bar-fixed");
+            } else {
+                actionBar.classList.remove("action-bar-fixed");
+            }
+        }
+
+         function getUser(id) {
+            var promise = $.ajax({
+                dataType: 'json',
+                url: '@Url.Action("DetailEntity","User")' + '?id=' + id,
+                type: "GET"
+            });
+
+            return promise;
+        }
+
+
+          function updateUser(id,data) {
+            var promise = $.ajax({
+                dataType: 'json',
+                url: '@Url.Action("Create","User")' + '?id=' + id,
+                type: "POST",
+                data:data
+            });
+
+            return promise;
+        }
+
+
+
+
+         //Validation logic goes here.
+        function validationSettings() {
+            $('#frmGeneral').validate({
+                rules: {
+                    txtUserName: 'required',
+                    txtDomainName: 'required',
+                    lstUserRoleType: 'required'
+                },
+                messages: {
+                    txtUserName: 'User name is required.',
+                    txtDomainName: 'Domain name is required.',
+                    lstUserRoleType: 'Please select the user role type.'
+                },
+                submitHandler: function (form) {
+
+                    var data = {
+                        "Phone": model.data.phone(),
+                        "mobile": model.data.mobile(),
+                        "UserRole": {
+                            "RoleName": model.data.userRoleName(),
+                            "UserId": id,
+                            "Services": model.data.serviceOptions(),
+                            "RegionServices": model.data.serviceRegionOptions(),
+                            "Sites": model.data.siteOptions(),
+                            "PreScreenTypeId": model.data.preScreenTypeId()
+                        }
+                    };
+
+                    console.log(model.data.preScreenOptions());
+
+                    var promise = updateUser(id,data);
+                    promise.then(function (data) {
+                        var list = [];
+
+                        if (data && data.Status) {
+                            if (data.Status == '@Constant.RESPONSE_OK') {
+                                list.push({ "name": "Success", "description": data.Description });
+                                model.ui.successList(list);
+                                model.ui.success(true);
+
+                                model.data.contextId(data.ContextId);
+
+                            } else {
+                                list.push({ "name": "Error", "description": data.Description });
+                                model.ui.errorList(list);
+                                model.ui.error(true);
+                            }
+                        }
+                        else {
+                            list.push({ "name": "Error", "description": data.Description });
+                            model.ui.errorList(list);
+                            model.ui.error(true);
+
+                        }
+
+                    }, handleError);
+
+                }
+            });
+        }
+
+        function getSelected(items, compareItem, propertyName) {
+            if (isIterable(items)) {
+                for (let item of items) {
+                    if (compareItem[propertyName] == item[propertyName]) {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        function loadData() {
+            $.when(getUserRoleTypes(), getServiceTypes(), getRegionServiceTypes(), getSites(), getPreScreenTypes()).then(function (userRoleTypes, serviceTypes, serviceRegionTypes, sites, preScreenTypes) {
+
+                var items = [];
+
+                for (let item of serviceTypes[0]) {
+
+                    var serviceItem = {
+                        ServiceTypeId: item.ServiceTypeId,
+                        Selected: false,
+                        Name: item.Name
+                    };
+
+
+                    items.push(serviceItem);
+
+                }
+
+
+                model.data.serviceOptions(items);
+
+                items = [];
+
+                for (let item of serviceRegionTypes[0]) {
+
+                    var serviceRegionItem = {
+                        RegionServiceTypeId: item.RegionServiceTypeId,
+                        Selected: false,
+                        ServiceName: item.ServiceName,
+                        RegionName: item.RegionName,
+                        RegionTypeId: item.RegionTypeId,
+                        ServiceTypeId: item.ServiceTypeId
+                    };
+
+
+                    items.push(serviceRegionItem);
+
+                }
+
+                model.data.serviceRegionOptions(items);
+
+
+                items = [];
+
+                for (let item of sites[0]) {
+
+                    var siteItem = {
+                        CHGSiteId: item.CHGSiteId,
+                        Selected: false,
+                        FullName: item.FullName,
+                        ServiceName: item.ServiceName,
+                        RegionName: item.RegionName,
+                        RegionTypeId: item.RegionTypeId,
+                        ServiceTypeId: item.ServiceTypeId
+                    };
+
+
+                    items.push(siteItem);
+
+                }
+                model.data.siteOptions(items);
+
+
+                items = [];
+
+                for (let item of preScreenTypes[0]) {
+
+                    var preScreenItem = {
+                        PreScreenTypeId: item.PreScreenTypeId,
+                        Selected: null,
+                        Name: item.Name
+                    };
+
+
+                    items.push(preScreenItem);
+
+                }
+                model.data.preScreenOptions(items);
+
+                model.data.userRoleTypes(userRoleTypes[0]);
+
+                model.ui.progress(false);
+
+
+            }, handleError);
+        }
+
+        $(document).ready(function () {
+            //model.ui.progress(true);
+            validationSettings();
+            //UI Initializations.
+            $("#autoCompleteUsers").autocomplete({
+                source: '@Url.Action("AutoCompleteUsers","User")',
+                minLength: 2,
+                select: function (event, ui) {
+                    event.preventDefault();
+                    $("#autoCompleteUsers").val(ui.item.userName);
+                    id = ui.item.userId;
+                    model.ui.progress(true);
+                    getUser(ui.item.userId).then(function (viewModel) {
+
+                        if (viewModel && viewModel.Status != '@Constant.RESPONSE_OK') {
+                            list.push({ "name": "Error", "description": viewModel.Description });
+                            model.ui.errorList(list);
+                            model.ui.error(true);
+                         }
+
+                        model.data.domainName(viewModel.Data.DomainName);
+                        model.data.userName(viewModel.Data.UserName);
+                        model.data.firstName(viewModel.Data.FirstName);
+                        model.data.lastName(viewModel.Data.LastName);
+                        model.data.email(viewModel.Data.Email);
+                        model.data.mobile(viewModel.Data.Mobile);
+                        model.data.phone(viewModel.Data.Phone);
+                        model.data.Title(viewModel.Data.Title);
+                        model.data.Role(viewModel.Data.Role);
+
+                        model.ui.progress(false);
+
+                    }, handleError);
+                }
+            });
+
+            loadData();
+
+            window.onscroll = function () { actionBarFix() };
+        });
+
+    </script>
+
+
+}

@@ -1,0 +1,231 @@
+﻿@{
+    ViewBag.Title = "Contact";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="panel panel-default">
+    <div class="panel-heading">
+        Filter
+    </div>
+    <div class="panel-body">
+        <div class="form-horizontal">
+            <div class="col-xs-12 col-md-12 col-lg-4">
+                <label>
+                    Role:
+                </label>
+                <select class="form-control" data-bind="options: data.contactRoleTypes(), optionsText: 'Name',optionsValue:'ContactRoleTypeId',optionsCaption: '@Constant.DEFAULT_ALL_OPTION',value:data.contactRoleTypeId"></select>
+            </div>
+            <div class="separator col-xs-12 hidden visible-xs visible-sm visible-md"></div>
+
+            <div class="col-xs-12 col-md-12 col-lg-4">
+                <label>
+                    Keyword:
+                </label>
+                <input type="text" class="form-control" name="keyword" data-bind="value:data.keyword" />
+            </div>
+
+            <div class="separator col-xs-12 hidden visible-xs visible-sm visible-md visible-lg"></div>
+
+            <div class="col-xs-12 col-md-12 col-lg-12">
+                <button type="submit" class="btn btn-primary separator-right" data-bind="click:data.searchClick" title="Search">Search</button>
+                <button type="submit" class="btn btn-default separator-right" data-bind="click:data.clearClick" title="Clear">Clear</button>
+                <a href='@Url.Action("Create","Contact")' class="pointer action-button green separator-left-4x" title="Create New"><span class="glyphicon glyphicon-plus "></span></a>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+
+<div class="panel">
+    <div class="panel-body">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th class="action-column">Action</th>
+                    <th class="id-column">
+                        ID
+                    </th>
+                    <th class="email-column">
+                        Email
+                    </th>
+                    <th class="name-column">
+                        First Name
+                    </th>
+                    <th class="name-column">
+                        Last Name
+                    </th>
+                    <th class="phone-column">
+                        Phone
+                    </th>
+
+                    <th class="Referal Source-column">
+                        Mobile
+                    </th>
+                    <th>
+                    Approved
+                    </th>
+                    <th class="ReferalSourceType-column">
+                        ReferalSource Type
+                    </th>
+                    <th>
+                      Referal Source
+                    </th>
+
+                </tr>
+            </thead>
+            <tbody data-bind="foreach: data.contacts"> 
+                <tr>
+                    <td>
+                        <span data-bind="click:$root.data.editClick" class="glyphicon glyphicon-pencil edit-action pointer"></span>
+                        <span data-bind="click:$root.data.deleteClick" class="glyphicon glyphicon-remove delete-action pointer"></span>
+                    </td>
+                    <td><a href="#" data-bind="text:ContactId,click:$root.data.detailClick"></a></td>
+                    <td><a href="#" data-bind="text:Email,click:$root.data.detailClick"></a></td>
+                    <td data-bind="text:FirstName"></td>
+                    <td data-bind="text:LastName"></td>
+
+                    <td data-bind="text:Phone"></td>
+                    <td data-bind="text:Mobile"></td>
+                    <td data-bind="text:IsApproved?'Yes':'No'"></td>
+                    <td data-bind="text:ReferalSource"></td>
+                    <td data-bind="text:ReferalSourceType"></td>
+                </tr>
+
+            </tbody>
+
+
+        </table>
+    </div>
+</div>
+
+@section scripts
+    {
+
+    <script>
+        //Initialize variables.
+        model.data.contacts = ko.observableArray([]);
+        model.data.keyword = ko.observable("");
+
+        model.data.contactRoleTypes = ko.observableArray([]);
+        model.data.contactRoleTypeId = ko.observableArray("");
+
+
+        //Functions to load the screen on first load.
+
+    
+
+        function getContacts() {
+            var timestamp = new Date().getTime();
+
+            var promise = $.ajax({
+                dataType: 'json',
+                url: '@Url.Action("Contacts","Contact")' + "?keyword=" + encodeURI(model.data.keyword()) + "&contactRoleTypeId=" + model.data.contactRoleTypeId() +"&timestamp=" + timestamp,
+                type: "GET"
+            });
+
+            return promise;
+
+        }
+
+          function getContactRoleTypes() {
+            var promise = $.ajax({
+                dataType: 'json',
+                url: '@Url.Action("ContactRoleTypes", "Base")',
+                type: "GET"
+            });
+
+            return promise;
+        }
+
+
+        function loadData() {
+            model.ui.progress(true);
+            var promiseGrid = getContactRoleTypes();
+            promiseGrid.then(function (contactRoleTypes) {
+                model.data.contactRoleTypes(contactRoleTypes);
+                getContacts().then(function (data) {
+                    model.data.contacts(data);
+                    model.ui.progress(false);
+                }, handleError);
+            }, handleError);
+        }
+
+       
+        function deleteContact() {
+            model.ui.progress(true);
+            var promise = $.ajax({
+                dataType: 'json',
+                url: '@Url.Action("Delete","Contact")' + "/" +  model.data.context.ContactId,
+                type: "POST"
+            });
+
+            promise.then(function(data) {
+                if (data.Status == "@Constant.RESPONSE_OK") {
+                    var errorList = [];
+                    errorList.push({ "name": "Success", "description": "Contact successfully deleted." });
+                    model.ui.successList(errorList);
+                    model.ui.success(true);
+                    loadData();
+                    model.ui.progress(false);
+                }
+                else {
+                    handleError({
+                        status: @Constant.CUSTOM_ERROR_CODE,
+                        description: data.Description
+                    });
+                }
+            }, handleError);
+        }
+
+        function handleError(errorData) {
+            model.ui.progress(false);
+            globalErrorHandler(errorData);
+        }
+
+        $(document).ready(function () {
+
+            model.ui.progress(true);
+
+            //Define the functions that get data binded to individual rows here.
+            model.ui.modalDeleteClick = function () {
+                $("#responseModal").modal('hide');
+                deleteContact();
+            };
+
+            model.data.searchClick = function () {
+                model.ui.progress(true);
+                loadData();
+                return false;
+            };
+            model.data.clearClick = function () {
+                model.ui.progress(true);
+                model.data.contactRoleTypeId("");
+                model.data.keyword("");
+                loadData();
+                return false;
+            };
+            model.data.deleteClick = function (data) {
+                model.ui.modalTitle("Confirmation");
+                model.ui.modalBody("Are you sure you want to delete the selected contact?");
+                model.data.context = data;
+                $("#responseModal").modal('show');
+                return false;
+            };
+            model.data.editClick = function (data)
+            {
+                window.location.href = '@Url.Action("Edit","Contact")' + "?id=" + data.ContactId;
+                return false;
+            };
+
+             model.data.detailClick = function (data) {
+                window.location.href = '@Url.Action("Detail","Contact")' + "?id=" + data.ContactId;
+                return false;
+            };
+
+            loadData();
+        });
+
+    </script>
+}
+

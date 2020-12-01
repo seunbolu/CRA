@@ -1,0 +1,176 @@
+﻿@model CRA.Models.Shared.SectionModel
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<button id="btnSave" class="btn btn-primary">Save</button>
+
+@foreach (var sectionItem in Model.SectionItems.Where(p => p.ItemType == "Table"))
+{
+    @Html.Partial("InputEditorTableModal", sectionItem)
+}
+
+<div class="form-horizontal">
+
+    @foreach (var sectionItem in Model.SectionItems)
+    {
+        <div class="form-group" id="input_container_@(sectionItem.SectionItemId)">
+            <div class="col-xs-12">
+                <label class="col-xs-12 control-label">
+                    @(sectionItem.Label)
+                </label>
+                <p class="input-p">@Html.Partial("InputEditor", sectionItem)</p>
+            </div>
+        </div>
+    }
+
+</div>
+
+@section scripts{
+
+<script id="prescreen">
+
+        model.@(Model.ObjectContainerId) = {};
+
+
+        //declare the variables (all except for table. table variables are handled separately)
+
+            @foreach (var sectionItem in Model.SectionItems.Where(p=>p.ItemType!="Table"))
+            {
+                <text>model.@(sectionItem.ObjectContainerId).@(sectionItem.ContainerId)_control_@(sectionItem.SectionItemId.ToString()) = ko.observable("");</text>
+            }
+
+
+        //declare variables for tables.
+
+        @foreach (var sectionItem in Model.SectionItems.Where(p=>p.ItemType=="Table"))
+        {
+             <text>model.@(sectionItem.ObjectContainerId).@(sectionItem.ContainerId)_modal_context_control_@(sectionItem.SectionItemId.ToString()) = {};</text>
+
+            foreach(var header in sectionItem.LabelList)
+            {
+                <text>model.@(sectionItem.ObjectContainerId).@(sectionItem.ContainerId)_modal_context_control_@(sectionItem.SectionItemId.ToString()).@(header) = ko.observable("");</text>
+            }
+
+
+        <text> model.@(sectionItem.ObjectContainerId).@(sectionItem.ContainerId)_control_@(sectionItem.SectionItemId.ToString()) = ko.observableArray([]);</text>
+            }
+
+            model.@(Model.ObjectContainerId).createPostData=function() {
+              model.@(Model.ObjectContainerId).PostData = {};
+                model.@(Model.ObjectContainerId).PostData.ControlData = [];
+                    model.@(Model.ObjectContainerId).PostData.TableData = [];
+
+            @foreach (var sectionItem in Model.SectionItems.Where(p=>p.ItemType!="Table"))
+            {
+                <text>model.@(Model.ObjectContainerId).PostData.ControlData.push({ Name: "@(sectionItem.ContainerId)_control_@(sectionItem.SectionItemId.ToString())", Value: model.@(sectionItem.ObjectContainerId).@(sectionItem.ContainerId)_control_@(sectionItem.SectionItemId.ToString())() });</text>
+            }
+
+                @foreach (var sectionItem in Model.SectionItems.Where(p=>p.ItemType=="Table"))
+            {
+                <text>
+                var i = 0;
+                for (let item of model.@(Model.ObjectContainerId).@(sectionItem.ContainerId)_control_@(sectionItem.SectionItemId.ToString())()) {
+
+                    //console.log(item);
+
+                   @foreach(var code in sectionItem.CodeList)
+                   {
+                      <text> model.@(Model.ObjectContainerId).PostData.TableData.push({SectionItemId:@(sectionItem.SectionItemId), Index:i, Name: "@(code)", Value: item["@code"] });</text>
+                   }
+
+                   i++;
+                   
+                }
+
+
+                </text>
+            }
+
+
+
+        }
+
+         function updateControlData(data) {
+                var promise = $.ajax({
+                dataType: 'json',
+                url: '@Url.Action("UpdatePreScreen", "PreScreen")',
+                type: "POST",
+                data:data
+            });
+
+            return promise;
+        }
+
+
+        //Code to generate all the modal events.
+
+        @foreach (var sectionItem in Model.SectionItems.Where(p=>p.ItemType=="Table"))
+        {
+
+            <text>$('#@(sectionItem.ContainerId)_modal_trigger_control_@(sectionItem.SectionItemId.ToString())').click(function () {
+
+            //Clear the modal context before displaying the modal.
+            @foreach(var code in sectionItem.CodeList)
+            {
+                <text>model.@(sectionItem.ObjectContainerId).@(sectionItem.ContainerId)_modal_context_control_@(sectionItem.SectionItemId.ToString()).@(code)("");</text>
+            }
+
+            $("#@(sectionItem.ContainerId)_modal_control_@(sectionItem.SectionItemId.ToString())").modal('show');
+            });
+            </text>
+
+ <text>
+    model.@(sectionItem.ObjectContainerId).@(sectionItem.ContainerId)_modal_ok_control_@(sectionItem.SectionItemId.ToString()) = function () {
+
+             var item = {};
+             @foreach(var code in sectionItem.LabelList)
+              {
+                 <text>
+                    item.@(code) =  model.@(sectionItem.ObjectContainerId).@(sectionItem.ContainerId)_modal_context_control_@(sectionItem.SectionItemId.ToString()).@(code)();
+                 </text>
+
+                }
+
+        var items = model.@(sectionItem.ObjectContainerId).@(sectionItem.ContainerId)_control_@(sectionItem.SectionItemId.ToString())();
+        items.push(item);
+        model.@(sectionItem.ObjectContainerId).@(sectionItem.ContainerId)_control_@(sectionItem.SectionItemId.ToString())(items);
+          $("#@(sectionItem.ContainerId)_modal_control_@(sectionItem.SectionItemId.ToString())").modal('hide');
+
+    }
+</text>
+
+            <text>
+
+            model.@(sectionItem.ObjectContainerId).@(sectionItem.ContainerId)_delete_trigger_control_@(sectionItem.SectionItemId.ToString()) = function (data) {
+            model.@(sectionItem.ObjectContainerId).@(sectionItem.ContainerId)_control_@(sectionItem.SectionItemId.ToString()).remove(data);
+        }
+
+        </text>
+
+        }
+
+
+        $("#btnSave").click(
+            function () {
+                model.data.preScreen.createPostData();
+                updateControlData(model.data.preScreen.PostData).then(function () {
+                    alert("Data saved successfully!");
+                });
+            }
+        );
+
+</script>
+
+    <script>
+        $(document).ready(function () {
+            $(".date-control").datepicker();
+        });
+    </script>
+
+}
+
+

@@ -1,0 +1,3185 @@
+
+        //Pre-screen sections
+
+        //Studies section
+        public JsonResult PreScreenStudies(long preScreenId)
+        {
+            var model = new StudiesModel();
+            var item = _dataContext.PreScreenLabStudies.Where(p => p.PreScreenId == preScreenId && p.Deleted == false).SingleOrDefault();
+            if (item != null)
+            {
+                model.CT = item.CT;
+                model.Dopplers = item.Dopplers;
+                model.ECHO = item.ECHO;
+                model.EEG = item.EEG;
+                model.MRA = item.MRA;
+                model.MRI = item.MRI;
+                model.Other = item.Other;
+                model.Results = item.Results;
+                model.XRAY = item.XRAY;
+            }
+
+            return Json(model, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult PreScreenStudies(long preScreenId, StudiesModel model)
+        {
+            if (model != null)
+            {
+                using (var transaction = _dataContext.Database.BeginTransaction())
+                {
+                    var item = _dataContext.PreScreenLabStudies.Where(p => p.PreScreenId == preScreenId && p.Deleted == false).SingleOrDefault();
+
+                    if (item == null)
+                    {
+                        item = new PreScreenLabStudy();
+                        _dataContext.PreScreenLabStudies.Add(item);
+                    }
+
+                    item.CT = model.CT;
+                    item.MRA = model.MRA;
+                    item.MRI = model.MRI;
+                    item.Dopplers = model.Dopplers;
+                    item.ECHO = model.ECHO;
+                    item.EEG = model.EEG;
+                    item.Other = model.Other;
+                    item.PreScreenId = preScreenId;
+                    item.Results = model.Results;
+                    item.XRAY = model.XRAY;
+
+                    _dataContext.SaveChanges();
+                    transaction.Commit();
+                }
+
+                return Json(new { Status = Constant.RESPONSE_OK, Description = "Pre-screen labs studies section saved successfully." });
+            }
+
+            return Json(new { Status = Constant.RESPONSE_ERROR, Description = "There was an error in processing the request. Please check the input and try again." });
+        }
+
+        //Blood work labs section
+        public JsonResult PreScreenBloodWorkLabs(long preScreenId)
+        {
+            var model = new BloodWorkLabsModel();
+            var item = _dataContext.PreScreenLabBloodWorkLabs.Where(p => p.PreScreenId == preScreenId && p.Deleted == false).SingleOrDefault();
+            if (item != null)
+            {
+                model.FLAALEOD = item.FLAALEOD;
+                model.Urinalysis = item.Urinalysis;
+                model.SPGravity = item.SPGravity;
+                model.PH = item.PH;
+
+            }
+
+            return Json(model, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult PreScreenBloodWorkLabs(long preScreenId, BloodWorkLabsModel model)
+        {
+            if (model != null)
+            {
+                using (var transaction = _dataContext.Database.BeginTransaction())
+                {
+                    var item = _dataContext.PreScreenLabBloodWorkLabs.Where(p => p.PreScreenId == preScreenId && p.Deleted == false).SingleOrDefault();
+
+                    if (item == null)
+                    {
+                        item = new PreScreenLabBloodWorkLab();
+                        _dataContext.PreScreenLabBloodWorkLabs.Add(item);
+                    }
+
+                    item.FLAALEOD = model.FLAALEOD;
+                    item.Urinalysis = model.Urinalysis;
+                    item.SPGravity = model.SPGravity;
+                    item.PH = model.PH;
+                    item.PreScreenId = preScreenId;
+
+                    _dataContext.SaveChanges();
+                    transaction.Commit();
+                }
+
+                return Json(new { Status = Constant.RESPONSE_OK, Description = "Pre-screen labs blood work section saved successfully." });
+            }
+
+            return Json(new { Status = Constant.RESPONSE_ERROR, Description = "There was an error in processing the request. Please check the input and try again." });
+        }
+
+
+        //Blood product labs section
+        public JsonResult PreScreenBloodProducts(long preScreenId)
+        {
+            var model = new BloodProductsModel();
+            var item = _dataContext.PreScreenLabBloodProducts.Where(p => p.PreScreenId == preScreenId && p.Deleted == false).SingleOrDefault();
+            if (item != null)
+            {
+                model.SALMR = item.SALMR;
+                model.Date = item.Date == null ? null : item.Date.Value.ToShortDateString();
+                model.PRBC = item.PRBC;
+                model.FFP = item.FFP;
+                model.Plazma = item.Plazma;
+                model.DonationType = item.DonationType;
+            }
+
+            return Json(model, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult PreScreenBloodProducts(long preScreenId, BloodProductsModel model)
+        {
+            if (model != null)
+            {
+                using (var transaction = _dataContext.Database.BeginTransaction())
+                {
+                    var item = _dataContext.PreScreenLabBloodProducts.Where(p => p.PreScreenId == preScreenId && p.Deleted == false).SingleOrDefault();
+
+                    if (item == null)
+                    {
+                        item = new PreScreenLabBloodProduct();
+                        _dataContext.PreScreenLabBloodProducts.Add(item);
+                    }
+                    DateTime dtDate;
+
+                    if (DateTime.TryParse(model.Date, out dtDate))
+                    {
+                        item.Date = dtDate;
+                    }
+                    item.SALMR = model.SALMR;
+                    item.PRBC = model.PRBC;
+                    item.FFP = model.FFP;
+                    item.Plazma = model.Plazma;
+                    item.DonationType = model.DonationType;
+                    item.PreScreenId = preScreenId;
+
+                    _dataContext.SaveChanges();
+                    transaction.Commit();
+                }
+
+                return Json(new { Status = Constant.RESPONSE_OK, Description = "Pre-screen labs blood / blood  product section saved successfully." });
+            }
+
+            return Json(new { Status = Constant.RESPONSE_ERROR, Description = "There was an error in processing the request. Please check the input and try again." });
+        }
+
+        //Medication List labs section
+        public JsonResult PreScreenMedicationList(long preScreenId)
+        {
+            var model = new MedicalListModel();
+            var item = _dataContext.PreScreenLabMedicationLists.Where(p => p.PreScreenId == preScreenId && p.Deleted == false).SingleOrDefault();
+            if (item != null)
+            {
+                model.SMAR = item.SMAR;
+                model.POI = item.POI;
+                model.FMA = item.FMA;
+
+                foreach (var medication in _dataContext.PreScreenLabMedicationListMedications.Where(p => p.PreScreenLabMedicationListId == item.PreScreenLabMedicationListId && p.Deleted == false).ToList())
+                {
+                    model.Medications.Add(new MedicalListMedicationModel()
+                    {
+                        Medication = medication.Medication,
+                        Status = medication.Status
+
+                    });
+                }
+
+            }
+
+            return Json(model, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult PreScreenMedicationList(long preScreenId, MedicalListModel model)
+        {
+            if (model != null)
+            {
+                using (var transaction = _dataContext.Database.BeginTransaction())
+                {
+                    var item = _dataContext.PreScreenLabMedicationLists.Where(p => p.PreScreenId == preScreenId && p.Deleted == false).SingleOrDefault();
+
+                    if (item == null)
+                    {
+                        item = new PreScreenLabMedicationList();
+                        _dataContext.PreScreenLabMedicationLists.Add(item);
+                    }
+
+                    item.SMAR = model.SMAR;
+                    item.POI = model.POI;
+                    item.FMA = model.FMA;
+
+                    item.PreScreenId = preScreenId;
+
+                    _dataContext.SaveChanges();
+
+                    foreach (var medication in _dataContext.PreScreenLabMedicationListMedications.Where(p => p.PreScreenLabMedicationListId == item.PreScreenLabMedicationListId).ToList())
+                    {
+                        medication.Deleted = true;
+                    }
+
+                    _dataContext.SaveChanges();
+
+                    foreach (var medicationModel in model.Medications)
+                    {
+                        _dataContext.PreScreenLabMedicationListMedications.Add(
+
+                            new PreScreenLabMedicationListMedication()
+                            {
+                                PreScreenLabMedicationListId = item.PreScreenLabMedicationListId,
+                                Medication = medicationModel.Medication,
+                                Status = medicationModel.Status
+                            }
+                            );
+                    }
+                    _dataContext.SaveChanges();
+                    transaction.Commit();
+                }
+
+                return Json(new { Status = Constant.RESPONSE_OK, Description = "Pre-screen labs medication list section saved successfully." });
+            }
+
+            return Json(new { Status = Constant.RESPONSE_ERROR, Description = "There was an error in processing the request. Please check the input and try again." });
+        }
+
+        //Microbiology labs section
+        public JsonResult PreScreenMicrobiology(long preScreenId)
+        {
+            var model = new List<MicrobiologyModel>();
+
+            var items = _dataContext.PreScreenLabMicrobiologies.Where(p => p.PreScreenId == preScreenId && p.Deleted == false).ToList();
+
+            foreach (var item in items)
+            {
+                model.Add(new MicrobiologyModel()
+                {
+
+                    Organism = item.Organism,
+                    Date = (item.Date == null ? null : item.Date.Value.ToShortDateString()),
+                    Result = item.Result,
+                    Source = item.Source
+                });
+            }
+
+
+            return Json(model, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult PreScreenMicrobiology(long preScreenId, MicrobiologyContainerModel containerModel)
+        {
+
+            if (containerModel != null)
+            {
+
+                var model = containerModel.Items;
+                using (var transaction = _dataContext.Database.BeginTransaction())
+                {
+                    foreach (var microbiology in _dataContext.PreScreenLabMicrobiologies.Where(p => p.PreScreenId == preScreenId).ToList())
+                    {
+                        microbiology.Deleted = true;
+                    }
+
+                    _dataContext.SaveChanges();
+
+                    foreach (var item in model)
+                    {
+
+                        var entity = new PreScreenLabMicrobiology()
+                        {
+                            Organism = item.Organism,
+                            Source = item.Source,
+                            Result = item.Result
+                        };
+
+                        DateTime dt;
+                        if (DateTime.TryParse(item.Date, out dt))
+                        {
+                            entity.Date = dt;
+                        }
+
+                        entity.PreScreenId = preScreenId;
+                        _dataContext.PreScreenLabMicrobiologies.Add(entity);
+                    }
+
+                    _dataContext.SaveChanges();
+
+                    transaction.Commit();
+                }
+
+                return Json(new { Status = Constant.RESPONSE_OK, Description = "Pre-screen labs microbiology section saved successfully." });
+            }
+
+            return Json(new { Status = Constant.RESPONSE_ERROR, Description = "There was an error in processing the request. Please check the input and try again." });
+        }
+
+        //Respiratory Status section
+        public JsonResult PreScreenRespiratoryStatus(long preScreenId)
+        {
+            var model = new PSRespiratoryStatusModel();
+            var item = _dataContext.PSRespiratoryStatuses.Where(p => p.PreScreenId == preScreenId && p.Deleted == false).SingleOrDefault();
+            if (item != null)
+            {
+                model.LSWNL = item.LSWNL;
+                model.NPC = item.NPC;
+                model.NRT = item.NRT;
+                model.OTH = item.OTH;
+                model.PC = item.PC;
+                model.WHZ = item.WHZ;
+                model.OTHText = item.OTHText;
+
+            }
+
+            return Json(model, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult PreScreenRespiratoryStatus(long preScreenId, PSRespiratoryStatusModel model)
+        {
+            if (model != null)
+            {
+                using (var transaction = _dataContext.Database.BeginTransaction())
+                {
+                    var item = _dataContext.PSRespiratoryStatuses.Where(p => p.PreScreenId == preScreenId && p.Deleted == false).SingleOrDefault();
+
+                    if (item == null)
+                    {
+                        item = new PSRespiratoryStatus();
+                        _dataContext.PSRespiratoryStatuses.Add(item);
+                    }
+
+                    item.NPC = model.NPC;
+                    item.LSWNL = model.LSWNL;
+                    item.NRT = model.NRT;
+                    item.OTH = model.OTH;
+                    item.OTHText = model.OTHText;
+                    item.PC = model.PC;
+                    item.WHZ = model.WHZ;
+
+                    item.PreScreenId = preScreenId;
+
+                    if (item.OTH != "Yes")
+                    {
+                        item.OTHText = null;
+                    }
+
+                    _dataContext.SaveChanges();
+                    transaction.Commit();
+                }
+
+                return Json(new { Status = Constant.RESPONSE_OK, Description = "Pre-screen respiratory status section saved successfully." });
+            }
+
+            return Json(new { Status = Constant.RESPONSE_ERROR, Description = "There was an error in processing the request. Please check the input and try again." });
+        }
+
+        //Respiratory treatment section
+        public JsonResult PreScreenRespiratoryTreatment(long preScreenId)
+        {
+            var model = new PSRespiratoryTreatmentsModel();
+            var item = _dataContext.PSRespiratoryTreatments.Where(p => p.PreScreenId == preScreenId && p.Deleted == false).SingleOrDefault();
+            if (item != null)
+            {
+                model.IPPB = item.IPPB;
+                model.NBLZ = item.NBLZ;
+                model.NBLZTALQ6H = item.NBLZTALQ6H;
+                model.OTH = item.OTH;
+                model.OTHText = item.OTHText;
+                model.CPT = item.CPT;
+
+            }
+
+            return Json(model, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult PreScreenRespiratoryTreatment(long preScreenId, PSRespiratoryTreatmentsModel model)
+        {
+            if (model != null)
+            {
+                using (var transaction = _dataContext.Database.BeginTransaction())
+                {
+                    var item = _dataContext.PSRespiratoryTreatments.Where(p => p.PreScreenId == preScreenId && p.Deleted == false).SingleOrDefault();
+
+                    if (item == null)
+                    {
+                        item = new PSRespiratoryTreatment();
+                        _dataContext.PSRespiratoryTreatments.Add(item);
+                    }
+
+                    item.CPT = model.CPT;
+                    item.IPPB = model.IPPB;
+                    item.NBLZ = model.NBLZ;
+                    item.NBLZTALQ6H = model.NBLZTALQ6H;
+                    item.OTH = model.OTH;
+                    item.OTHText = model.OTHText;
+                    item.PreScreenId = preScreenId;
+
+                    if (item.OTH != "Yes")
+                    {
+                        item.OTHText = null;
+                    }
+
+                    _dataContext.SaveChanges();
+                    transaction.Commit();
+                }
+
+                return Json(new { Status = Constant.RESPONSE_OK, Description = "Pre-screen respiratory treatments section saved successfully." });
+            }
+
+            return Json(new { Status = Constant.RESPONSE_ERROR, Description = "There was an error in processing the request. Please check the input and try again." });
+        }
+
+        //Respiratory oxygen required section
+        public JsonResult PreScreenRespiratoryOxygenRequired(long preScreenId)
+        {
+            var model = new PSRespiratoryOxygenRequiredModel();
+            var item = _dataContext.PSRespiratoryOxygenRequireds.Where(p => p.PreScreenId == preScreenId && p.Deleted == false).SingleOrDefault();
+            if (item != null)
+            {
+                model.CHPT = item.CHPT;
+                model.CPO = item.CPO;
+                model.HVT = item.HVT;
+                model.LILPMN = item.LILPMN;
+                model.NO2DAR = item.NO2DAR;
+                model.O2SATN = item.O2SATN;
+                model.OR = item.OR;
+
+            }
+
+            return Json(model, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult PreScreenRespiratoryOxygenRequired(long preScreenId, PSRespiratoryOxygenRequiredModel model)
+        {
+            if (model != null)
+            {
+                using (var transaction = _dataContext.Database.BeginTransaction())
+                {
+                    var item = _dataContext.PSRespiratoryOxygenRequireds.Where(p => p.PreScreenId == preScreenId && p.Deleted == false).SingleOrDefault();
+
+                    if (item == null)
+                    {
+                        item = new PSRespiratoryOxygenRequired();
+                        _dataContext.PSRespiratoryOxygenRequireds.Add(item);
+                    }
+
+                    item.CHPT = model.CHPT;
+                    item.CPO = model.CPO;
+                    item.HVT = model.HVT;
+                    item.LILPMN = model.LILPMN;
+                    item.NO2DAR = model.NO2DAR;
+                    item.O2SATN = model.O2SATN;
+                    item.OR = model.OR;
+                    item.PreScreenId = preScreenId;
+
+                    _dataContext.SaveChanges();
+                    transaction.Commit();
+                }
+
+                return Json(new { Status = Constant.RESPONSE_OK, Description = "Pre-screen respiratory oxygen required section saved successfully." });
+            }
+
+            return Json(new { Status = Constant.RESPONSE_ERROR, Description = "There was an error in processing the request. Please check the input and try again." });
+        }
+
+        //Respiratory mode section
+        public JsonResult PreScreenRespiratoryMode(long preScreenId)
+        {
+            var model = new PSRespiratoryModeModel();
+            var item = _dataContext.PSRespiratoryModes.Where(p => p.PreScreenId == preScreenId && p.Deleted == false).SingleOrDefault();
+            if (item != null)
+            {
+                model.MSK = item.MSK;
+                model.NC = item.NC;
+                model.OTH = item.OTH;
+                model.OTHText = item.OTHText;
+                model.TC = item.TC;
+
+            }
+
+            return Json(model, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult PreScreenRespiratoryMode(long preScreenId, PSRespiratoryModeModel model)
+        {
+            if (model != null)
+            {
+                using (var transaction = _dataContext.Database.BeginTransaction())
+                {
+                    var item = _dataContext.PSRespiratoryModes.Where(p => p.PreScreenId == preScreenId && p.Deleted == false).SingleOrDefault();
+
+                    if (item == null)
+                    {
+                        item = new PSRespiratoryMode();
+                        _dataContext.PSRespiratoryModes.Add(item);
+                    }
+
+                    item.MSK = model.MSK;
+                    item.NC = model.NC;
+                    item.TC = model.TC;
+                    item.OTH = model.OTH;
+                    item.OTHText = model.OTHText;
+                    item.PreScreenId = preScreenId;
+                    if (item.OTH != "Yes")
+                    {
+                        item.OTHText = null;
+                    }
+
+                    _dataContext.SaveChanges();
+                    transaction.Commit();
+                }
+
+                return Json(new { Status = Constant.RESPONSE_OK, Description = "Pre-screen respiratory mode section saved successfully." });
+            }
+
+            return Json(new { Status = Constant.RESPONSE_ERROR, Description = "There was an error in processing the request. Please check the input and try again." });
+        }
+
+
+        //Ventilation mode section
+        public JsonResult PSRespiratoryVentilation(long preScreenId)
+        {
+            var model = new PSRespiratoryVentilationModel();
+            var item = _dataContext.PSRespiratoryVentilations.Where(p => p.PreScreenId == preScreenId && p.Deleted == false).SingleOrDefault();
+            if (item != null)
+            {
+
+                model.MV = item.MV;
+                model.MVAW = item.MVAW;
+                model.IPONIV = item.IPONIV;
+                model.SA6TPD = item.SA6TPD;
+                model.BIPAPIPAP = item.BIPAPIPAP;
+                model.BIPAPIPAPOther = item.BIPAPIPAPOther;
+                model.CPAP = item.CPAP;
+                model.CPAPOther = item.CPAPOther;
+                model.EPAP = item.EPAP;
+                model.EPAPOther = item.EPAPOther;
+                model.NIPPV = item.NIPPV;
+
+
+
+            }
+
+            return Json(model, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult PSRespiratoryVentilation(long preScreenId, PSRespiratoryVentilationModel model)
+        {
+            if (model != null)
+            {
+                using (var transaction = _dataContext.Database.BeginTransaction())
+                {
+                    var item = _dataContext.PSRespiratoryVentilations.Where(p => p.PreScreenId == preScreenId && p.Deleted == false).SingleOrDefault();
+
+                    if (item == null)
+                    {
+                        item = new PSRespiratoryVentilation();
+                        _dataContext.PSRespiratoryVentilations.Add(item);
+                    }
+
+
+                    item.MV = model.MV;
+                    item.MVAW = model.MVAW;
+                    item.IPONIV = model.IPONIV;
+                    item.SA6TPD = model.SA6TPD;
+                    item.BIPAPIPAP = model.BIPAPIPAP;
+                    item.BIPAPIPAPOther = model.BIPAPIPAPOther;
+                    item.CPAP = model.CPAP;
+                    item.CPAPOther = model.CPAPOther;
+                    item.EPAP = model.EPAP;
+                    item.EPAPOther = model.EPAPOther;
+                    item.NIPPV = model.NIPPV;
+
+                    if (item.BIPAPIPAP != "Yes")
+                    {
+                        item.BIPAPIPAPOther = null;
+                    }
+
+                    if (item.CPAP != "Yes")
+                    {
+                        item.CPAPOther = null;
+                    }
+
+                    if (item.EPAP != "Yes")
+                    {
+                        item.EPAPOther = null;
+                    }
+
+                    item.PreScreenId = preScreenId;
+
+
+                    _dataContext.SaveChanges();
+                    transaction.Commit();
+                }
+
+                return Json(new { Status = Constant.RESPONSE_OK, Description = "Pre-screen respiratory ventilation section saved successfully." });
+            }
+
+            return Json(new { Status = Constant.RESPONSE_ERROR, Description = "There was an error in processing the request. Please check the input and try again." });
+        }
+
+        //Frequency mode section
+        public JsonResult PSRespiratoryFrequency(long preScreenId)
+        {
+            var model = new PSRespiratoryFrequencyModel();
+            var item = _dataContext.PSRespiratoryFrequencies.Where(p => p.PreScreenId == preScreenId && p.Deleted == false).SingleOrDefault();
+            if (item != null)
+            {
+
+                model.NU = item.NU;
+                model.PRN = item.PRN;
+                model.OTH = item.OTH;
+                model.OTHText = item.OTHText;
+
+
+
+            }
+
+            return Json(model, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult PSRespiratoryFrequency(long preScreenId, PSRespiratoryFrequencyModel model)
+        {
+            if (model != null)
+            {
+                using (var transaction = _dataContext.Database.BeginTransaction())
+                {
+                    var item = _dataContext.PSRespiratoryFrequencies.Where(p => p.PreScreenId == preScreenId && p.Deleted == false).SingleOrDefault();
+
+                    if (item == null)
+                    {
+                        item = new PSRespiratoryFrequency();
+                        _dataContext.PSRespiratoryFrequencies.Add(item);
+                    }
+
+
+                    item.NU = model.NU;
+                    item.PRN = model.PRN;
+                    item.OTH = model.OTH;
+                    item.OTHText = model.OTHText;
+
+                    if (item.OTH != "Yes")
+                    {
+                        item.OTHText = null;
+                    }
+
+                    item.PreScreenId = preScreenId;
+
+                    _dataContext.SaveChanges();
+                    transaction.Commit();
+                }
+
+                return Json(new { Status = Constant.RESPONSE_OK, Description = "Pre-screen respiratory frequency section saved successfully." });
+            }
+
+            return Json(new { Status = Constant.RESPONSE_ERROR, Description = "There was an error in processing the request. Please check the input and try again." });
+        }
+
+        //Mode2 mode section
+        public JsonResult PSRespiratoryMode2(long preScreenId)
+        {
+            var model = new PSRespiratoryMode2Model();
+            var item = _dataContext.PSRespiratoryModes2.Where(p => p.PreScreenId == preScreenId && p.Deleted == false).SingleOrDefault();
+            if (item != null)
+            {
+
+                model.DPOAU = item.DPOAU;
+                model.ITPOV = item.ITPOV;
+                model.CMV = item.CMV;
+                model.AC = item.AC;
+                model.SIMV = item.SIMV;
+                model.PRVC = item.PRVC;
+                model.OTH1 = item.OTH1;
+                model.OTHText1 = item.OTHText1;
+                model.Rate = item.Rate;
+                model.FIO2 = item.FIO2;
+                model.FIO2G28P = item.FIO2G28P;
+                model.TV = item.TV;
+                model.PEEP = item.PEEP;
+                model.PS = item.PS;
+                model.WA = item.WA;
+                model.WASD = item.WASD == null ? null : item.WASD.Value.ToShortDateString();
+                model.Mode = item.Mode;
+                model.Method = item.Method;
+                model.TOV = item.TOV;
+                model.WC = item.WC;
+                model.CHF = item.CHF;
+                model.IHR = item.IHR;
+                model.DRR = item.DRR;
+                model.DO2S = item.DO2S;
+                model.OTH2 = item.OTH2;
+                model.OTHText2 = item.OTHText2;
+
+
+
+            }
+
+            return Json(model, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult PSRespiratoryMode2(long preScreenId, PSRespiratoryMode2Model model)
+        {
+            if (model != null)
+            {
+                using (var transaction = _dataContext.Database.BeginTransaction())
+                {
+                    var item = _dataContext.PSRespiratoryModes2.Where(p => p.PreScreenId == preScreenId && p.Deleted == false).SingleOrDefault();
+
+                    if (item == null)
+                    {
+                        item = new PSRespiratoryMode2();
+                        _dataContext.PSRespiratoryModes2.Add(item);
+                    }
+
+
+                    item.DPOAU = model.DPOAU;
+
+                    item.ITPOV = model.ITPOV;
+
+                    item.CMV = model.CMV;
+
+                    item.AC = model.AC;
+
+                    item.SIMV = model.SIMV;
+
+                    item.PRVC = model.PRVC;
+
+                    item.OTH1 = model.OTH1;
+
+                    item.OTHText1 = model.OTHText1;
+
+
+
+                    if (item.OTH1 != "Yes")
+                    {
+                        item.OTHText1 = null;
+                    }
+
+                    item.Rate = model.Rate;
+
+                    item.FIO2 = model.FIO2;
+
+                    item.FIO2G28P = model.FIO2G28P;
+
+                    item.TV = model.TV;
+
+                    item.PEEP = model.PEEP;
+
+                    item.PS = model.PS;
+
+                    item.WA = model.WA;
+
+                    DateTime dt;
+                    if (DateTime.TryParse(model.WASD, out dt))
+                    {
+                        item.WASD = dt;
+                    }
+
+
+                    item.Mode = model.Mode;
+
+                    item.Method = model.Method;
+
+                    item.TOV = model.TOV;
+
+                    item.WC = model.WC;
+
+                    item.CHF = model.CHF;
+
+                    item.IHR = model.IHR;
+
+                    item.DRR = model.DRR;
+
+                    item.DO2S = model.DO2S;
+
+                    item.OTH2 = model.OTH2;
+
+                    item.OTHText2 = model.OTHText2;
+
+
+
+                    if (item.OTH2 != "Yes")
+                    {
+                        item.OTHText2 = null;
+                    }
+
+
+
+                    item.PreScreenId = preScreenId;
+
+                    _dataContext.SaveChanges();
+                    transaction.Commit();
+                }
+
+                return Json(new { Status = Constant.RESPONSE_OK, Description = "Pre-screen respiratory mode section saved successfully." });
+            }
+
+            return Json(new { Status = Constant.RESPONSE_ERROR, Description = "There was an error in processing the request. Please check the input and try again." });
+        }
+
+
+
+        //ABG mode section
+        public JsonResult PSRespiratoryABG(long preScreenId)
+        {
+            var model = new PSRespiratoryABGModel();
+            var item = _dataContext.PSRespiratoryABGs.Where(p => p.PreScreenId == preScreenId && p.Deleted == false).SingleOrDefault();
+            if (item != null)
+            {
+
+                model.PH = item.PH;
+                model.PC02 = item.PC02;
+                model.PA02 = item.PA02;
+                model.HC03 = item.HC03;
+                model.BE = item.BE;
+                model.O2SAT = item.O2SAT;
+                model.O2G40 = item.O2G40;
+                model.O2TTMS = item.O2TTMS;
+                model.SA02M = item.SA02M;
+
+
+
+            }
+
+            return Json(model, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult PSRespiratoryABG(long preScreenId, PSRespiratoryABGModel model)
+        {
+            if (model != null)
+            {
+                using (var transaction = _dataContext.Database.BeginTransaction())
+                {
+                    var item = _dataContext.PSRespiratoryABGs.Where(p => p.PreScreenId == preScreenId && p.Deleted == false).SingleOrDefault();
+
+                    if (item == null)
+                    {
+                        item = new PSRespiratoryABG();
+                        _dataContext.PSRespiratoryABGs.Add(item);
+                    }
+
+
+                    item.PH = model.PH;
+
+                    item.PC02 = model.PC02;
+
+                    item.PA02 = model.PA02;
+
+                    item.HC03 = model.HC03;
+
+                    item.BE = model.BE;
+
+                    item.O2SAT = model.O2SAT;
+
+                    item.O2G40 = model.O2G40;
+
+                    item.O2TTMS = model.O2TTMS;
+
+                    item.SA02M = model.SA02M;
+
+
+
+                    item.PreScreenId = preScreenId;
+
+                    _dataContext.SaveChanges();
+                    transaction.Commit();
+                }
+
+                return Json(new { Status = Constant.RESPONSE_OK, Description = "Pre-screen respiratory arterial blood gases section saved successfully." });
+            }
+
+            return Json(new { Status = Constant.RESPONSE_ERROR, Description = "There was an error in processing the request. Please check the input and try again." });
+        }
+
+
+        //Trach mode section
+        public JsonResult PSRespiratoryTrach(long preScreenId)
+        {
+            var model = new PSRespiratoryTrachModel();
+            var item = _dataContext.PSRespiratoryTrachs.Where(p => p.PreScreenId == preScreenId && p.Deleted == false).SingleOrDefault();
+            if (item != null)
+            {
+
+                model.DPHT = item.DPHT;
+                model.Date = item.Date == null ? null : item.Date.Value.ToShortDateString();
+                model.TMSFBO = item.TMSFBO;
+                model.IDIM = item.IDIM;
+                model.COC = item.COC;
+                model.TC = item.TC;
+                model.SV = item.SV;
+                model.TWL2W = item.TWL2W;
+
+
+
+            }
+
+            return Json(model, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult PSRespiratoryTrach(long preScreenId, PSRespiratoryTrachModel model)
+        {
+            if (model != null)
+            {
+                using (var transaction = _dataContext.Database.BeginTransaction())
+                {
+                    var item = _dataContext.PSRespiratoryTrachs.Where(p => p.PreScreenId == preScreenId && p.Deleted == false).SingleOrDefault();
+
+                    if (item == null)
+                    {
+                        item = new PSRespiratoryTrach();
+                        _dataContext.PSRespiratoryTrachs.Add(item);
+                    }
+
+
+                    item.DPHT = model.DPHT;
+
+                    DateTime dt;
+                    if (DateTime.TryParse(model.Date, out dt))
+                    {
+                        item.Date = dt;
+                    }
+
+                    item.TMSFBO = model.TMSFBO;
+
+                    item.IDIM = model.IDIM;
+
+                    item.COC = model.COC;
+
+                    item.TC = model.TC;
+
+                    item.SV = model.SV;
+
+                    item.TWL2W = model.TWL2W;
+
+
+
+                    item.PreScreenId = preScreenId;
+
+                    _dataContext.SaveChanges();
+                    transaction.Commit();
+                }
+
+                return Json(new { Status = Constant.RESPONSE_OK, Description = "Pre-screen respiratory trach section saved successfully." });
+            }
+
+            return Json(new { Status = Constant.RESPONSE_ERROR, Description = "There was an error in processing the request. Please check the input and try again." });
+        }
+
+
+
+
+        //ETTube mode section
+        public JsonResult PSRespiratoryETTube(long preScreenId)
+        {
+            var model = new PSRespiratoryETTubeModel();
+            var item = _dataContext.PSRespiratoryETTubes.Where(p => p.PreScreenId == preScreenId && p.Deleted == false).SingleOrDefault();
+            if (item != null)
+            {
+
+                model.DPHET = item.DPHET;
+                model.Date = item.Date == null ? null : item.Date.Value.ToShortDateString();
+                model.Size = item.Size;
+                model.Length = item.Length;
+                model.LAL = item.LAL;
+                model.DE = item.DE == null ? null : item.DE.Value.ToShortDateString();
+
+
+
+            }
+
+            return Json(model, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult PSRespiratoryETTube(long preScreenId, PSRespiratoryETTubeModel model)
+        {
+            if (model != null)
+            {
+                using (var transaction = _dataContext.Database.BeginTransaction())
+                {
+                    var item = _dataContext.PSRespiratoryETTubes.Where(p => p.PreScreenId == preScreenId && p.Deleted == false).SingleOrDefault();
+
+                    if (item == null)
+                    {
+                        item = new PSRespiratoryETTube();
+                        _dataContext.PSRespiratoryETTubes.Add(item);
+                    }
+
+
+                    item.DPHET = model.DPHET;
+
+                    DateTime dt;
+
+                    if (DateTime.TryParse(model.Date, out dt))
+                    {
+                        item.Date = dt;
+                    }
+
+
+                    item.Size = model.Size;
+
+                    item.Length = model.Length;
+
+                    item.LAL = model.LAL;
+
+                    if (DateTime.TryParse(model.DE, out dt))
+                    {
+                        item.DE = dt;
+                    }
+
+
+
+
+
+                    item.PreScreenId = preScreenId;
+
+                    _dataContext.SaveChanges();
+                    transaction.Commit();
+                }
+
+                return Json(new { Status = Constant.RESPONSE_OK, Description = "Pre-screen respiratory ET tube section saved successfully." });
+            }
+
+            return Json(new { Status = Constant.RESPONSE_ERROR, Description = "There was an error in processing the request. Please check the input and try again." });
+        }
+
+
+        //ChestTube mode section
+        public JsonResult PSRespiratoryChestTube(long preScreenId)
+        {
+            var model = new PSRespiratoryChestTubeModel();
+            var item = _dataContext.PSRespiratoryChestTubes.Where(p => p.PreScreenId == preScreenId && p.Deleted == false).SingleOrDefault();
+            if (item != null)
+            {
+
+                model.DPHCT = item.DPHCT;
+                model.LL = item.LL;
+                model.LLType = item.LLType;
+                model.LL24HR = item.LL24HR;
+                model.LLSeal = item.LLSeal;
+                model.LLAL = item.LLAL;
+                model.RL = item.RL;
+                model.RLType = item.RLType;
+                model.RL24HR = item.RL24HR;
+                model.RLSeal = item.RLSeal;
+                model.RLAL = item.RLAL;
+
+
+
+            }
+
+            return Json(model, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult PSRespiratoryChestTube(long preScreenId, PSRespiratoryChestTubeModel model)
+        {
+            if (model != null)
+            {
+                using (var transaction = _dataContext.Database.BeginTransaction())
+                {
+                    var item = _dataContext.PSRespiratoryChestTubes.Where(p => p.PreScreenId == preScreenId && p.Deleted == false).SingleOrDefault();
+
+                    if (item == null)
+                    {
+                        item = new PSRespiratoryChestTube();
+                        _dataContext.PSRespiratoryChestTubes.Add(item);
+                    }
+
+
+                    item.DPHCT = model.DPHCT;
+
+                    item.LL = model.LL;
+
+                    item.LLType = model.LLType;
+
+                    item.LL24HR = model.LL24HR;
+
+                    item.LLSeal = model.LLSeal;
+
+                    item.LLAL = model.LLAL;
+
+                    item.RL = model.RL;
+
+                    item.RLType = model.RLType;
+
+                    item.RL24HR = model.RL24HR;
+
+                    item.RLSeal = model.RLSeal;
+
+                    item.RLAL = model.RLAL;
+
+                    if (!model.LL)
+                    {
+                        item.LLType = null;
+
+                        item.LL24HR = null;
+
+                        item.LLSeal = null;
+
+                        item.LLAL = null;
+                    }
+
+                    if (!model.RL)
+                    {
+                        item.RLType = null;
+
+                        item.RL24HR = null;
+
+                        item.RLSeal = null;
+
+                        item.RLAL = null;
+                    }
+
+
+                    item.PreScreenId = preScreenId;
+
+                    _dataContext.SaveChanges();
+                    transaction.Commit();
+                }
+
+                return Json(new { Status = Constant.RESPONSE_OK, Description = "Pre-screen respiratory chest tube section saved successfully." });
+            }
+
+            return Json(new { Status = Constant.RESPONSE_ERROR, Description = "There was an error in processing the request. Please check the input and try again." });
+        }
+
+        //PTOTSummary mode section
+        public JsonResult PSFunctionPTOTSummary(long preScreenId)
+        {
+            var model = new PSFunctionPTOTSummaryModel();
+            var item = _dataContext.PSFunctionPTOTSummaries.Where(p => p.PreScreenId == preScreenId && p.Deleted == false).SingleOrDefault();
+            if (item != null)
+            {
+
+                model.AD = item.AD;
+                model.PTOTS = item.PTOTS;
+                model.PLOF = item.PLOF;
+                model.TS = item.TS;
+                model.WBS = item.WBS;
+                model.MT1H = item.MT1H;
+                model.MO3H = item.MO3H;
+
+
+
+            }
+
+            return Json(model, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult PSFunctionPTOTSummary(long preScreenId, PSFunctionPTOTSummaryModel model)
+        {
+            if (model != null)
+            {
+                using (var transaction = _dataContext.Database.BeginTransaction())
+                {
+                    var item = _dataContext.PSFunctionPTOTSummaries.Where(p => p.PreScreenId == preScreenId && p.Deleted == false).SingleOrDefault();
+
+                    if (item == null)
+                    {
+                        item = new PSFunctionPTOTSummary();
+                        _dataContext.PSFunctionPTOTSummaries.Add(item);
+                    }
+
+
+                    item.AD = model.AD;
+
+                    item.PTOTS = model.PTOTS;
+
+                    item.PLOF = model.PLOF;
+
+                    item.TS = model.TS;
+
+                    item.WBS = model.WBS;
+
+                    item.MT1H = model.MT1H;
+
+                    item.MO3H = model.MO3H;
+
+
+
+                    item.PreScreenId = preScreenId;
+
+                    _dataContext.SaveChanges();
+                    transaction.Commit();
+                }
+
+                return Json(new { Status = Constant.RESPONSE_OK, Description = "Pre-screen function PT/OT summary section saved successfully." });
+            }
+
+            return Json(new { Status = Constant.RESPONSE_ERROR, Description = "There was an error in processing the request. Please check the input and try again." });
+        }
+
+        //Motor mode section
+        public JsonResult PSFunctionMotor(long preScreenId)
+        {
+            var model = new PSFunctionMotorModel();
+            var item = _dataContext.PSFunctionMotors.Where(p => p.PreScreenId == preScreenId && p.Deleted == false).SingleOrDefault();
+            if (item != null)
+            {
+
+                model.FC = item.FC;
+                model.SM = item.SM;
+                model.WFP = item.WFP;
+                model.PST = item.PST;
+
+
+
+            }
+
+            return Json(model, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult PSFunctionMotor(long preScreenId, PSFunctionMotorModel model)
+        {
+            if (model != null)
+            {
+                using (var transaction = _dataContext.Database.BeginTransaction())
+                {
+                    var item = _dataContext.PSFunctionMotors.Where(p => p.PreScreenId == preScreenId && p.Deleted == false).SingleOrDefault();
+
+                    if (item == null)
+                    {
+                        item = new PSFunctionMotor();
+                        _dataContext.PSFunctionMotors.Add(item);
+                    }
+
+
+                    item.FC = model.FC;
+
+                    item.SM = model.SM;
+
+                    item.WFP = model.WFP;
+
+                    item.PST = model.PST;
+
+
+
+                    item.PreScreenId = preScreenId;
+
+                    _dataContext.SaveChanges();
+                    transaction.Commit();
+                }
+
+                return Json(new { Status = Constant.RESPONSE_OK, Description = "Pre-screen function motor section saved successfully." });
+            }
+
+            return Json(new { Status = Constant.RESPONSE_ERROR, Description = "There was an error in processing the request. Please check the input and try again." });
+        }
+
+
+        //Verbal mode section
+        public JsonResult PSFunctionVerbal(long preScreenId)
+        {
+            var model = new PSFunctionVerbalModel();
+            var item = _dataContext.PSFunctionVerbals.Where(p => p.PreScreenId == preScreenId && p.Deleted == false).SingleOrDefault();
+            if (item != null)
+            {
+
+                model.APP = item.APP;
+                model.IAPP = item.IAPP;
+                model.Words = item.Words;
+                model.Sounds = item.Sounds;
+                model.NV = item.NV;
+                model.Aphasia = item.Aphasia;
+                model.POI = item.POI;
+                model.COF = item.COF;
+
+
+
+            }
+
+            return Json(model, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult PSFunctionVerbal(long preScreenId, PSFunctionVerbalModel model)
+        {
+            if (model != null)
+            {
+                using (var transaction = _dataContext.Database.BeginTransaction())
+                {
+                    var item = _dataContext.PSFunctionVerbals.Where(p => p.PreScreenId == preScreenId && p.Deleted == false).SingleOrDefault();
+
+                    if (item == null)
+                    {
+                        item = new PSFunctionVerbal();
+                        _dataContext.PSFunctionVerbals.Add(item);
+                    }
+
+
+                    item.APP = model.APP;
+
+                    item.IAPP = model.IAPP;
+
+                    item.Words = model.Words;
+
+                    item.Sounds = model.Sounds;
+
+                    item.NV = model.NV;
+
+                    item.Aphasia = model.Aphasia;
+
+                    item.POI = model.POI;
+
+                    item.COF = model.COF;
+
+
+
+                    item.PreScreenId = preScreenId;
+
+                    _dataContext.SaveChanges();
+                    transaction.Commit();
+                }
+
+                return Json(new { Status = Constant.RESPONSE_OK, Description = "Pre-screen function verbal section saved successfully." });
+            }
+
+            return Json(new { Status = Constant.RESPONSE_ERROR, Description = "There was an error in processing the request. Please check the input and try again." });
+        }
+
+        //Safety mode section
+        public JsonResult PSFunctionSafety(long preScreenId)
+        {
+            var model = new PSFunctionSafetyModel();
+            var item = _dataContext.PSFunctionSafetys.Where(p => p.PreScreenId == preScreenId && p.Deleted == false).SingleOrDefault();
+            if (item != null)
+            {
+
+                model.SR = item.SR;
+                model.FR = item.FR;
+                model.BA = item.BA;
+                model.FH = item.FH;
+                model.OSI = item.OSI;
+                model.N11 = item.N11;
+                model.N11I = item.N11I == null ? null : item.N11I.Value.ToShortDateString();
+                model.N11D = item.N11D == null ? null : item.N11D.Value.ToShortDateString();
+
+
+
+            }
+
+            return Json(model, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult PSFunctionSafety(long preScreenId, PSFunctionSafetyModel model)
+        {
+            if (model != null)
+            {
+                using (var transaction = _dataContext.Database.BeginTransaction())
+                {
+                    var item = _dataContext.PSFunctionSafetys.Where(p => p.PreScreenId == preScreenId && p.Deleted == false).SingleOrDefault();
+
+                    if (item == null)
+                    {
+                        item = new PSFunctionSafety();
+                        _dataContext.PSFunctionSafetys.Add(item);
+                    }
+
+
+                    item.SR = model.SR;
+
+                    item.FR = model.FR;
+
+                    item.BA = model.BA;
+
+                    item.FH = model.FH;
+
+                    item.OSI = model.OSI;
+
+                    item.N11 = model.N11;
+
+                    DateTime dt;
+                    if (DateTime.TryParse(model.N11I, out dt))
+                    {
+                        item.N11I = dt;
+                    }
+                    if (DateTime.TryParse(model.N11D, out dt))
+                    {
+                        item.N11D = dt;
+                    }
+
+                    item.PreScreenId = preScreenId;
+
+                    _dataContext.SaveChanges();
+                    transaction.Commit();
+                }
+
+                return Json(new { Status = Constant.RESPONSE_OK, Description = "Pre-screen function safety section saved successfully." });
+            }
+
+            return Json(new { Status = Constant.RESPONSE_ERROR, Description = "There was an error in processing the request. Please check the input and try again." });
+        }
+
+        //Restraint mode section
+        public JsonResult PSFunctionRestraint(long preScreenId)
+        {
+            var model = new PSFunctionRestraintModel();
+            var item = _dataContext.PSFunctionRestraints.Where(p => p.PreScreenId == preScreenId && p.Deleted == false).SingleOrDefault();
+            if (item != null)
+            {
+
+                model.Type = item.Type;
+                model.Reason = item.Reason;
+
+
+
+            }
+
+            return Json(model, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult PSFunctionRestraint(long preScreenId, PSFunctionRestraintModel model)
+        {
+            if (model != null)
+            {
+                using (var transaction = _dataContext.Database.BeginTransaction())
+                {
+                    var item = _dataContext.PSFunctionRestraints.Where(p => p.PreScreenId == preScreenId && p.Deleted == false).SingleOrDefault();
+
+                    if (item == null)
+                    {
+                        item = new PSFunctionRestraint();
+                        _dataContext.PSFunctionRestraints.Add(item);
+                    }
+
+
+                    item.Type = model.Type;
+
+                    item.Reason = model.Reason;
+
+
+
+                    item.PreScreenId = preScreenId;
+
+                    _dataContext.SaveChanges();
+                    transaction.Commit();
+                }
+
+                return Json(new { Status = Constant.RESPONSE_OK, Description = "Pre-screen function restraint section saved successfully." });
+            }
+
+            return Json(new { Status = Constant.RESPONSE_ERROR, Description = "There was an error in processing the request. Please check the input and try again." });
+        }
+
+
+        //SpecialEquipment mode section
+        public JsonResult PSFunctionSpecialEquipment(long preScreenId)
+        {
+            var model = new PSFunctionSpecialEquipmentModel();
+            var item = _dataContext.PSFunctionSpecialEquipments.Where(p => p.PreScreenId == preScreenId && p.Deleted == false).SingleOrDefault();
+            if (item != null)
+            {
+
+                model.Vent = item.Vent;
+                model.HBO = item.HBO;
+                model.TEL = item.TEL;
+                model.WV = item.WV;
+                model.PCA = item.PCA;
+                model.BIPCP = item.BIPCP;
+                model.BC = item.BC;
+                model.SB = item.SB;
+                model.SMB = item.SMB;
+                model.Trapeze = item.Trapeze;
+                model.IVP = item.IVP;
+                model.SW = item.SW;
+                model.HL = item.HL;
+                model.OTH = item.OTH;
+                model.OTHText = item.OTHText;
+
+
+
+            }
+
+            return Json(model, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult PSFunctionSpecialEquipment(long preScreenId, PSFunctionSpecialEquipmentModel model)
+        {
+            if (model != null)
+            {
+                using (var transaction = _dataContext.Database.BeginTransaction())
+                {
+                    var item = _dataContext.PSFunctionSpecialEquipments.Where(p => p.PreScreenId == preScreenId && p.Deleted == false).SingleOrDefault();
+
+                    if (item == null)
+                    {
+                        item = new PSFunctionSpecialEquipment();
+                        _dataContext.PSFunctionSpecialEquipments.Add(item);
+                    }
+
+
+                    item.Vent = model.Vent;
+
+                    item.HBO = model.HBO;
+
+                    item.TEL = model.TEL;
+
+                    item.WV = model.WV;
+
+                    item.PCA = model.PCA;
+
+                    item.BIPCP = model.BIPCP;
+
+                    item.BC = model.BC;
+
+                    item.SB = model.SB;
+
+                    item.SMB = model.SMB;
+
+                    item.Trapeze = model.Trapeze;
+
+                    item.IVP = model.IVP;
+
+                    item.SW = model.SW;
+
+                    item.HL = model.HL;
+
+                    item.OTH = model.OTH;
+
+                    item.OTHText = model.OTHText;
+
+
+
+                    if (item.OTH != "Yes")
+                    {
+                        item.OTHText = null;
+                    }
+
+
+
+                    item.PreScreenId = preScreenId;
+
+                    _dataContext.SaveChanges();
+                    transaction.Commit();
+                }
+
+                return Json(new { Status = Constant.RESPONSE_OK, Description = "Pre-screen function special equipment section saved successfully." });
+            }
+
+            return Json(new { Status = Constant.RESPONSE_ERROR, Description = "There was an error in processing the request. Please check the input and try again." });
+        }
+
+        //SPI mode section
+        public JsonResult PSSystemSPI(long preScreenId)
+        {
+            var model = new PSSystemSPIModel();
+            var item = _dataContext.PSSystemSPIs.Where(p => p.PreScreenId == preScreenId && p.Deleted == false).SingleOrDefault();
+            if (item != null)
+            {
+
+                model.ASP = item.ASP;
+                model.NP = item.NP;
+                model.Seizures = item.Seizures;
+                model.CI = item.CI;
+                model.OTH = item.OTH;
+                model.OTHText = item.OTHText;
+
+
+
+            }
+
+            return Json(model, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult PSSystemSPI(long preScreenId, PSSystemSPIModel model)
+        {
+            if (model != null)
+            {
+                using (var transaction = _dataContext.Database.BeginTransaction())
+                {
+                    var item = _dataContext.PSSystemSPIs.Where(p => p.PreScreenId == preScreenId && p.Deleted == false).SingleOrDefault();
+
+                    if (item == null)
+                    {
+                        item = new PSSystemSPI();
+                        _dataContext.PSSystemSPIs.Add(item);
+                    }
+
+
+                    item.ASP = model.ASP;
+
+                    item.NP = model.NP;
+
+                    item.Seizures = model.Seizures;
+
+                    item.CI = model.CI;
+
+                    item.OTH = model.OTH;
+
+                    item.OTHText = model.OTHText;
+
+
+
+                    if (item.OTH != "Yes")
+                    {
+                        item.OTHText = null;
+                    }
+
+
+
+                    item.PreScreenId = preScreenId;
+
+                    _dataContext.SaveChanges();
+                    transaction.Commit();
+                }
+
+                return Json(new { Status = Constant.RESPONSE_OK, Description = "Pre-screen system special precautions/ isolation section saved successfully." });
+            }
+
+            return Json(new { Status = Constant.RESPONSE_ERROR, Description = "There was an error in processing the request. Please check the input and try again." });
+        }
+
+
+        //Allergy mode section
+        public JsonResult PSSystemAllergy(long preScreenId)
+        {
+            var model = new PSSystemAllergyModel();
+            var item = _dataContext.PSSystemAllergies.Where(p => p.PreScreenId == preScreenId && p.Deleted == false).SingleOrDefault();
+            if (item != null)
+            {
+
+                model.NKA = item.NKA;
+                model.AU = item.AU;
+                model.DTA = item.DTA;
+                model.NGA = item.NGA;
+                model.DA = item.DA;
+
+
+
+            }
+
+            return Json(model, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult PSSystemAllergy(long preScreenId, PSSystemAllergyModel model)
+        {
+            if (model != null)
+            {
+                using (var transaction = _dataContext.Database.BeginTransaction())
+                {
+                    var item = _dataContext.PSSystemAllergies.Where(p => p.PreScreenId == preScreenId && p.Deleted == false).SingleOrDefault();
+
+                    if (item == null)
+                    {
+                        item = new PSSystemAllergy();
+                        _dataContext.PSSystemAllergies.Add(item);
+                    }
+
+
+                    item.NKA = model.NKA;
+
+                    item.AU = model.AU;
+
+                    item.DTA = model.DTA;
+
+                    item.NGA = model.NGA;
+
+                    item.DA = model.DA;
+
+
+
+                    item.PreScreenId = preScreenId;
+
+                    _dataContext.SaveChanges();
+                    transaction.Commit();
+                }
+
+                return Json(new { Status = Constant.RESPONSE_OK, Description = "Pre-screen system allergies section saved successfully." });
+            }
+
+            return Json(new { Status = Constant.RESPONSE_ERROR, Description = "There was an error in processing the request. Please check the input and try again." });
+        }
+
+
+        //NeuroAssessment mode section
+        public JsonResult PSSystemNeuroAssessment(long preScreenId)
+        {
+            var model = new PSSystemNeuroAssessmentModel();
+            var item = _dataContext.PSSystemNeuroAssessments.Where(p => p.PreScreenId == preScreenId && p.Deleted == false).SingleOrDefault();
+            if (item != null)
+            {
+
+                model.MSA = item.MSA;
+                model.NA = item.NA;
+                model.BS = item.BS;
+
+
+
+            }
+
+            return Json(model, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult PSSystemNeuroAssessment(long preScreenId, PSSystemNeuroAssessmentModel model)
+        {
+            if (model != null)
+            {
+                using (var transaction = _dataContext.Database.BeginTransaction())
+                {
+                    var item = _dataContext.PSSystemNeuroAssessments.Where(p => p.PreScreenId == preScreenId && p.Deleted == false).SingleOrDefault();
+
+                    if (item == null)
+                    {
+                        item = new PSSystemNeuroAssessment();
+                        _dataContext.PSSystemNeuroAssessments.Add(item);
+                    }
+
+
+                    item.MSA = model.MSA;
+
+                    item.NA = model.NA;
+
+                    item.BS = model.BS;
+
+
+
+                    item.PreScreenId = preScreenId;
+
+                    _dataContext.SaveChanges();
+                    transaction.Commit();
+                }
+
+                return Json(new { Status = Constant.RESPONSE_OK, Description = "Pre-screen system nero assessment section saved successfully." });
+            }
+
+            return Json(new { Status = Constant.RESPONSE_ERROR, Description = "There was an error in processing the request. Please check the input and try again." });
+        }
+
+
+        //Cognitive mode section
+        public JsonResult PSSystemCognitive(long preScreenId)
+        {
+            var model = new PSSystemCognitiveModel();
+            var item = _dataContext.PSSystemCognitives.Where(p => p.PreScreenId == preScreenId && p.Deleted == false).SingleOrDefault();
+            if (item != null)
+            {
+
+                model.ALT = item.ALT;
+                model.Combative = item.Combative;
+                model.Confused = item.Confused;
+                model.Lethargic = item.Lethargic;
+                model.Nonresponsive = item.Nonresponsive;
+                model.STMD = item.STMD;
+                model.VC = item.VC;
+
+
+
+            }
+
+            return Json(model, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult PSSystemCognitive(long preScreenId, PSSystemCognitiveModel model)
+        {
+            if (model != null)
+            {
+                using (var transaction = _dataContext.Database.BeginTransaction())
+                {
+                    var item = _dataContext.PSSystemCognitives.Where(p => p.PreScreenId == preScreenId && p.Deleted == false).SingleOrDefault();
+
+                    if (item == null)
+                    {
+                        item = new PSSystemCognitive();
+                        _dataContext.PSSystemCognitives.Add(item);
+                    }
+
+
+                    item.ALT = model.ALT;
+
+                    item.Combative = model.Combative;
+
+                    item.Confused = model.Confused;
+
+                    item.Lethargic = model.Lethargic;
+
+                    item.Nonresponsive = model.Nonresponsive;
+
+                    item.STMD = model.STMD;
+
+                    item.VC = model.VC;
+
+
+
+                    item.PreScreenId = preScreenId;
+
+                    _dataContext.SaveChanges();
+                    transaction.Commit();
+                }
+
+                return Json(new { Status = Constant.RESPONSE_OK, Description = "Pre-screen system cognitive section saved successfully." });
+            }
+
+            return Json(new { Status = Constant.RESPONSE_ERROR, Description = "There was an error in processing the request. Please check the input and try again." });
+        }
+
+        //Vision mode section
+        public JsonResult PSSystemVision(long preScreenId)
+        {
+            var model = new PSSystemVisionModel();
+            var item = _dataContext.PSSystemVisions.Where(p => p.PreScreenId == preScreenId && p.Deleted == false).SingleOrDefault();
+            if (item != null)
+            {
+
+                model.VC = item.VC;
+                model.Glasses = item.Glasses;
+                model.Contacts = item.Contacts;
+                model.OTHText = item.OTHText;
+
+
+
+            }
+
+            return Json(model, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult PSSystemVision(long preScreenId, PSSystemVisionModel model)
+        {
+            if (model != null)
+            {
+                using (var transaction = _dataContext.Database.BeginTransaction())
+                {
+                    var item = _dataContext.PSSystemVisions.Where(p => p.PreScreenId == preScreenId && p.Deleted == false).SingleOrDefault();
+
+                    if (item == null)
+                    {
+                        item = new PSSystemVision();
+                        _dataContext.PSSystemVisions.Add(item);
+                    }
+
+
+                    item.VC = model.VC;
+
+                    item.Glasses = model.Glasses;
+
+                    item.Contacts = model.Contacts;
+
+                    item.OTHText = model.OTHText;
+
+
+
+                    item.PreScreenId = preScreenId;
+
+                    _dataContext.SaveChanges();
+                    transaction.Commit();
+                }
+
+                return Json(new { Status = Constant.RESPONSE_OK, Description = "Pre-screen system vision section saved successfully." });
+            }
+
+            return Json(new { Status = Constant.RESPONSE_ERROR, Description = "There was an error in processing the request. Please check the input and try again." });
+        }
+
+
+        //HearingAid mode section
+        public JsonResult PSSystemHearingAid(long preScreenId)
+        {
+            var model = new PSSystemHearingAidModel();
+            var item = _dataContext.PSSystemHearingAids.Where(p => p.PreScreenId == preScreenId && p.Deleted == false).SingleOrDefault();
+            if (item != null)
+            {
+
+                model.HA = item.HA;
+
+
+
+            }
+
+            return Json(model, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult PSSystemHearingAid(long preScreenId, PSSystemHearingAidModel model)
+        {
+            if (model != null)
+            {
+                using (var transaction = _dataContext.Database.BeginTransaction())
+                {
+                    var item = _dataContext.PSSystemHearingAids.Where(p => p.PreScreenId == preScreenId && p.Deleted == false).SingleOrDefault();
+
+                    if (item == null)
+                    {
+                        item = new PSSystemHearingAid();
+                        _dataContext.PSSystemHearingAids.Add(item);
+                    }
+
+
+                    item.HA = model.HA;
+
+
+
+                    item.PreScreenId = preScreenId;
+
+                    _dataContext.SaveChanges();
+                    transaction.Commit();
+                }
+
+                return Json(new { Status = Constant.RESPONSE_OK, Description = "Pre-screen system hearing section saved successfully." });
+            }
+
+            return Json(new { Status = Constant.RESPONSE_ERROR, Description = "There was an error in processing the request. Please check the input and try again." });
+        }
+
+
+        //Cardiovascular mode section
+        public JsonResult PSSystemCardiovascular(long preScreenId)
+        {
+            var model = new PSSystemCardiovascularModel();
+            var item = _dataContext.PSSystemCardiovasculars.Where(p => p.PreScreenId == preScreenId && p.Deleted == false).SingleOrDefault();
+            if (item != null)
+            {
+
+                model.ORT = item.ORT;
+                model.CP = item.CP;
+                model.DOE = item.DOE;
+                model.Edema = item.Edema;
+                model.Palpitation = item.Palpitation;
+                model.Arrhythmia = item.Arrhythmia;
+                model.Pacemaker = item.Pacemaker;
+                model.Telemetry = item.Telemetry;
+                model.Rhythm = item.Rhythm;
+                model.MAMOP = item.MAMOP;
+                model.IOATD = item.IOATD;
+                model.Echo = item.Echo;
+                model.EchoDate = item.EchoDate == null ? null : item.EchoDate.Value.ToShortDateString();
+                model.EFP = item.EFP;
+                model.LVAD = item.LVAD;
+
+
+
+            }
+
+            return Json(model, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult PSSystemCardiovascular(long preScreenId, PSSystemCardiovascularModel model)
+        {
+            if (model != null)
+            {
+                using (var transaction = _dataContext.Database.BeginTransaction())
+                {
+                    var item = _dataContext.PSSystemCardiovasculars.Where(p => p.PreScreenId == preScreenId && p.Deleted == false).SingleOrDefault();
+
+                    if (item == null)
+                    {
+                        item = new PSSystemCardiovascular();
+                        _dataContext.PSSystemCardiovasculars.Add(item);
+                    }
+
+
+                    item.ORT = model.ORT;
+
+                    item.CP = model.CP;
+
+                    item.DOE = model.DOE;
+
+                    item.Edema = model.Edema;
+
+                    item.Palpitation = model.Palpitation;
+
+                    item.Arrhythmia = model.Arrhythmia;
+
+                    item.Pacemaker = model.Pacemaker;
+
+                    item.Telemetry = model.Telemetry;
+
+                    item.Rhythm = model.Rhythm;
+
+                    item.MAMOP = model.MAMOP;
+
+                    item.IOATD = model.IOATD;
+
+                    item.Echo = model.Echo;
+
+                    DateTime dt;
+                    if (DateTime.TryParse(model.EchoDate, out dt))
+                    {
+                        item.EchoDate = dt;
+                    }
+
+
+
+                    item.EFP = model.EFP;
+
+                    item.LVAD = model.LVAD;
+
+
+
+                    item.PreScreenId = preScreenId;
+
+                    _dataContext.SaveChanges();
+                    transaction.Commit();
+                }
+
+                return Json(new { Status = Constant.RESPONSE_OK, Description = "Pre-screen system cardiovascular section saved successfully." });
+            }
+
+            return Json(new { Status = Constant.RESPONSE_ERROR, Description = "There was an error in processing the request. Please check the input and try again." });
+        }
+
+
+        //Gastrointestinal mode section
+        public JsonResult PSSystemGastrointestinal(long preScreenId)
+        {
+            var model = new PSSystemGastrointestinalModel();
+            var item = _dataContext.PSSystemGastrointestinals.Where(p => p.PreScreenId == preScreenId && p.Deleted == false).SingleOrDefault();
+            if (item != null)
+            {
+
+                model.Nausea = item.Nausea;
+                model.Vomitting = item.Vomitting;
+                model.Diarrhea = item.Diarrhea;
+                model.GIS = item.GIS;
+                model.OTH = item.OTH;
+                model.OTHText = item.OTHText;
+
+
+
+            }
+
+            return Json(model, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult PSSystemGastrointestinal(long preScreenId, PSSystemGastrointestinalModel model)
+        {
+            if (model != null)
+            {
+                using (var transaction = _dataContext.Database.BeginTransaction())
+                {
+                    var item = _dataContext.PSSystemGastrointestinals.Where(p => p.PreScreenId == preScreenId && p.Deleted == false).SingleOrDefault();
+
+                    if (item == null)
+                    {
+                        item = new PSSystemGastrointestinal();
+                        _dataContext.PSSystemGastrointestinals.Add(item);
+                    }
+
+
+                    item.Nausea = model.Nausea;
+
+                    item.Vomitting = model.Vomitting;
+
+                    item.Diarrhea = model.Diarrhea;
+
+                    item.GIS = model.GIS;
+
+                    item.OTH = model.OTH;
+
+                    item.OTHText = model.OTHText;
+
+
+
+                    if (item.OTH != "Yes")
+                    {
+                        item.OTHText = null;
+                    }
+
+
+
+                    item.PreScreenId = preScreenId;
+
+                    _dataContext.SaveChanges();
+                    transaction.Commit();
+                }
+
+                return Json(new { Status = Constant.RESPONSE_OK, Description = "Pre-screen system gastrointestinal section saved successfully." });
+            }
+
+            return Json(new { Status = Constant.RESPONSE_ERROR, Description = "There was an error in processing the request. Please check the input and try again." });
+        }
+
+        //Musculoskeletal mode section
+        public JsonResult PSSystemMusculoskeletal(long preScreenId)
+        {
+            var model = new PSSystemMusculoskeletalModel();
+            var item = _dataContext.PSSystemMusculoskeletals.Where(p => p.PreScreenId == preScreenId && p.Deleted == false).SingleOrDefault();
+            if (item != null)
+            {
+
+                model.WNL = item.WNL;
+                model.NWB = item.NWB;
+                model.PWB = item.PWB;
+                model.FWB = item.FWB;
+                model.AD = item.AD;
+                model.OTH = item.OTH;
+
+
+
+            }
+
+            return Json(model, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult PSSystemMusculoskeletal(long preScreenId, PSSystemMusculoskeletalModel model)
+        {
+            if (model != null)
+            {
+                using (var transaction = _dataContext.Database.BeginTransaction())
+                {
+                    var item = _dataContext.PSSystemMusculoskeletals.Where(p => p.PreScreenId == preScreenId && p.Deleted == false).SingleOrDefault();
+
+                    if (item == null)
+                    {
+                        item = new PSSystemMusculoskeletal();
+                        _dataContext.PSSystemMusculoskeletals.Add(item);
+                    }
+
+
+                    item.WNL = model.WNL;
+
+                    item.NWB = model.NWB;
+
+                    item.PWB = model.PWB;
+
+                    item.FWB = model.FWB;
+
+                    item.AD = model.AD;
+
+                    item.OTH = model.OTH;
+
+
+
+                    item.PreScreenId = preScreenId;
+
+                    _dataContext.SaveChanges();
+                    transaction.Commit();
+                }
+
+                return Json(new { Status = Constant.RESPONSE_OK, Description = "Pre-screen system musculoskeletal section saved successfully." });
+            }
+
+            return Json(new { Status = Constant.RESPONSE_ERROR, Description = "There was an error in processing the request. Please check the input and try again." });
+        }
+
+
+
+
+        //Skin mode section
+        public JsonResult PSSystemSkin(long preScreenId)
+        {
+            var model = new PSSystemSkinModel();
+            var item = _dataContext.PSSystemSkins.Where(p => p.PreScreenId == preScreenId && p.Deleted == false).SingleOrDefault();
+            if (item != null)
+            {
+
+                model.Rash = item.Rash;
+                model.WNL = item.WNL;
+                model.Bruising = item.Bruising;
+                model.Cellulitis = item.Cellulitis;
+                model.OTH = item.OTH;
+
+
+
+            }
+
+            return Json(model, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult PSSystemSkin(long preScreenId, PSSystemSkinModel model)
+        {
+            if (model != null)
+            {
+                using (var transaction = _dataContext.Database.BeginTransaction())
+                {
+                    var item = _dataContext.PSSystemSkins.Where(p => p.PreScreenId == preScreenId && p.Deleted == false).SingleOrDefault();
+
+                    if (item == null)
+                    {
+                        item = new PSSystemSkin();
+                        _dataContext.PSSystemSkins.Add(item);
+                    }
+
+
+                    item.Rash = model.Rash;
+
+                    item.WNL = model.WNL;
+
+                    item.Bruising = model.Bruising;
+
+                    item.Cellulitis = model.Cellulitis;
+
+                    item.OTH = model.OTH;
+
+
+
+                    item.PreScreenId = preScreenId;
+
+                    _dataContext.SaveChanges();
+                    transaction.Commit();
+                }
+
+                return Json(new { Status = Constant.RESPONSE_OK, Description = "Pre-screen system skin section saved successfully." });
+            }
+
+            return Json(new { Status = Constant.RESPONSE_ERROR, Description = "There was an error in processing the request. Please check the input and try again." });
+        }
+
+        //Endocrine mode section
+        public JsonResult PSSystemEndocrine(long preScreenId)
+        {
+            var model = new PSSystemEndocrineModel();
+            var item = _dataContext.PSSystemEndocrines.Where(p => p.PreScreenId == preScreenId && p.Deleted == false).SingleOrDefault();
+            if (item != null)
+            {
+
+                model.Diabetes = item.Diabetes;
+                model.Hypothyroid = item.Hypothyroid;
+                model.Hyperthyroid = item.Hyperthyroid;
+
+
+
+            }
+
+            return Json(model, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult PSSystemEndocrine(long preScreenId, PSSystemEndocrineModel model)
+        {
+            if (model != null)
+            {
+                using (var transaction = _dataContext.Database.BeginTransaction())
+                {
+                    var item = _dataContext.PSSystemEndocrines.Where(p => p.PreScreenId == preScreenId && p.Deleted == false).SingleOrDefault();
+
+                    if (item == null)
+                    {
+                        item = new PSSystemEndocrine();
+                        _dataContext.PSSystemEndocrines.Add(item);
+                    }
+
+
+                    item.Diabetes = model.Diabetes;
+
+                    item.Hypothyroid = model.Hypothyroid;
+
+                    item.Hyperthyroid = model.Hyperthyroid;
+
+
+
+                    item.PreScreenId = preScreenId;
+
+                    _dataContext.SaveChanges();
+                    transaction.Commit();
+                }
+
+                return Json(new { Status = Constant.RESPONSE_OK, Description = "Pre-screen system endocrine section saved successfully." });
+            }
+
+            return Json(new { Status = Constant.RESPONSE_ERROR, Description = "There was an error in processing the request. Please check the input and try again." });
+        }
+
+        //RenalFunction mode section
+        public JsonResult PSSystemRenalFunction(long preScreenId)
+        {
+            var model = new PSSystemRenalFunctionModel();
+            var item = _dataContext.PSSystemRenalFunctions.Where(p => p.PreScreenId == preScreenId && p.Deleted == false).SingleOrDefault();
+            if (item != null)
+            {
+
+                model.CRI = item.CRI;
+                model.ARF = item.ARF;
+                model.CRF = item.CRF;
+                model.ESRD = item.ESRD;
+                model.RIE = item.RIE;
+
+
+
+            }
+
+            return Json(model, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult PSSystemRenalFunction(long preScreenId, PSSystemRenalFunctionModel model)
+        {
+            if (model != null)
+            {
+                using (var transaction = _dataContext.Database.BeginTransaction())
+                {
+                    var item = _dataContext.PSSystemRenalFunctions.Where(p => p.PreScreenId == preScreenId && p.Deleted == false).SingleOrDefault();
+
+                    if (item == null)
+                    {
+                        item = new PSSystemRenalFunction();
+                        _dataContext.PSSystemRenalFunctions.Add(item);
+                    }
+
+
+                    item.CRI = model.CRI;
+
+                    item.ARF = model.ARF;
+
+                    item.CRF = model.CRF;
+
+                    item.ESRD = model.ESRD;
+
+                    item.RIE = model.RIE;
+
+
+
+                    item.PreScreenId = preScreenId;
+
+                    _dataContext.SaveChanges();
+                    transaction.Commit();
+                }
+
+                return Json(new { Status = Constant.RESPONSE_OK, Description = "Pre-screen system renal function section saved successfully." });
+            }
+
+            return Json(new { Status = Constant.RESPONSE_ERROR, Description = "There was an error in processing the request. Please check the input and try again." });
+        }
+
+        //Dialysis mode section
+        public JsonResult PSSystemDialysis(long preScreenId)
+        {
+            var model = new PSSystemDialysisModel();
+            var item = _dataContext.PSSystemDialysis.Where(p => p.PreScreenId == preScreenId && p.Deleted == false).SingleOrDefault();
+            if (item != null)
+            {
+
+                model.None = item.None;
+                model.New = item.New;
+                model.Chronic = item.Chronic;
+                model.Hemodialysis = item.Hemodialysis;
+                model.PD = item.PD;
+                model.SADM = item.SADM;
+                model.MWF = item.MWF;
+                model.TTS = item.TTS;
+
+
+
+            }
+
+            return Json(model, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult PSSystemDialysis(long preScreenId, PSSystemDialysisModel model)
+        {
+            if (model != null)
+            {
+                using (var transaction = _dataContext.Database.BeginTransaction())
+                {
+                    var item = _dataContext.PSSystemDialysis.Where(p => p.PreScreenId == preScreenId && p.Deleted == false).SingleOrDefault();
+
+                    if (item == null)
+                    {
+                        item = new PSSystemDialysis();
+                        _dataContext.PSSystemDialysis.Add(item);
+                    }
+
+
+                    item.None = model.None;
+
+                    item.New = model.New;
+
+                    item.Chronic = model.Chronic;
+
+                    item.Hemodialysis = model.Hemodialysis;
+
+                    item.PD = model.PD;
+
+                    item.SADM = model.SADM;
+
+                    item.MWF = model.MWF;
+
+                    item.TTS = model.TTS;
+
+
+
+                    item.PreScreenId = preScreenId;
+
+                    _dataContext.SaveChanges();
+                    transaction.Commit();
+                }
+
+                return Json(new { Status = Constant.RESPONSE_OK, Description = "Pre-screen system dialysis section saved successfully." });
+            }
+
+            return Json(new { Status = Constant.RESPONSE_ERROR, Description = "There was an error in processing the request. Please check the input and try again." });
+        }
+
+        //DialysisAccess mode section
+        public JsonResult PSSystemDialysisAccess(long preScreenId)
+        {
+            var model = new PSSystemDialysisAccessModel();
+            var item = _dataContext.PSSystemDialysisAccess.Where(p => p.PreScreenId == preScreenId && p.Deleted == false).SingleOrDefault();
+            if (item != null)
+            {
+
+                model.AVF = item.AVF;
+                model.QC = item.QC;
+                model.TC = item.TC;
+                model.Graft = item.Graft;
+                model.OTH = item.OTH;
+                model.EOPCN = item.EOPCN;
+
+
+
+            }
+
+            return Json(model, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult PSSystemDialysisAccess(long preScreenId, PSSystemDialysisAccessModel model)
+        {
+            if (model != null)
+            {
+                using (var transaction = _dataContext.Database.BeginTransaction())
+                {
+                    var item = _dataContext.PSSystemDialysisAccess.Where(p => p.PreScreenId == preScreenId && p.Deleted == false).SingleOrDefault();
+
+                    if (item == null)
+                    {
+                        item = new PSSystemDialysisAccess();
+                        _dataContext.PSSystemDialysisAccess.Add(item);
+                    }
+
+
+                    item.AVF = model.AVF;
+
+                    item.QC = model.QC;
+
+                    item.TC = model.TC;
+
+                    item.Graft = model.Graft;
+
+                    item.OTH = model.OTH;
+
+                    item.EOPCN = model.EOPCN;
+
+
+
+                    item.PreScreenId = preScreenId;
+
+                    _dataContext.SaveChanges();
+                    transaction.Commit();
+                }
+
+                return Json(new { Status = Constant.RESPONSE_OK, Description = "Pre-screen system dialysis access section saved successfully." });
+            }
+
+            return Json(new { Status = Constant.RESPONSE_ERROR, Description = "There was an error in processing the request. Please check the input and try again." });
+        }
+
+        //Wound mode section
+        public JsonResult PSSystemWound(long preScreenId)
+        {
+            var model = new PSSystemWoundModel();
+            var item = _dataContext.PSSystemWounds.Where(p => p.PreScreenId == preScreenId && p.Deleted == false).SingleOrDefault();
+            if (item != null)
+            {
+
+                model.WM = item.WM;
+                model.FCD = item.FCD;
+                model.FBD = item.FBD;
+                model.TLC = item.TLC;
+                model.DPL = item.DPL;
+                model.HBO = item.HBO;
+                model.RIV = item.RIV;
+                model.COS = item.COS;
+                model.SIIW = item.SIIW;
+                model.WCTP = item.WCTP;
+                model.Wounds = _dataContext.PSSystemWoundItems.Where(p => p.PSSystemWoundId == item.PSSystemWoundId && p.Deleted == false).Select(p => new PSSystemWoundItemModel()
+                {
+                    Type = p.Type,
+                    Location = p.Location,
+                    Depth = p.Depth,
+                    Size = p.Size
+                }).ToList();
+
+            }
+
+            return Json(model, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult PSSystemWound(long preScreenId, PSSystemWoundModel model)
+        {
+            if (model != null)
+            {
+                using (var transaction = _dataContext.Database.BeginTransaction())
+                {
+                    var item = _dataContext.PSSystemWounds.Where(p => p.PreScreenId == preScreenId && p.Deleted == false).SingleOrDefault();
+
+                    if (item == null)
+                    {
+                        item = new PSSystemWound();
+                        _dataContext.PSSystemWounds.Add(item);
+                    }
+
+
+                    item.WM = model.WM;
+
+                    item.FCD = model.FCD;
+
+                    item.FBD = model.FBD;
+
+                    item.TLC = model.TLC;
+
+                    item.DPL = model.DPL;
+
+                    item.HBO = model.HBO;
+
+                    item.RIV = model.RIV;
+
+                    item.COS = model.COS;
+
+                    item.SIIW = model.SIIW;
+
+                    item.WCTP = model.WCTP;
+                    item.PreScreenId = preScreenId;
+                    _dataContext.SaveChanges();
+
+                    foreach (var woundItem in _dataContext.PSSystemWoundItems.Where(p => p.Deleted == false && p.PSSystemWoundId == item.PSSystemWoundId))
+                    {
+                        woundItem.Deleted = true;
+                    }
+
+                    if (model.Wounds != null)
+                    {
+                        foreach (var woundItemModel in model.Wounds)
+                        {
+                            _dataContext.PSSystemWoundItems.Add(
+                                new PSSystemWoundItem()
+                                {
+                                    Type = woundItemModel.Type,
+                                    Location = woundItemModel.Location,
+                                    Size = woundItemModel.Size,
+                                    Depth = woundItemModel.Depth,
+                                    PSSystemWoundId = item.PSSystemWoundId
+
+                                }
+                                );
+                        }
+                    }
+
+
+
+
+                    _dataContext.SaveChanges();
+                    transaction.Commit();
+                }
+
+                return Json(new { Status = Constant.RESPONSE_OK, Description = "Pre-screen system wounds section saved successfully." });
+            }
+
+            return Json(new { Status = Constant.RESPONSE_ERROR, Description = "There was an error in processing the request. Please check the input and try again." });
+        }
+
+        //PHL mode section
+        public JsonResult PSStatusPHL(long preScreenId)
+        {
+            var model = new PSStatusPHLModel();
+            var item = _dataContext.PSStatusPHLs.Where(p => p.PreScreenId == preScreenId && p.Deleted == false).SingleOrDefault();
+            if (item != null)
+            {
+
+                model.PHL = item.PHL;
+                model.PHLText = item.PHLText;
+
+
+
+            }
+
+            return Json(model, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult PSStatusPHL(long preScreenId, PSStatusPHLModel model)
+        {
+            if (model != null)
+            {
+                using (var transaction = _dataContext.Database.BeginTransaction())
+                {
+                    var item = _dataContext.PSStatusPHLs.Where(p => p.PreScreenId == preScreenId && p.Deleted == false).SingleOrDefault();
+
+                    if (item == null)
+                    {
+                        item = new PSStatusPHL();
+                        _dataContext.PSStatusPHLs.Add(item);
+                    }
+
+
+                    item.PHL = model.PHL;
+
+                    item.PHLText = model.PHLText;
+
+
+
+                    if (item.PHL != "Other")
+                    {
+                        item.PHLText = null;
+                    }
+
+
+
+                    item.PreScreenId = preScreenId;
+
+                    _dataContext.SaveChanges();
+                    transaction.Commit();
+                }
+
+                return Json(new { Status = Constant.RESPONSE_OK, Description = "Pre-screen status pre-hospital living section saved successfully." });
+            }
+
+            return Json(new { Status = Constant.RESPONSE_ERROR, Description = "There was an error in processing the request. Please check the input and try again." });
+        }
+
+        //LCN mode section
+        public JsonResult PSStatusLCN(long preScreenId)
+        {
+            var model = new PSStatusLCNModel();
+            var item = _dataContext.PSStatusLCNs.Where(p => p.PreScreenId == preScreenId && p.Deleted == false).SingleOrDefault();
+            if (item != null)
+            {
+
+                model.PL = item.PL;
+                model.DPSE = item.DPSE;
+                model.DPNI = item.DPNI;
+
+
+
+            }
+
+            return Json(model, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult PSStatusLCN(long preScreenId, PSStatusLCNModel model)
+        {
+            if (model != null)
+            {
+                using (var transaction = _dataContext.Database.BeginTransaction())
+                {
+                    var item = _dataContext.PSStatusLCNs.Where(p => p.PreScreenId == preScreenId && p.Deleted == false).SingleOrDefault();
+
+                    if (item == null)
+                    {
+                        item = new PSStatusLCN();
+                        _dataContext.PSStatusLCNs.Add(item);
+                    }
+
+
+                    item.PL = model.PL;
+
+                    item.DPSE = model.DPSE;
+
+                    item.DPNI = model.DPNI;
+
+
+
+                    item.PreScreenId = preScreenId;
+
+                    _dataContext.SaveChanges();
+                    transaction.Commit();
+                }
+
+                return Json(new { Status = Constant.RESPONSE_OK, Description = "Pre-screen status language communication needs section saved successfully." });
+            }
+
+            return Json(new { Status = Constant.RESPONSE_ERROR, Description = "There was an error in processing the request. Please check the input and try again." });
+        }
+
+        //PADM mode section
+        public JsonResult PSStatusPADM(long preScreenId)
+        {
+            var model = new PSStatusPADMModel();
+            var item = _dataContext.PSStatusPADMs.Where(p => p.PreScreenId == preScreenId && p.Deleted == false).SingleOrDefault();
+            if (item != null)
+            {
+
+                model.CMSOP = item.CMSOP;
+                model.PD = item.PD;
+                model.CMSPFA = item.CMSPFA;
+                model.SD = item.SD;
+                model.ACLT = item.ACLT;
+                model.PPTPFTP = item.PPTPFTP;
+                model.P24 = item.P24;
+                model.PRNDVTP = item.PRNDVTP;
+                model.PTPCRS = item.PTPCRS;
+                model.PRC = item.PRC;
+                model.PLI = item.PLI;
+                model.ELOS = item.ELOS;
+                model.APD = item.APD;
+                model.PCN = item.PCN;
+                model.PFALL = item.PFALL;
+                model.ITAT = item.ITAT;
+                model.PMH = item.PMH;
+
+
+
+            }
+
+            return Json(model, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult PSStatusPADM(long preScreenId, PSStatusPADMModel model)
+        {
+            if (model != null)
+            {
+                using (var transaction = _dataContext.Database.BeginTransaction())
+                {
+                    var item = _dataContext.PSStatusPADMs.Where(p => p.PreScreenId == preScreenId && p.Deleted == false).SingleOrDefault();
+
+                    if (item == null)
+                    {
+                        item = new PSStatusPADM();
+                        _dataContext.PSStatusPADMs.Add(item);
+                    }
+
+
+                    item.CMSOP = model.CMSOP;
+
+                    item.PD = model.PD;
+
+                    item.CMSPFA = model.CMSPFA;
+
+                    item.SD = model.SD;
+
+                    item.ACLT = model.ACLT;
+
+                    item.PPTPFTP = model.PPTPFTP;
+
+                    item.P24 = model.P24;
+
+                    item.PRNDVTP = model.PRNDVTP;
+
+                    item.PTPCRS = model.PTPCRS;
+
+                    item.PRC = model.PRC;
+
+                    item.PLI = model.PLI;
+
+                    item.ELOS = model.ELOS;
+
+                    item.APD = model.APD;
+
+                    item.PCN = model.PCN;
+
+                    item.PFALL = model.PFALL;
+
+                    item.ITAT = model.ITAT;
+
+                    item.PMH = model.PMH;
+
+
+
+                    item.PreScreenId = preScreenId;
+
+                    _dataContext.SaveChanges();
+                    transaction.Commit();
+                }
+
+                return Json(new { Status = Constant.RESPONSE_OK, Description = "Pre-screen status pre-admission section saved successfully." });
+            }
+
+            return Json(new { Status = Constant.RESPONSE_ERROR, Description = "There was an error in processing the request. Please check the input and try again." });
+        }
+
+        //PsySocial mode section
+        public JsonResult PSStatusPsySocial(long preScreenId)
+        {
+            var model = new PSStatusPsySocialModel();
+            var item = _dataContext.PSStatusPsySocials.Where(p => p.PreScreenId == preScreenId && p.Deleted == false).SingleOrDefault();
+            if (item != null)
+            {
+
+                model.DP = item.DP;
+                model.SA = item.SA;
+                model.OTH = item.OTH;
+                model.OTHText = item.OTHText;
+
+
+
+            }
+
+            return Json(model, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult PSStatusPsySocial(long preScreenId, PSStatusPsySocialModel model)
+        {
+            if (model != null)
+            {
+                using (var transaction = _dataContext.Database.BeginTransaction())
+                {
+                    var item = _dataContext.PSStatusPsySocials.Where(p => p.PreScreenId == preScreenId && p.Deleted == false).SingleOrDefault();
+
+                    if (item == null)
+                    {
+                        item = new PSStatusPsySocial();
+                        _dataContext.PSStatusPsySocials.Add(item);
+                    }
+
+
+                    item.DP = model.DP;
+
+                    item.SA = model.SA;
+
+                    item.OTH = model.OTH;
+
+                    item.OTHText = model.OTHText;
+
+
+
+                    if (item.OTH != "Yes")
+                    {
+                        item.OTHText = null;
+                    }
+
+
+
+                    item.PreScreenId = preScreenId;
+
+                    _dataContext.SaveChanges();
+                    transaction.Commit();
+                }
+
+                return Json(new { Status = Constant.RESPONSE_OK, Description = "Pre-screen status psych-social section saved successfully." });
+            }
+
+            return Json(new { Status = Constant.RESPONSE_ERROR, Description = "There was an error in processing the request. Please check the input and try again." });
+        }
+
+
+        //SocialHistory mode section
+        public JsonResult PSStatusSocialHistory(long preScreenId)
+        {
+            var model = new PSStatusSocialHistoryModel();
+            var item = _dataContext.PSStatusSocialHistories.Where(p => p.PreScreenId == preScreenId && p.Deleted == false).SingleOrDefault();
+            if (item != null)
+            {
+
+                model.AH = item.AH;
+                model.TH = item.TH;
+                model.DU = item.DU;
+                model.SI = item.SI;
+
+
+
+            }
+
+            return Json(model, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult PSStatusSocialHistory(long preScreenId, PSStatusSocialHistoryModel model)
+        {
+            if (model != null)
+            {
+                using (var transaction = _dataContext.Database.BeginTransaction())
+                {
+                    var item = _dataContext.PSStatusSocialHistories.Where(p => p.PreScreenId == preScreenId && p.Deleted == false).SingleOrDefault();
+
+                    if (item == null)
+                    {
+                        item = new PSStatusSocialHistory();
+                        _dataContext.PSStatusSocialHistories.Add(item);
+                    }
+
+
+                    item.AH = model.AH;
+
+                    item.TH = model.TH;
+
+                    item.DU = model.DU;
+
+                    item.SI = model.SI;
+
+
+
+                    item.PreScreenId = preScreenId;
+
+                    _dataContext.SaveChanges();
+                    transaction.Commit();
+                }
+
+                return Json(new { Status = Constant.RESPONSE_OK, Description = "Pre-screen status social history section saved successfully." });
+            }
+
+            return Json(new { Status = Constant.RESPONSE_ERROR, Description = "There was an error in processing the request. Please check the input and try again." });
+        }
+
+        //Bowel mode section
+        public JsonResult PSStatusBowel(long preScreenId)
+        {
+            var model = new PSStatusBowelModel();
+            var item = _dataContext.PSStatusBowels.Where(p => p.PreScreenId == preScreenId && p.Deleted == false).SingleOrDefault();
+            if (item != null)
+            {
+
+                model.Continent = item.Continent;
+                model.Incontinent = item.Incontinent;
+                model.Unspecified = item.Unspecified;
+                model.BP = item.BP;
+
+
+
+            }
+
+            return Json(model, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult PSStatusBowel(long preScreenId, PSStatusBowelModel model)
+        {
+            if (model != null)
+            {
+                using (var transaction = _dataContext.Database.BeginTransaction())
+                {
+                    var item = _dataContext.PSStatusBowels.Where(p => p.PreScreenId == preScreenId && p.Deleted == false).SingleOrDefault();
+
+                    if (item == null)
+                    {
+                        item = new PSStatusBowel();
+                        _dataContext.PSStatusBowels.Add(item);
+                    }
+
+
+                    item.Continent = model.Continent;
+
+                    item.Incontinent = model.Incontinent;
+
+                    item.Unspecified = model.Unspecified;
+
+                    item.BP = model.BP;
+
+
+
+                    item.PreScreenId = preScreenId;
+
+                    _dataContext.SaveChanges();
+                    transaction.Commit();
+                }
+
+                return Json(new { Status = Constant.RESPONSE_OK, Description = "Pre-screen status bowel section saved successfully." });
+            }
+
+            return Json(new { Status = Constant.RESPONSE_ERROR, Description = "There was an error in processing the request. Please check the input and try again." });
+        }
+
+        //BowelAppliance mode section
+        public JsonResult PSStatusBowelAppliance(long preScreenId)
+        {
+            var model = new PSStatusBowelApplianceModel();
+            var item = _dataContext.PSStatusBowelAppliances.Where(p => p.PreScreenId == preScreenId && p.Deleted == false).SingleOrDefault();
+            if (item != null)
+            {
+
+                model.BAC = item.BAC;
+                model.Ileostomy = item.Ileostomy;
+                model.Type = item.Type;
+                model.DOLP = item.DOLP == null ? null : item.DOLP.Value.ToShortDateString();
+                model.Notes = item.Notes;
+
+
+
+            }
+
+            return Json(model, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult PSStatusBowelAppliance(long preScreenId, PSStatusBowelApplianceModel model)
+        {
+            if (model != null)
+            {
+                using (var transaction = _dataContext.Database.BeginTransaction())
+                {
+                    var item = _dataContext.PSStatusBowelAppliances.Where(p => p.PreScreenId == preScreenId && p.Deleted == false).SingleOrDefault();
+
+                    if (item == null)
+                    {
+                        item = new PSStatusBowelAppliance();
+                        _dataContext.PSStatusBowelAppliances.Add(item);
+                    }
+
+
+                    item.BAC = model.BAC;
+
+                    item.Ileostomy = model.Ileostomy;
+
+                    item.Type = model.Type;
+
+                    DateTime dt;
+                    if (DateTime.TryParse(model.DOLP, out dt))
+                    {
+                        item.DOLP = dt;
+                    }
+
+
+                    item.Notes = model.Notes;
+
+                    item.PreScreenId = preScreenId;
+
+                    _dataContext.SaveChanges();
+                    transaction.Commit();
+                }
+
+                return Json(new { Status = Constant.RESPONSE_OK, Description = "Pre-screen status bowel appliance section saved successfully." });
+            }
+
+            return Json(new { Status = Constant.RESPONSE_ERROR, Description = "There was an error in processing the request. Please check the input and try again." });
+        }
+
+        //Vital mode section
+        public JsonResult PSStatusVital(long preScreenId)
+        {
+            var model = new PSStatusVitalModel();
+            var item = _dataContext.PSStatusVitals.Where(p => p.PreScreenId == preScreenId && p.Deleted == false).SingleOrDefault();
+            if (item != null)
+            {
+
+                model.DM = item.DM == null ? null : item.DM.Value.ToShortDateString();
+                model.Height = item.Height;
+                model.Weight = item.Weight;
+                model.BP = item.BP;
+                model.Temp = item.Temp;
+                model.Pulse = item.Pulse;
+                model.Resp = item.Resp;
+                model.OSP = item.OSP;
+
+
+
+            }
+
+            return Json(model, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult PSStatusVital(long preScreenId, PSStatusVitalModel model)
+        {
+            if (model != null)
+            {
+                using (var transaction = _dataContext.Database.BeginTransaction())
+                {
+                    var item = _dataContext.PSStatusVitals.Where(p => p.PreScreenId == preScreenId && p.Deleted == false).SingleOrDefault();
+
+                    if (item == null)
+                    {
+                        item = new PSStatusVital();
+                        _dataContext.PSStatusVitals.Add(item);
+                    }
+
+                    DateTime dt;
+
+                    if (DateTime.TryParse(model.DM, out dt))
+                    {
+                        item.DM = dt;
+                    }
+
+
+                    item.Height = model.Height;
+
+                    item.Weight = model.Weight;
+
+                    item.BP = model.BP;
+
+                    item.Temp = model.Temp;
+
+                    item.Pulse = model.Pulse;
+
+                    item.Resp = model.Resp;
+
+                    item.OSP = model.OSP;
+
+
+
+                    item.PreScreenId = preScreenId;
+
+                    _dataContext.SaveChanges();
+                    transaction.Commit();
+                }
+
+                return Json(new { Status = Constant.RESPONSE_OK, Description = "Pre-screen status vitals section saved successfully." });
+            }
+
+            return Json(new { Status = Constant.RESPONSE_ERROR, Description = "There was an error in processing the request. Please check the input and try again." });
+        }
+
+
+
+
+
+
+
+        //PainScale mode section
+        public JsonResult PSStatusPainScale(long preScreenId)
+        {
+            var model = new PSStatusPainScaleModel();
+            var item = _dataContext.PSStatusPainScales.Where(p => p.PreScreenId == preScreenId && p.Deleted == false).SingleOrDefault();
+            if (item != null)
+            {
+
+                model.PS = item.PS;
+                model.LOP = item.LOP;
+                model.PM = item.PM;
+
+
+
+            }
+
+            return Json(model, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult PSStatusPainScale(long preScreenId, PSStatusPainScaleModel model)
+        {
+            if (model != null)
+            {
+                using (var transaction = _dataContext.Database.BeginTransaction())
+                {
+                    var item = _dataContext.PSStatusPainScales.Where(p => p.PreScreenId == preScreenId && p.Deleted == false).SingleOrDefault();
+
+                    if (item == null)
+                    {
+                        item = new PSStatusPainScale();
+                        _dataContext.PSStatusPainScales.Add(item);
+                    }
+
+
+                    item.PS = model.PS;
+
+                    item.LOP = model.LOP;
+
+                    item.PM = model.PM;
+
+
+
+                    item.PreScreenId = preScreenId;
+
+                    _dataContext.SaveChanges();
+                    transaction.Commit();
+                }
+
+                return Json(new { Status = Constant.RESPONSE_OK, Description = "Pre-screen status pain scale section saved successfully." });
+            }
+
+            return Json(new { Status = Constant.RESPONSE_ERROR, Description = "There was an error in processing the request. Please check the input and try again." });
+        }
+
+

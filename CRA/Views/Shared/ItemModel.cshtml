@@ -1,0 +1,24 @@
+﻿@model CRA.Models.Shared.ItemModel
+<div class="form-group" 
+     @if (!string.IsNullOrEmpty(Model.DependsOnCode) && !string.IsNullOrEmpty(Model.DependsOnAssertValue) && Model.ItemType!="Check")
+     {
+         if (Model.ComparePrimitive)
+         {
+                 <text>data-bind="css:{hide:@(Model.GetParentDataBoundUniqueClientCode()).@(Model.DependsOnCode)()!=@Model.DependsOnAssertValue}" </text>
+         }
+         else
+         {
+                 <text>data-bind="css:{hide:@(Model.GetParentDataBoundUniqueClientCode()).@(Model.DependsOnCode)()!='@Model.DependsOnAssertValue'}" </text>
+         }
+     
+     }>
+    
+     <div class="col-xs-12">
+        <label class="col-xs-12 control-label">
+            @Model.Label
+        </label>
+        <p class="input-p">
+            @Html.Partial("InputEditor", Model)
+        </p>
+    </div>
+</div>

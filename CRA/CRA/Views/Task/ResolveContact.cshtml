@@ -1,0 +1,180 @@
+﻿@model CRA.Models.Task.TaskModel
+@{
+    /**/
+
+    ViewBag.Title = "Resolve Task";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@Html.Partial("DecisionModal")
+
+<div id="divActionBar" class="container-fluid action-bar">
+    <div class="row">
+        <div class="col-xs-6">
+            <button class="btn btn-default">@Html.ActionLink("Back to Tasks", "Index")</button>
+        </div>
+        <div class="col-xs-6">
+            <button type="submit" class="btn btn-primary separator-right pull-right" title="Search" data-bind="click:data.approve,css:{hide:model.data.status()=='Completed'}">Approve</button>
+            <button type="submit" class="btn btn-primary separator-right pull-right" title="Search" data-bind="click:data.reject,css:{hide:model.data.status()=='Completed'}">Reject</button>
+
+            <button class="btn btn-success pull-right separator-right-2x" data-bind="css:{hide:data.contactId==0 || model.data.status()=='Completed'},click:data.viewModal">View Pending Contact Request</button>
+
+        </div>
+    </div>
+</div>
+
+<form id="frmGeneral">
+    <div class="panel panel-default">
+        <div class="panel-heading pointer">
+            Resolve Task
+        </div>
+        <div class="panel-body">
+
+            <div class="form-horizontal">
+                <div class="form-group">
+                    <div class="col-xs-12">
+                        <label class="col-xs-12 control-label">
+                            Task ID
+                            @Html.TextBoxFor(p => p.UserTaskId, new { disabled = "disabled", @class = "form-control" })
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-xs-12">
+                        <label class="col-xs-12 control-label">
+                            Task Type
+                            @Html.TextBoxFor(p => p.TaskType, new { disabled = "disabled", @class = "form-control" })
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-xs-12">
+                        <label class="col-xs-12 control-label">
+                            Description
+                            @Html.TextBoxFor(p => p.Description, new { disabled = "disabled", @class = "form-control" })
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-xs-12">
+                        <label class="col-xs-12 control-label">
+                            Task Status
+                            <input type="text" class="form-control" disabled="disabled" data-bind="value:data.status" />
+
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-xs-12">
+                        <label class="col-xs-12 control-label">
+                            Sub Status
+                            <input type="text" class="form-control" disabled="disabled" data-bind="value:data.subStatus" />
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-xs-12">
+                        <label class="col-xs-12 control-label">
+                            Notes
+                            <textarea class="form-control" disabled="disabled" data-bind="value:data.notes"></textarea>
+                         
+                        </label>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+
+
+</form>
+
+@section scripts{
+
+    <script>
+        model.data.contactId = ko.observable(@Model.ContactId);
+        model.data.notes = ko.observable("");
+
+        model.data.status = ko.observable('@Model.Status');
+        model.data.subStatus = ko.observable('@Model.SubStatus');
+        model.data.notes = ko.observable('@Model.Notes');
+
+        model.data.viewModal = function () {
+            window.location.replace('@Url.Action("Detail","Contact")' + '?id=' + model.data.contactId());
+        }
+
+
+        model.data.context = ko.observable("");
+
+        model.data.reject = function () {
+            model.ui.modalTitle("Confirm Reject");    
+            model.data.notes("");
+            $("#decisionModal").modal('show');
+            model.data.context("Reject");
+        }
+
+
+        model.data.approve = function () {
+
+            model.ui.modalTitle("Confirm Approve");      
+            model.data.notes("");
+            $("#decisionModal").modal('show');
+            model.data.context("Approve");
+        }
+
+
+        function handleError(errorData) {
+            model.ui.progress(false);
+            globalErrorHandler(errorData);
+        }
+
+        model.data.save = function () {
+            model.ui.actionClick();
+        }
+
+        function action() {
+
+            var data = {};
+            data.UserTaskId = @Model.UserTaskId;
+            data.Action = model.data.context();
+            data.Notes = model.data.notes();
+
+            model.ui.progress(true);
+            var promise = $.ajax({
+                dataType: 'json',
+                url: '@Url.Action("TaskActionContact","Task")',
+                type: "POST",
+                data: data
+            });
+
+            return promise;
+
+        }
+
+            model.ui.actionClick = function () {
+                $("#decisionModal").modal('hide');
+                action().then(function (data) {
+
+                    model.data.status(data.Status);
+                    model.data.subStatus(data.SubStatus);
+                    model.data.notes(data.Notes);
+
+                    var errorList = [];
+                    errorList.push({ "name": "Success", "description": "Task status set successfully" });
+                    model.ui.successList(errorList);
+                    model.ui.success(true);
+                    model.ui.progress(false);
+
+                }, handleError);
+            }
+
+
+    </script>
+}

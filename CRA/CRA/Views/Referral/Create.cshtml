@@ -1,0 +1,438 @@
+﻿@{
+    ViewBag.Title = "Create Referral";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@Html.Partial("CreateReferralOptionsModal")
+
+<div id="divActionBar" class="container-fluid action-bar">
+    <div class="row">
+        <div class="col-xs-6">
+            <button class="btn btn-default">@Html.ActionLink("Back to Referrals", "Index")</button>
+        </div>
+        <div class="col-xs-6">
+            <button id="btnClear" class="btn btn-default pull-right separator-left" data-bind="click:data.clear">Clear</button>
+            <button id="btnSave" class="btn btn-primary pull-right">Save</button>
+        </div>
+    </div>
+</div>
+
+
+<form id="frmGeneral">
+
+    <div class="panel panel-default">
+        <div class="panel-heading pointer">
+            Referral Information
+        </div>
+        <div class="panel-body">
+            <div class="form-horizontal">
+
+                <div class="form-group">
+                    <div class="col-xs-12">
+                        <label class="col-xs-12 control-label">
+                            Search
+                            <input id="txtSearch" type="text" class="form-control" data-bind="value:data.searchName" />
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-xs-12">
+                        <hr />
+                    </div>
+                </div>
+
+
+
+                <div class="form-group">
+                    <div class="col-xs-12">
+                        <label class="col-xs-12 control-label">
+                            Social security number
+                            <input name="txtSSN" type="text" class="form-control ssn-mask" data-bind="value:data.ssn,enable:(data.patientId()==0)" />
+                        </label>
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    <div class="col-xs-12">
+                        <label class="col-xs-12 control-label">
+                            First name
+                            <input name="txtFirstName" type="text" class="form-control" data-bind="value:data.firstName,enable:(data.patientId()==0)" />
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-xs-12">
+                        <label class="col-xs-12 control-label">
+                            Middle name
+                            <input name="txtMiddleName" type="text" class="form-control" data-bind="value:data.middleName,enable:(data.patientId()==0)" />
+                        </label>
+                    </div>
+                </div>
+
+
+
+                <div class="form-group">
+                    <div class="col-xs-12">
+                        <label class="col-xs-12 control-label">
+                            Last name
+                            <input name="txtLastName" type="text" class="form-control" data-bind="value:data.lastName,enable:(data.patientId()==0)" />
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-xs-12">
+                        <label class="col-xs-12 control-label">
+                            Date of birth
+                            <input name="txtDOB" id="txtDOB" type="text" class="form-control" data-bind="value:data.dob,enable:(data.patientId()==0)" />
+                        </label>
+                    </div>
+                </div>
+
+                <div class="col-xs-12">
+                    <hr />
+                </div>
+
+
+                <div class="form-group">
+                    <div class="col-xs-12">
+                        <label class="col-xs-12 control-label">
+                            Select CHG site
+                            <select name="lstSites" id="lstSites" class="form-control" data-bind="options: data.sites(), optionsText: 'FullName',optionsValue:'CHGSiteId',optionsCaption: '@Constant.DEFAULT_SELECTALL_OPTION',value:data.siteId"></select>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-xs-12">
+                        <label class="col-xs-12 control-label">
+                            Select referral source
+                            <input name="txtReferralSourceName" id="autoCompleteReferralSources" type="text" class="form-control" data-bind="value:data.referralSourceName" />
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-xs-12">
+                        <label class="col-xs-12 control-label">
+                            Select contact
+                            <input name="txtReferralSourceContactName" id="autoCompleteReferralSourceContacts" type="text" class="form-control" data-bind="value:data.referralSourceContactName" />
+                        </label>
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    <div class="col-xs-12">
+                        <label class="col-xs-12 control-label">
+                            Select liaison
+                            <select name="lstLiaisons" class="form-control" data-bind="options: data.liaisons(), optionsText: 'FullName',optionsValue:'UserId',optionsCaption: '@Constant.DEFAULT_SELECTALL_OPTION',value:data.liaisonId"></select>
+                        </label>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+
+</form>
+
+
+
+
+@section scripts
+    {
+    <script>
+        model.data.searchName = ko.observable("");
+        model.data.firstName = ko.observable("");
+        model.data.middleName = ko.observable("");
+        model.data.lastName = ko.observable("");
+        model.data.ssn = ko.observable("");
+        model.data.dob = ko.observable("");
+        model.data.patientId = ko.observable(0);
+        model.data.siteId = ko.observable("");
+        model.data.contactId = ko.observable("");
+        model.data.liaisonId = ko.observable("");
+        model.data.preScreenId = ko.observable(0);
+       
+
+
+
+       
+
+        model.data.referralSourceId = ko.observable("");
+        model.data.referralSourceName = ko.observable("");
+        model.data.referralSourceContactName = ko.observable("");
+
+        model.data.sites = ko.observableArray([]);
+        model.data.liaisons = ko.observableArray([]);
+
+        model.data.referralId = ko.observable("");
+
+
+        var validator;
+
+
+         
+
+
+         function getSites() {
+            var promise = $.ajax({
+                dataType: 'json',
+                url: '@Url.Action("GetUserSites", "Referral")'
+            });
+
+            return promise;
+        }
+
+          function getLiaisons(id) {
+            var promise = $.ajax({
+                dataType: 'json',
+                url: '@Url.Action("SiteLiaisons", "Referral")' + '?siteId=' + id
+            });
+
+            return promise;
+        }
+
+
+        function loadData() {
+            model.ui.progress(true);
+            $.when(getSites())
+                .then(function (sites) {
+                model.data.sites(sites);
+
+                    model.ui.progress(false);
+                }, handleError);
+        }
+
+        function handleError(errorData) {
+            model.ui.progress(false);
+            globalErrorHandler(errorData);
+        }
+
+
+
+        model.data.clear = function () {
+
+            model.data.searchName("");
+            model.data.patientId(0);
+            model.data.firstName("");
+            model.data.middleName("");
+            model.data.lastName("");
+            model.data.ssn("");
+            model.data.dob("");
+            model.data.siteId("");
+            model.data.referralSourceName("");
+            model.data.referralSourceId("");
+            model.data.contactId("");
+            model.data.liaisonId("");
+            model.data.referralSourceContactName("");
+         
+
+        }
+
+
+        //UI variables
+        var actionBar = document.getElementById("divActionBar");
+        var offsetValue = actionBar.offsetTop;
+
+        function actionBarFix() {
+            if (window.pageYOffset >= offsetValue) {
+                actionBar.classList.add("action-bar-fixed");
+            } else {
+                actionBar.classList.remove("action-bar-fixed");
+            }
+        }
+
+        $("#lstSites").change(function () {
+            var value = $("#lstSites").val();
+            if (value && value > 0) {
+                getLiaisons(value)
+                    .then(function (data) {
+                        model.data.liaisons(data);
+                    }, handleError);
+            }
+
+
+             $("#autoCompleteReferralSources").autocomplete({
+                 source: '@Url.Action("AutoCompleteReferralSources","Referral")' + '?siteId=' + $("#lstSites").val(),
+                minLength: 2,
+                select: function (event, ui) {
+                    event.preventDefault();
+                    model.data.referralSourceName(ui.item.FullName);
+                    model.data.referralSourceId(ui.item.ReferralSourceId);
+                    validator.resetForm();
+                }
+            });
+
+        });
+
+
+        model.data.referralSourceId.subscribe(function (value) {
+            var id = 0;
+            if (value && value > 0) {
+                id = value;
+            }
+             $("#autoCompleteReferralSourceContacts").autocomplete({
+                    source: '@Url.Action("autoCompleteReferralSourceContacts", "Referral")' + '?referralSourceId=' + id,
+                    minLength: 2,
+                    select: function (event, ui) {
+                        event.preventDefault();
+                        model.data.contactId(ui.item.ContactId);
+                        model.data.referralSourceContactName(ui.item.FirstName + " " + ui.item.LastName);
+                        validator.resetForm();
+
+                     
+                    }
+                });
+        });
+
+
+        function createReferral(data) {
+            var promise = $.ajax({
+                dataType: 'json',
+                url: '@Url.Action("Create","Referral")',
+                type: "POST",
+                data:data
+            });
+
+            return promise;
+        }
+
+
+
+          function validationSettings() {
+              validator= $('#frmGeneral').validate({
+                rules: {
+
+                    txtFirstName:  { required: true },
+                    txtLastName:  { required: true },
+                    txtDOB: { required: true },
+                 
+                    lstSites: { required: true },
+                    txtReferralSourceName: { referralSourceId: true },
+                    txtReferralSourceContactName: { contactId: true },
+                    lstLiaisons: { required: true },
+                    lstPreScreenTypes: { required: true }
+                },
+                messages: {
+                    txtFirstName:  { required: 'First name is required.'},
+                    txtLastName:  { required: 'Last name is required.'},
+                    txtDOB: { required: 'Date of birth.' },
+                  
+                    lstSites: { required: 'Please select the site.' },
+                    txtReferralSourceName: { referralSourceId: 'Invalid referral source.' },
+                    txtReferralSourceContactName: { contactId: 'Invalid contact.' },
+                    lstLiaisons: { required: 'Please select the liaison.' },
+                    lstPreScreenTypes: { required: 'Please select the pre-screen type.' }
+
+                },
+                submitHandler: function (form) {
+
+                    var data = {
+                        "patientId": model.data.patientId(),
+                        "FirstName": model.data.firstName(),
+                        "MiddleName": model.data.middleName(),
+                        "LastName": model.data.lastName(),
+                        "DOB": model.data.dob(),
+                        "SSN": model.data.ssn(),         
+                        "CHGSiteId": model.data.siteId(),
+                        "ReferralSourceId": model.data.referralSourceId(),
+                        "ContactId": model.data.contactId(),
+                        "LiaisonId": model.data.liaisonId()
+                      
+                    };
+
+                    var promise = createReferral(data);
+                    promise.then(function (data) {
+                        var list = [];
+
+                        if (data && data.Status) {
+                            if (data.Status == '@Constant.RESPONSE_OK') {
+
+                                model.data.patientId(data.PatientId);
+                                model.data.referralId(data.ReferralId);
+                                model.data.preScreenId(data.PreScreenId);
+
+                                $("#createReferralOptionsModal").modal('show');
+                            } else {
+                                list.push({ "name": "Error", "description": data.Description });
+                                model.ui.errorList(list);
+                                model.ui.error(true);
+                            }
+                        }
+                        else {
+                            list.push({ "name": "Error", "description": data.Description });
+                            model.ui.errorList(list);
+                            model.ui.error(true);
+                        }
+
+                    }, handleError);
+
+                }
+            });
+        }
+
+        $("#btnSave").click(function () {
+            submitForm('#frmGeneral');
+        });
+
+
+        $(document).ready(function () {
+
+            $("#txtSearch").autocomplete({
+                source: '@Url.Action("AutoCompleteReferrals","Referral")',
+                minLength: 2,
+                select: function (event, ui) {
+                    event.preventDefault();
+                    validator.resetForm();
+
+                    model.data.searchName(ui.item.firstName + " " + ui.item.lastName);
+                    model.data.patientId(ui.item.value);
+                    model.data.firstName(ui.item.firstName);
+                    model.data.middleName(ui.item.middleName);
+                    model.data.lastName(ui.item.lastName);
+                    model.data.ssn(ui.item.ssn);
+                    model.data.dob(ui.item.dob);
+
+
+                }
+            });
+
+
+            $("#txtDOB").datepicker();
+            validationSettings();
+            loadData();
+
+            $.validator.addMethod("referralSourceId", function (value, element) {
+                return model.data.referralSourceId() && parseFloat( model.data.referralSourceId()) > 0;
+            }, "Invalid id.");
+
+            $.validator.addMethod("contactId", function (value, element) {
+                return model.data.contactId() && parseFloat(model.data.contactId()) > 0;
+            }, "Invalid id.");
+
+
+            model.data.backToReferrals = function () {
+                   window.location.href = '@Url.Action("Index","Referral")';
+                return false;
+
+            };
+
+            model.data.editPreScreenRecord = function () {
+                window.location.href = '@Url.Action("Edit","PreScreen")' + "?id=" + model.data.preScreenId();
+                return false;
+            };
+
+           
+
+
+            window.onscroll = function () { actionBarFix() };
+
+            if ("GHC")
+        });
+    </script>
+}

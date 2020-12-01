@@ -1,0 +1,509 @@
+﻿@{
+    ViewBag.Title = "Detail";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div id="divActionBar" class="container-fluid action-bar">
+    <div class="row">
+        <div class="col-xs-6">
+            <button class="btn btn-default">@Html.ActionLink("Back to Referral Sources", "Index")</button>
+            <div class="dropdown inline">
+                <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                    Action
+                    <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                    <li><a href='#' data-bind="click:data.editReferralSource">Edit</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-xs-6">
+            <button class="btn btn-primary pull-right" data-bind="click:data.approveDeny,css:{hide:!data.pendingTaskId()}">Approve / Deny</button>
+        </div>
+    </div>
+</div>
+
+
+<form id="frmGeneral">
+    <div class="panel panel-default">
+        <div class="panel-heading pointer">
+            General
+        </div>
+        <div class="panel-body">
+
+            <div class="form-horizontal">
+                <div class="form-group">
+                    <div class="col-xs-12">
+                        <label class="col-xs-12 control-label">
+                            Full Name
+                            <input name="txtFullName" type="text" class="form-control" data-bind="value:data.fullName" readonly="readonly" />
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+
+                    <div class="col-xs-12">
+                        <label class="col-xs-12 control-label">
+                            Short Name
+                            <input name="txtShortName" type="text" class="form-control" data-bind="value:data.shortName" readonly="readonly" />
+                        </label>
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+
+
+                    <div class="col-xs-12">
+                        <label class="col-xs-12 control-label">
+                            Referral Source Type
+                            <input type="text" class="form-control" data-bind="value:data.referralSourceTypeName" readonly="readonly" />
+                        </label>
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    <div class="col-xs-12">
+                        <label class="col-xs-12 control-label">
+                            Number of Operational ICU Beds
+                            <input name="txtOperationalICUBedCount" type="number" class="form-control" min="0" max="10000" data-bind="value:data.operationalICUBedCount" readonly="readonly" />
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-xs-12">
+                        <label class="col-xs-12 control-label">
+                            Total Number of Beds
+                            <input name="txtBedCount" type="number" class="form-control" min="0" max="10000" data-bind="value:data.bedCount" readonly="readonly" />
+                        </label>
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    <div class="col-xs-12">
+                        <label class="col-xs-12 control-label">
+                            ICU Bed Count
+                            <input type="number" class="form-control" min="0" max="10000" data-bind="value:data.icuBedCount" readonly="readonly" />
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-xs-12">
+                        <label class="col-xs-12 control-label">
+                            CCU Bed Count
+                            <input type="number" class="form-control" min="0" max="10000" data-bind="value:data.ccuBedCount" readonly="readonly" />
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-xs-12">
+                        <label class="col-xs-12 control-label">
+                            SICU Bed Count
+                            <input type="number" class="form-control" min="0" max="10000" data-bind="value:data.sicuBedCount" readonly="readonly" />
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-xs-12">
+                        <label class="col-xs-12 control-label">
+                            MICU Bed Count
+                            <input type="number" class="form-control" min="0" max="10000" data-bind="value:data.micuBedCount" readonly="readonly" />
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-xs-12">
+                        <label class="col-xs-12 control-label">
+                            Neuro ICU Bed Count
+                            <input type="number" class="form-control" min="0" max="10000" data-bind="value:data.neuroICUBedCount" readonly="readonly" />
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-xs-12">
+                        <label class="col-xs-12 control-label">
+                            Rehab Bed Count
+                            <input type="number" class="form-control" min="0" max="10000" data-bind="value:data.rehabBedCount" readonly="readonly" />
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-xs-12">
+                        <label class="col-xs-12 control-label">
+                            Skilled Nursing Bed Count
+                            <input type="number" class="form-control" min="0" max="10000" data-bind="value:data.skilledNursingBedCount" readonly="readonly" />
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-xs-12">
+                        <label class="col-xs-12 control-label">
+                            LTACH Bed Count
+                            <input type="number" class="form-control" min="0" max="10000" data-bind="value:data.ltachBedCount" readonly="readonly" />
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-xs-12">
+                        <label class="col-xs-12 control-label">
+                            Confirmed Beds Coding ICU Rev Codes
+
+                            <input type="checkbox" class="block" data-bind="checked:data.confirmedBedsCodingICURevCodes" readonly="readonly" disabled="disabled" />
+                        </label>
+                    </div>
+                </div>
+
+            </div>
+
+
+        </div>
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-heading pointer">
+            CHG Site Assignment
+        </div>
+        <div class="panel-body">
+            <div class="form-group">
+                <div class="col-xs-12">
+                    <label class="col-xs-12 control-label">
+                        CHG Sites
+                    </label>
+                    <ul data-bind="foreach: data.siteOptions" class="list">
+                        <li>
+                            <input type="checkbox" data-bind="checked:Selected" disabled="disabled" /><span class="inline" data-bind="text:ServiceName"></span> - <span class="inline" data-bind="text:RegionName"></span> - <span class="inline" data-bind="text:FullName"></span>
+                        </li>
+                    </ul>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+    <div class="panel panel-default">
+        <div class="panel-heading pointer">
+            Electronic Referral Types
+        </div>
+        <div class="panel-body">
+            <div class="form-group">
+                <div class="col-xs-12">
+                    <label class="col-xs-12 control-label">
+                        Electronic Referral Types
+                    </label>
+                    <ul data-bind="foreach: data.electronicReferralTypesOptions" class="list">
+                        <li>
+                            <input type="checkbox" data-bind="checked:Selected" disabled="disabled" /><span class="inline" data-bind="text:Name"></span>
+                        </li>
+                    </ul>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="panel panel-default">
+        <div class="panel-heading pointer">
+            Commercial Payor Types
+        </div>
+        <div class="panel-body">
+            <div class="form-group">
+                <div class="col-xs-12">
+                    <label class="col-xs-12 control-label">
+                        Commercial Payors
+                    </label>
+                    <ul data-bind="foreach: data.commercialPayorTypesOptions" class="list">
+                        <li>
+                            <input type="checkbox" data-bind="checked:Selected" disabled="disabled" /><span class="inline" data-bind="text:Name"></span>
+                        </li>
+                    </ul>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="panel panel-default">
+        <div class="panel-heading pointer">
+            Managed Medicare Payor Types
+        </div>
+        <div class="panel-body">
+            <div class="form-group">
+                <div class="col-xs-12">
+                    <label class="col-xs-12 control-label">
+                        Select Managed Medicare Payors
+                    </label>
+                    <ul data-bind="foreach: data.managedMedicarePayorTypesOptions" class="list">
+                        <li>
+                            <input type="checkbox" data-bind="checked:Selected" disabled="disabled" /><span class="inline" data-bind="text:Name"></span>
+                        </li>
+                    </ul>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+</form>
+
+
+@section scripts
+    {
+    <script>
+
+        var id = getUrlParameter("id");
+
+          //Initialize variables.
+        model.data.fullName = ko.observable("");
+        model.data.shortName = ko.observable("");
+        model.data.referralSourceTypeId = ko.observable("");
+        model.data.referralSourceTypeName = ko.observable("");
+        model.data.operationalICUBedCount = ko.observable("");
+        model.data.bedCount = ko.observable("");
+        model.data.icuBedCount = ko.observable("");
+        model.data.ccuBedCount = ko.observable("");
+        model.data.micuBedCount = ko.observable("");
+        model.data.sicuBedCount = ko.observable("");
+        model.data.neuroICUBedCount = ko.observable("");
+        model.data.rehabBedCount = ko.observable("");
+        model.data.skilledNursingBedCount = ko.observable("");
+        model.data.ltachBedCount = ko.observable("");
+        model.data.confirmedBedsCodingICURevCodes = ko.observable(false);
+
+        model.data.siteOptions = ko.observableArray([]);
+        model.data.electronicReferralTypesOptions = ko.observableArray([]);
+        model.data.commercialPayorTypesOptions = ko.observableArray([]);
+        model.data.managedMedicarePayorTypesOptions = ko.observableArray([]);
+
+
+
+        model.data.Notes = ko.observable("");
+
+        model.data.pendingTaskId = ko.observable("");
+
+
+        //Functions to load the screen on first load.
+        function getReferralSource(id) {
+            var promise = $.ajax({
+                dataType: 'json',
+                url: '@Url.Action("DetailEntity","ReferralSource")' + '?id=' + id,
+                type: "GET"
+            });
+
+            return promise;
+        }
+
+             function getElectronicReferralTypes() {
+            var promise = $.ajax({
+                dataType: 'json',
+                url: '@Url.Action("ElectronicReferralTypes","Base")',
+                type: "GET"
+            });
+
+            return promise;
+        }
+
+          function getSites() {
+            var promise = $.ajax({
+                dataType: 'json',
+                url: '@Url.Action("Sites", "Base")'
+            });
+
+            return promise;
+        }
+
+
+          function getCommercialPayorTypes() {
+            var promise = $.ajax({
+                dataType: 'json',
+                url: '@Url.Action("CommercialPayorTypes","Base")',
+                type: "GET"
+            });
+
+            return promise;
+        }
+
+         function getManagedMedicarePayorTypes() {
+            var promise = $.ajax({
+                dataType: 'json',
+                url: '@Url.Action("ManagedMedicarePayorTypes", "Base")',
+                type: "GET"
+            });
+
+            return promise;
+        }
+
+
+        function getSelected(items, compareItem, propertyName) {
+            if (isIterable(items)) {
+                for (let item of items) {
+                    if (compareItem[propertyName] == item[propertyName]) {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+
+        function loadData() {
+            model.ui.progress(true);
+            $.when(getReferralSource(id), getElectronicReferralTypes(), getCommercialPayorTypes(), getManagedMedicarePayorTypes(),getSites()).then(
+                function (viewModel, electronicReferralTypes, commercialPayorTypes, managedMedicarePayorTypes,sites) {
+                    viewModel = viewModel[0];
+
+                    model.data.Notes(viewModel.Notes);
+
+                
+
+
+
+                    if (viewModel.PendingTask) {
+                        model.data.pendingTaskId(viewModel.PendingTask.UserTaskId);
+                    }
+
+
+                    model.data.fullName(viewModel.Data.FullName);
+                    model.data.shortName(viewModel.Data.ShortName);
+                    model.data.referralSourceTypeId(viewModel.Data.ReferralSourceTypeId);
+                    model.data.referralSourceTypeName(viewModel.Data.ReferralSourceTypeName);
+                    model.data.operationalICUBedCount(viewModel.Data.OperationalICUBedCount);
+                    model.data.bedCount(viewModel.Data.BedCount);
+                    model.data.icuBedCount(viewModel.Data.ICUBedCount);
+                    model.data.ccuBedCount(viewModel.Data.CCUBedCount);
+                    model.data.micuBedCount(viewModel.Data.MICUBedCount);
+                    model.data.sicuBedCount(viewModel.Data.SICUBedCount);
+                    model.data.neuroICUBedCount(viewModel.Data.NeuroICUBedCount);
+                    model.data.rehabBedCount(viewModel.Data.RehabBedCount);
+                    model.data.skilledNursingBedCount(viewModel.Data.SkilledNursingBedCount);
+                    model.data.ltachBedCount(viewModel.Data.LTACHBedCount);
+                    model.data.confirmedBedsCodingICURevCodes(viewModel.Data.ConfirmedBedsCodingICURevCodes);
+
+                    var items = [];
+
+                    for (let item of sites[0]) {
+
+                        var siteItem = {
+                            CHGSiteId: item.CHGSiteId,
+                            Selected: getSelected(viewModel.Data.Sites, item, "CHGSiteId"),
+                            FullName: item.FullName,
+                            ServiceName: item.ServiceName,
+                            RegionName: item.RegionName,
+                            RegionTypeId: item.RegionTypeId,
+                            ServiceTypeId: item.ServiceTypeId
+                        };
+
+
+                        items.push(siteItem);
+
+                    }
+                    model.data.siteOptions(items);
+
+                    items = [];
+
+                    for (let item of electronicReferralTypes[0]) {
+
+                        var electronicReferralTypeItem = {
+                            ElectronicReferralTypeId: item.ElectronicReferralTypeId,
+                            Selected: getSelected(viewModel.Data.ElectronicReferralTypes, item, "ElectronicReferralTypeId"),
+                            Name: item.Name
+                        };
+                        items.push(electronicReferralTypeItem);
+
+                    }
+
+                    model.data.electronicReferralTypesOptions(items);
+
+                    items = [];
+
+                    for (let item of commercialPayorTypes[0]) {
+
+                        var commercialPayorTypeItem = {
+                            CommercialPayorTypeId: item.CommercialPayorTypeId,
+                            Selected: getSelected(viewModel.Data.CommercialPayorTypes, item, "CommercialPayorTypeId"),
+                            Name: item.Name
+                        };
+                        items.push(commercialPayorTypeItem);
+
+                    }
+
+                    model.data.commercialPayorTypesOptions(items);
+
+                    items = [];
+
+                    for (let item of managedMedicarePayorTypes[0]) {
+
+                        var managedMedicarePayorTypeItem = {
+                            ManagedMedicarePayorTypeId: item.ManagedMedicarePayorTypeId,
+                            Selected: getSelected(viewModel.Data.ManagedMedicarePayorTypes, item, "ManagedMedicarePayorTypeId"),
+                            Name: item.Name
+                        };
+                        items.push(managedMedicarePayorTypeItem);
+
+                    }
+
+                    model.data.managedMedicarePayorTypesOptions(items);
+
+
+
+                    model.ui.progress(false);
+                }, handleError
+            );
+
+        }
+
+        function handleError(errorData) {
+            model.ui.progress(false);
+            globalErrorHandler(errorData);
+        }
+
+
+        //UI variables
+        var actionBar = document.getElementById("divActionBar");
+        var offsetValue = actionBar.offsetTop;
+
+        function actionBarFix() {
+            if (window.pageYOffset >= offsetValue) {
+                actionBar.classList.add("action-bar-fixed");
+            } else {
+                actionBar.classList.remove("action-bar-fixed");
+            }
+        }
+
+          model.data.approveDeny = function () {
+            window.location.replace('@Url.Action("ResolveReferralSource","Task")' + '/' + model.data.pendingTaskId());
+        }
+
+        $(document).ready(function () {
+
+            model.ui.progress(true);
+            loadData();
+
+              model.data.editReferralSource = function (data) {
+                window.location.href = '@Url.Action("Edit","ReferralSource")' + "?id=" + id;
+                return false;
+            };
+
+            //UI Initializations.
+            window.onscroll = function () { actionBarFix() };
+
+        });
+
+    </script>
+
+}

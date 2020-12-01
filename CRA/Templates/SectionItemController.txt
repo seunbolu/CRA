@@ -1,0 +1,61 @@
+﻿
+
+   //PainScale mode section
+        public JsonResult PSStatusPainScale(long preScreenId)
+        {
+            var model = new PSStatusPainScaleModel();
+            var item = _dataContext.PSStatusPainScales.Where(p => p.PreScreenId == preScreenId && p.Deleted == false).SingleOrDefault();
+            if (item != null)
+            {
+
+			 model.PS = item.PS;
+ model.LOP = item.LOP;
+ model.PM = item.PM;
+               
+             
+            
+            }
+
+            return Json(model, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult PSStatusPainScale(long preScreenId, PSStatusPainScaleModel model)
+        {
+            if (model != null)
+            {
+                using (var transaction = _dataContext.Database.BeginTransaction())
+                {
+                    var item = _dataContext.PSStatusPainScales.Where(p => p.PreScreenId == preScreenId && p.Deleted == false).SingleOrDefault();
+
+                    if (item == null)
+                    {
+                        item = new PSStatusPainScale();
+                        _dataContext.PSStatusPainScales.Add(item);
+                    }
+
+					
+			 item.PS = model.PS;
+
+  item.LOP = model.LOP;
+
+  item.PM = model.PM;
+
+ 
+
+                        item.PreScreenId = preScreenId;
+
+                    _dataContext.SaveChanges();
+                    transaction.Commit();
+                }
+
+                return Json(new { Status = Constant.RESPONSE_OK, Description = "Pre-screen status pain scale section saved successfully." });
+            }
+
+            return Json(new { Status = Constant.RESPONSE_ERROR, Description = "There was an error in processing the request. Please check the input and try again." });
+        }
+
+
+
+
+	

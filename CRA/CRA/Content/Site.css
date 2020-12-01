@@ -1,0 +1,484 @@
+﻿.header {
+    margin-bottom: 20px;
+    margin-top: 10px;
+}
+
+.footer {
+    position: fixed;
+    bottom: 0px;
+    right: 0px;
+    left: 0px;
+    margin-bottom: 0px;
+    background-color: white;
+    opacity: 1;
+}
+
+body {
+    margin-bottom: 100px;
+    /*font-size: 12pt;*/
+}
+
+label {
+    font-weight: 100;
+}
+
+.keyword-search-textbox {
+    width: 300px !important;
+}
+
+.keyword-search-selectbox {
+    width: 300px !important;
+}
+
+.inline {
+    display: inline;
+}
+
+.separator-right {
+    margin-right: 5px;
+}
+
+
+.separator-right-2x {
+    margin-right: 10px;
+}
+
+.separator-right-4x {
+    margin-right: 20px;
+}
+
+
+.separator-left {
+    margin-left: 5px;
+}
+
+.separator-left-2x {
+    margin-left: 10px;
+}
+
+.separator-left-4x {
+    margin-left: 20px;
+}
+
+.id-column {
+    width: 50px;
+}
+
+.action-column {
+    width: 80px;
+}
+
+
+.action-column-2 {
+    width: 120px;
+}
+
+
+.delete-action {
+    color: red;
+}
+
+
+.edit-action {
+    color: green;
+}
+
+
+.wait {
+    position: fixed;
+    z-index: 10000;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
+    top: 0px;
+    background-color: white;
+}
+
+    .wait i {
+        color: green;
+        font-size: 100px;
+    }
+
+    .wait div {
+        position: absolute;
+        top: 50%;
+        height: 100px;
+        margin-top: -50px;
+        width: 100%;
+    }
+
+.pointer {
+    cursor: pointer;
+}
+
+.confirmation {
+    font-size: 35pt;
+    color: #2b4572;
+}
+
+.error-modal-icon {
+    font-size: 35pt;
+    color: darkred;
+}
+
+.error-alert {
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    z-index: 10000;
+}
+
+.green {
+    color: green;
+}
+
+.action-button {
+    font-size: larger;
+}
+
+
+.control-label {
+    text-align: left !important;
+    font-weight: 700 !important;
+    color: #444444 !important;
+}
+
+
+.error {
+    color: #843534;
+}
+
+input.error {
+    border: 1px solid #843534;
+    background: #f2dede;
+}
+
+select.error {
+    border: 1px solid #843534;
+    color: #777777;
+    background: #f2dede;
+}
+
+label.error {
+    text-align: left !important;
+    font-weight: 700 !important;
+    color: #843534 !important;
+}
+
+textarea.error {
+    border: 1px solid #843534;
+    background: #f2dede;
+}
+
+.separator {
+    height: 15px;
+}
+
+.action-bar {
+    padding-bottom: 20px;
+    padding-left: 0px;
+}
+
+
+.action-bar-fixed {
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    z-index: 999;
+    background-color: white;
+    padding-top: 15px;
+    padding-left: 10px;
+    padding-bottom: 15px;
+    border: 1px dashed #999999;
+}
+
+
+    .action-bar-fixed > * {
+        -webkit-transform: translateZ(0);
+    }
+
+
+.block {
+    display: block;
+}
+
+.span-display {
+    padding: 5px;
+    border: 1px solid #DDDDDD;
+    background: #F5F5F5;
+}
+
+
+.name-column {
+    width: 150px;
+}
+
+.date-column {
+    width: 120px;
+}
+
+
+.short-column {
+    width: 100px;
+}
+
+.phone-column {
+    width: 120px;
+}
+
+.email-column {
+    width: 150px;
+}
+
+.custom-breadcrumb {
+    background-color: #EEEEEE;
+    padding: 5px;
+    padding-left: 10px;
+    margin-right: 15px;
+    margin-left: 15px;
+    margin-bottom: 10px;
+    margin-top: -10px;
+}
+
+.unauthorized {
+}
+
+    .unauthorized .inner {
+        position: absolute;
+        top: 50%;
+        height: 100px;
+        margin-top: -50px;
+        width: 100%;
+        text-align: center;
+    }
+
+    .unauthorized i.fa-ban {
+        font-size: 100px;
+        color: red;
+    }
+
+    .unauthorized span {
+        font-size: 100px;
+        font-family: Calibri,Tahoma;
+    }
+
+
+
+.status-error {
+}
+
+    .status-error .inner {
+        position: absolute;
+        top: 50%;
+        height: 100px;
+        margin-top: -50px;
+        width: 100%;
+        text-align: center;
+    }
+
+    .status-error i.fa-warning {
+        font-size: 100px;
+        color: red;
+    }
+
+    .status-error span {
+        font-size: 100px;
+        font-family: Calibri,Tahoma;
+    }
+
+
+.list {
+    list-style: none;
+}
+
+    .list li span {
+        margin-left: 10px;
+    }
+
+
+.calendar-heading {
+    font-size: 20pt;
+    font-family: Tahoma,Calibri,Arial
+}
+
+
+.calendar-note {
+    font-size: 12pt;
+    font-style: italic;
+    font-family: Tahoma,Calibri,Arial;
+    color: green;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+
+.calendar-min-height {
+    min-height: 150px;
+}
+
+.calendar-zone {
+    font-size: 14pt;
+}
+
+
+
+.calendar-arrow {
+    font-size: 20pt;
+    cursor: pointer;
+    color: gray;
+}
+
+
+.task-check {
+    padding-left: 20px;
+}
+
+.task-span {
+    padding-right: 20px;
+}
+
+.task-label {
+    padding-right: 20px;
+}
+
+.input-p {
+    padding-left: 20px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+
+    .input-p label {
+        padding-right: 10px;
+    }
+
+.datepicker {
+    z-index: 999999 !important;
+}
+
+textarea {
+    resize: none;
+}
+
+
+.section-title {
+    font-size: larger;
+}
+
+.date-control {
+}
+
+
+.phone-mask {
+}
+
+.ssn-mask {
+}
+
+.nav-stacked li a {
+    font-size: 14pt !important;
+}
+
+.pre-screen-links-panel {
+    border: 1px dashed gray;
+    padding-bottom: 10px;
+    padding-top: 10px;
+}
+
+.status-label {
+    font-size: 14pt;
+    padding-top: 3px;
+}
+
+.call-cycle-contact {
+    color: white;
+    padding: 5px;
+    text-align: center;
+    font-size: larger;
+    cursor: pointer;
+    border: dotted 2px black;
+    margin: 2px;
+}
+
+.green-contact{
+    color:green;
+}
+
+.yellow-contact {
+    color: darkorange;
+}
+
+.red-contact {
+    color:darkred;
+}
+
+.blue-contact {
+    color: darkred;
+}
+
+
+.call-cycle-schedule-container {
+    min-height: 500px;
+}
+
+    .call-cycle-schedule-container tr:nth-child(2n+1) td {
+        height: 200px;
+    }
+
+
+.call-cycle-schedule-container-target {
+    background-color: #dddddd;
+}
+
+
+.call-cycle-drop-container {
+    width: 100%;
+    height: 40px;
+    border: 1px dotted;
+    font-style: italic;
+    color: #555555;
+    vertical-align: middle;
+    padding: 10px;
+    text-align: center;
+}
+
+
+.call-cycle-table-header{
+    width:200px;
+    text-align:center;
+}
+
+
+.call-cycle-table-header-width100px {
+    width: 100px;
+}
+
+.call-cycle-table-header-width100pc {
+    width: 100%;
+}
+
+
+
+
+.red-color{
+    color:red;
+}
+
+
+.badge-notify {
+    background: red;
+    position: relative;
+    top: -20px;
+    left: -35px;
+}
+
+
+.italics{
+    font-style:italic;
+}
+
+.bold{
+    font-weight:bold;
+}

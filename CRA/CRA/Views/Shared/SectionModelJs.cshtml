@@ -1,0 +1,389 @@
+﻿@model CRA.Models.Shared.SectionModel
+<script id="@Model.GetUniqueClientCode()">
+
+@if (!string.IsNullOrEmpty(Model.ClientCode) && !string.IsNullOrEmpty(Model.ParentClientCode))
+{
+    <text>if (!@Model.GetUniqueClientCode()) {
+        @Model.GetUniqueClientCode()={ };
+    }
+
+    </text>
+
+    <text>//Declare variables for the section.
+    </text>
+    foreach(var item in Model.Items)
+    {
+        if (item.ItemType == "Table")
+        {
+              <text>@item.GetUniqueClientCode() = ko.observableArray([]);</text>
+        }
+        else
+        {
+            if(item.ItemType == "Check")
+            {
+                  <text>@item.GetUniqueClientCode() = ko.observable(false);</text>
+            }
+            else
+            {
+                  <text>@item.GetUniqueClientCode() = ko.observable("");</text>
+            }
+
+        }
+
+    }
+
+
+
+
+    if (Model.Items.Count() > 0)
+    {
+
+        <text>
+
+    //Declare functions for the section. </text>
+
+        <text>
+           @foreach(var item in Model.Items.Where(p=>p.ItemType=="Table"))
+           {
+               <text>
+    @(Model.GetUniqueClientCode()).create@(item.ClientCode) = function () {
+
+        @for(int i = 0; i < item.CodeList.Length; i++)
+        {
+            <text> @(Model.GetUniqueClientCode()).modal@(item.ClientCode).@(item.CodeList[i])("");</text>
+        }
+
+
+        if (@(Model.GetUniqueClientCode()).validator@(item.ClientCode)) {
+            @(Model.GetUniqueClientCode()).validator@(item.ClientCode).resetForm();
+            $("#modal_form_@item.GetUniqueClientCode().Replace(".", "_") input").removeClass("error");
+        }
+
+        $("#modal_@item.GetUniqueClientCode().Replace(".", "_")").modal("show");
+    };
+    </text>
+
+               <text>
+     @(Model.GetUniqueClientCode()).ok@(item.ClientCode) = function () {
+
+         submitForm("#modal_form_@item.GetUniqueClientCode().Replace(".", "_")");
+    };
+
+                  </text>
+
+
+
+                <text>
+     @(Model.GetUniqueClientCode()).deletemodalitem@(item.ClientCode) = function (data) {
+
+        @(item.GetUniqueClientCode()).remove(data);
+    };
+
+                  </text>
+
+
+
+               <text>
+
+    @(Model.GetUniqueClientCode()).modal@(item.ClientCode)= {
+
+        @for(int i = 0; i < item.CodeList.Length; i++)
+        {
+            <text>@(item.CodeList[i]):ko.observable(""),</text>
+        }
+    };
+
+
+    </text>
+
+           }
+
+
+     @(Model.GetUniqueClientCode()).save = function () {
+
+         model.ui.success(false);
+         model.ui.error(false);
+
+         var items = [];
+
+         var tables = [];
+
+           @foreach(var item in Model.Items.Where(p=>p.ItemType!="Table" && p.IsCalculated==false))
+           {
+               <text>items.push({ "Key": "@(item.ClientCode)", Value:@(item.GetUniqueClientCode())() });</text>
+           }
+
+         @foreach(var item in Model.Items.Where(p=>p.ItemType=="Table"))
+           {
+               <text>
+
+         var table@(item.ClientCode) = {};
+
+         table@(item.ClientCode) .ClientCode = "@item.ClientCode";
+
+         var headers = [];
+         @foreach(var code in item.CodeList)
+         {
+             <text>headers.push("@code");</text>
+         }
+
+         var clientTableData = @(item.GetUniqueClientCode())();
+         var rowData = [];
+
+         for (let row of clientTableData) {
+             var rowItem = [];
+             @foreach(var code in item.CodeList)
+             {
+                 <text>rowItem.push(row.@(code));</text>
+             }
+
+             rowData.push(rowItem);
+         }
+
+         table@(item.ClientCode) .HeaderCodes = headers;
+         table@(item.ClientCode) .CellValues = rowData;
+         tables.push(table@(item.ClientCode) );
+
+
+         </text>
+           }
+
+
+         //Post the data.
+
+         var data = {};
+         data.Context = "@Model.Context";
+         var contextId = 0;
+         if (data.Context == "Patient") {
+             contextId = model.data.patientId();
+         }
+         if (data.Context == "PreScreen") {
+             contextId = id;
+         }
+
+         data.ContextId = contextId;
+         data.SectionCode =  "@(Model.GetUniqueClientCode())";
+         data.Items = items;
+         data.Tables = tables;
+        
+         var promise = $.ajax({
+                dataType: 'json',
+                url: '@Url.Action("UpdatePatientData", "PreScreen")' + '?id=' + id,
+                type: "POST",
+                data:data
+            });
+
+         model.ui.progress(true);
+         promise.then(function (data) {
+
+             //Coupled with the calling method. needs refactoring.
+             GetCompletePrescreenFields();
+
+             model.data.common.validations.validate(function () {
+
+                                   var list = [];
+              
+                        if (data && data.Status) {
+                            if (data.Status == '@Constant.RESPONSE_OK') {
+                                list.push({ "name": "Success", "description": data.Description });
+                                model.ui.successList(list);
+                                model.ui.success(true);
+                            } else {
+                                list.push({ "name": "Error", "description": data.Description });
+                                model.ui.errorList(list);
+                                model.ui.error(true);
+                            }
+                        }
+                        else {
+                            list.push({ "name": "Error", "description": data.Description });
+                            model.ui.errorList(list);
+                            model.ui.error(true);
+
+              }
+             });
+
+           
+              
+            }, handleError);
+
+    }
+    </text>
+
+        <text>
+
+    function GetKeyValue(items, key) {
+        if (items) {
+            for (let item of items) {
+                if (item.Key == key) {
+                    return item.Value;
+                }
+            }
+        }
+
+        return null;
+    }
+
+
+          @(Model.GetUniqueClientCode()).load = function () {
+
+               var data = {};
+         data.Context = "@Model.Context";
+         var contextId = 0;
+         if (data.Context == "Patient") {
+             contextId = model.data.patientId();
+         }
+         if (data.Context == "PreScreen") {
+             contextId = id;
+         }
+
+                var promise = $.ajax({
+                dataType: 'json',
+                    url: '@Url.Action("PatientData", "PreScreen")' + '?Context=@(Model.Context)&ContextId=' + contextId + "&SectionCode=@(Model.GetUniqueClientCode())",
+                type: "GET"
+            });
+            promise.then(function (data) {
+                if (data) {
+
+
+                    @foreach(var item in Model.Items.Where(p => p.ItemType != "Table"))
+                    {
+                        if (item.ItemType == "Check")
+                        {
+                              <text> @(Model.GetUniqueClientCode()).@(item.ClientCode)(GetKeyValue(data.Items,"@item.ClientCode") == "true");</text>
+                        }
+                        else
+                        {
+                             <text> @(Model.GetUniqueClientCode()).@(item.ClientCode)(GetKeyValue(data.Items,"@item.ClientCode"));</text>
+                        }
+
+                    }
+
+                    @foreach(var item in Model.Items.Where(p => p.ItemType == "Table"))
+                    {
+                       <text>
+                    for (let table of data.Tables) {
+                        var baseTable = @(item.GetUniqueClientCode());
+
+                        for (let row of table.CellValues) {
+                            var rowItem = {};
+                            @for(int i= 0;i < item.CodeList.ToArray().Length;i++)
+                            {
+                              <text>
+                            rowItem.@(item.CodeList[i]) = row[@i];
+                            </text>
+                            }
+
+                            @(item.GetUniqueClientCode()).push(rowItem);
+
+                        }
+
+
+                    }
+
+                    </text>
+                    }
+
+
+
+                   @if (Model.ClientCallBack != null)
+                   {
+                       <text>
+
+                    $(document).ready(function () {
+
+                        @(Model.ClientCallBack);
+                    });
+
+                    </text>
+                   }
+
+                  }
+
+              }, handleError);
+
+         };
+
+         </text>
+
+        <text>
+
+
+    //Validation logic goes here.
+    @(Model.GetUniqueClientCode()).validationSettings = function () {
+
+        @foreach (var item in Model.Items.Where(p => p.ItemType == "Table"))
+        {
+            bool first = true;
+
+           <text>
+
+        @(Model.GetUniqueClientCode()).validator@(item.ClientCode) = $('#modal_form_@item.GetUniqueClientCode().Replace(".", "_")').validate({
+            rules: {
+                @foreach (var code in item.CodeList)
+                {
+                    if (!first)
+                    {<text>,</text>}<text>@code: 'required'</text>
+                    first = false;
+                }
+            },
+            messages: {
+                @{  first = true;}
+                  @foreach (var code in item.CodeList)
+                  {
+                      if (!first)
+                      {<text>,</text>}<text>@code: 'Please enter the @code'</text>
+                      first = false;
+                  }
+            },
+            submitHandler: function (form) {
+                var item = {};
+                 @foreach(var code in item.CodeList)
+                {
+                    <text>  item.@(code) = @(Model.GetUniqueClientCode()).modal@(item.ClientCode).@(code)();</text>
+                }
+
+                var items = @(Model.GetUniqueClientCode()).@(item.ClientCode)();
+                items.push(item);
+                @(Model.GetUniqueClientCode()).@(item.ClientCode)(items);
+                $("#modal_@item.GetUniqueClientCode().Replace(".", "_")").modal("hide");
+            }
+        });
+
+        </text>
+        }
+    }
+
+    </text>
+
+    }
+
+    <text>
+    $(document).ready(function () {
+        if (@(Model.GetUniqueClientCode()).validationSettings) {
+  @(Model.GetUniqueClientCode()).validationSettings();
+
+        }
+        if (@(Model.GetUniqueClientCode()).load) {
+
+        @(Model.GetUniqueClientCode()).load();
+
+        }
+    });
+    </text>
+
+}
+</script>
+
+
+@foreach (var accordion1 in Model.Accordions)
+{
+    foreach (var sec1 in accordion1.Sections)
+    {
+        if (!string.IsNullOrEmpty(sec1.ClientCode) && !string.IsNullOrEmpty(sec1.ParentClientCode))
+        {
+            @Html.Partial("SectionModelJs", sec1);
+
+        }
+
+    }
+}

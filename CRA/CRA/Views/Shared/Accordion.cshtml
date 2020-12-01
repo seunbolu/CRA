@@ -1,0 +1,39 @@
+﻿@model CRA.Models.Shared.AccordionModel
+<div class="panel-group" id="@(Model.ClientId)">
+    @foreach (var sec in Model.Sections)
+    {
+
+        if (sec.Accordions.Count() > 0 || sec.Items.Count() > 0)
+        {
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-xs-12 pointer" data-toggle="collapse" data-parent="#@(sec.ParentClientId)" href="#@(sec.ClientId)">
+                            <h3 class="inline">@sec.Label</h3>
+                            @if (sec.SaveButtonVisible)
+                            {
+                                if (sec.Items.Count() > 0)
+                                {
+                                    <button class="btn btn-success  pull-right" data-bind="click:@(sec.GetDataBoundUniqueClientCode()).save, clickBubble: false">Save</button>
+                                }
+                            }
+                        </div>
+                    </div>
+                </div>
+                <div id="@(sec.ClientId)" class="panel-collapse collapse @(sec.Active ? "in" : "")">
+                    <div class="panel-body">
+                        @Html.Partial("SectionModel", sec)
+                        @if (sec.SaveButtonVisible)
+                        {
+                            if (sec.Items.Count() > 0)
+                            {
+                                <button class="btn btn-success  pull-right" data-bind="click:@(sec.GetDataBoundUniqueClientCode()).save, clickBubble: false">Save</button>
+                            }
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+    }
+
+</div>

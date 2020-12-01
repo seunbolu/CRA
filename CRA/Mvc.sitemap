@@ -1,0 +1,77 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<mvcSiteMap xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xmlns="http://mvcsitemap.codeplex.com/schemas/MvcSiteMap-File-4.0"
+            xsi:schemaLocation="http://mvcsitemap.codeplex.com/schemas/MvcSiteMap-File-4.0 MvcSiteMapSchema.xsd">
+
+
+  <mvcSiteMapNode title="Dashboard" controller="Dashboard" action="Index">
+    <mvcSiteMapNode title="Users" controller="User" action="Index">
+      <mvcSiteMapNode title="Create" controller="User" action="Create"/>
+      <mvcSiteMapNode title="Edit" controller="User" action="Edit"/>
+      <mvcSiteMapNode title="Detail" controller="User" action="Detail"/>
+    </mvcSiteMapNode>
+
+    <mvcSiteMapNode title="CHG Sites" controller="CHGSite" action="Index">
+      <mvcSiteMapNode title="Create" controller="CHGSite" action="Create"/>
+      <mvcSiteMapNode title="Edit" controller="CHGSite" action="Edit"/>
+      <mvcSiteMapNode title="Detail" controller="CHGSite" action="Detail"/>
+    </mvcSiteMapNode>
+
+    <mvcSiteMapNode title="Referral Sources" controller="ReferralSource" action="Index">
+      <mvcSiteMapNode title="Create" controller="ReferralSource" action="Create"/>
+      <mvcSiteMapNode title="Edit" controller="ReferralSource" action="Edit"/>
+      <mvcSiteMapNode title="Detail" controller="ReferralSource" action="Detail"/>
+    </mvcSiteMapNode>
+
+
+    <mvcSiteMapNode title="Contacts" controller="Contact" action="Index">
+      <mvcSiteMapNode title="Create" controller="Contact" action="Create"/>
+      <mvcSiteMapNode title="Edit" controller="Contact" action="Edit"/>
+      <mvcSiteMapNode title="Detail" controller="Contact" action="Detail"/>
+    </mvcSiteMapNode>
+
+
+    <mvcSiteMapNode title="Referrals" controller="Referral" action="Index">
+      <mvcSiteMapNode title="Create" controller="Referral" action="Create"/>
+      <mvcSiteMapNode title="Edit" controller="Referral" action="Edit"/>
+      <mvcSiteMapNode title="Detail" controller="Referral" action="Detail"/>
+      <mvcSiteMapNode title="Edit" controller="Pending" action="Edit"/>
+    </mvcSiteMapNode>
+
+
+    
+    <mvcSiteMapNode title="Call Cycle" controller="CallCycle" action="Index">
+      <mvcSiteMapNode title="Call Cycle Admin" controller="CallCycle" action="Admin"/>
+      <mvcSiteMapNode title="Call Cycle Pending Schedule" controller="CallCycle" action="PendingSchedule"/>
+    </mvcSiteMapNode>
+
+
+    <mvcSiteMapNode title="Tasks" controller="Task" action="Index">
+      <mvcSiteMapNode title="Resolve Task" controller="Task" action="Resolve"/>
+    </mvcSiteMapNode>
+
+    <mvcSiteMapNode title="Patients" controller="Patient" action="Index">
+      <mvcSiteMapNode title="Edit" controller="Patient" action="Edit"/>
+    </mvcSiteMapNode>
+
+
+
+    <mvcSiteMapNode title="Reports" controller="Report" action="Index">
+    </mvcSiteMapNode>
+    
+    <mvcSiteMapNode title="Error" controller="Status" action="Index">
+      <mvcSiteMapNode title="Unauthorized" controller="Status" action="Unauthorized"/>
+    </mvcSiteMapNode>
+    
+    <mvcSiteMapNode title="Pre-Screens" controller="PreScreen" action="Index">
+      <mvcSiteMapNode title="Create" controller="PreScreen" action="Create"/>
+      <mvcSiteMapNode title="Edit" controller="PreScreen" action="Edit"/>
+    </mvcSiteMapNode>
+    
+  </mvcSiteMapNode>
+
+
+
+
+
+</mvcSiteMap>

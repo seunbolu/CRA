@@ -1,0 +1,111 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27703.2000
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CRA", "CRA\CRA.csproj", "{3864620A-D22B-483B-A961-2AC8F56BF23E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CRA.Data", "CRA.Data\CRA.Data.csproj", "{1B503F2B-CE4A-4C7F-B2A5-31F86D235086}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CRA.Scheduler", "CRA.Scheduler\CRA.Scheduler.csproj", "{F9ABC6ED-B928-4F7E-8148-4320C60CF575}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CRA.Tasks", "CRA.Tasks\CRA.Tasks.csproj", "{0EF4667E-301F-4074-A265-3D23D5DDB0DC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CRA.Terminal", "CRA.Terminal\CRA.Terminal.csproj", "{EF22B999-D38E-4C4D-B938-4BC7578042CD}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tasks", "Tasks", "{A6A2F8BE-253D-46B8-98CB-5A3E09C7D833}"
+	ProjectSection(SolutionItems) = preProject
+		PatientData.txt = PatientData.txt
+		scrap.txt = scrap.txt
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CRA.Events", "CRA.Events\CRA.Events.csproj", "{91D702B6-82A5-40A3-8A23-069A3E7DA6B2}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		PushTest|Any CPU = PushTest|Any CPU
+		Release|Any CPU = Release|Any CPU
+		Test|Any CPU = Test|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3864620A-D22B-483B-A961-2AC8F56BF23E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3864620A-D22B-483B-A961-2AC8F56BF23E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3864620A-D22B-483B-A961-2AC8F56BF23E}.PushTest|Any CPU.ActiveCfg = PushTest|Any CPU
+		{3864620A-D22B-483B-A961-2AC8F56BF23E}.PushTest|Any CPU.Build.0 = PushTest|Any CPU
+		{3864620A-D22B-483B-A961-2AC8F56BF23E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3864620A-D22B-483B-A961-2AC8F56BF23E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3864620A-D22B-483B-A961-2AC8F56BF23E}.Test|Any CPU.ActiveCfg = Test|Any CPU
+		{3864620A-D22B-483B-A961-2AC8F56BF23E}.Test|Any CPU.Build.0 = Test|Any CPU
+		{1B503F2B-CE4A-4C7F-B2A5-31F86D235086}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1B503F2B-CE4A-4C7F-B2A5-31F86D235086}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1B503F2B-CE4A-4C7F-B2A5-31F86D235086}.PushTest|Any CPU.ActiveCfg = PushTest|Any CPU
+		{1B503F2B-CE4A-4C7F-B2A5-31F86D235086}.PushTest|Any CPU.Build.0 = PushTest|Any CPU
+		{1B503F2B-CE4A-4C7F-B2A5-31F86D235086}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1B503F2B-CE4A-4C7F-B2A5-31F86D235086}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1B503F2B-CE4A-4C7F-B2A5-31F86D235086}.Test|Any CPU.ActiveCfg = Test|Any CPU
+		{1B503F2B-CE4A-4C7F-B2A5-31F86D235086}.Test|Any CPU.Build.0 = Test|Any CPU
+		{F9ABC6ED-B928-4F7E-8148-4320C60CF575}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F9ABC6ED-B928-4F7E-8148-4320C60CF575}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F9ABC6ED-B928-4F7E-8148-4320C60CF575}.PushTest|Any CPU.ActiveCfg = PushTest|Any CPU
+		{F9ABC6ED-B928-4F7E-8148-4320C60CF575}.PushTest|Any CPU.Build.0 = PushTest|Any CPU
+		{F9ABC6ED-B928-4F7E-8148-4320C60CF575}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F9ABC6ED-B928-4F7E-8148-4320C60CF575}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F9ABC6ED-B928-4F7E-8148-4320C60CF575}.Test|Any CPU.ActiveCfg = Test|Any CPU
+		{F9ABC6ED-B928-4F7E-8148-4320C60CF575}.Test|Any CPU.Build.0 = Test|Any CPU
+		{0EF4667E-301F-4074-A265-3D23D5DDB0DC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0EF4667E-301F-4074-A265-3D23D5DDB0DC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0EF4667E-301F-4074-A265-3D23D5DDB0DC}.PushTest|Any CPU.ActiveCfg = PushTest|Any CPU
+		{0EF4667E-301F-4074-A265-3D23D5DDB0DC}.PushTest|Any CPU.Build.0 = PushTest|Any CPU
+		{0EF4667E-301F-4074-A265-3D23D5DDB0DC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0EF4667E-301F-4074-A265-3D23D5DDB0DC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0EF4667E-301F-4074-A265-3D23D5DDB0DC}.Test|Any CPU.ActiveCfg = Test|Any CPU
+		{0EF4667E-301F-4074-A265-3D23D5DDB0DC}.Test|Any CPU.Build.0 = Test|Any CPU
+		{EF22B999-D38E-4C4D-B938-4BC7578042CD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EF22B999-D38E-4C4D-B938-4BC7578042CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EF22B999-D38E-4C4D-B938-4BC7578042CD}.PushTest|Any CPU.ActiveCfg = PushTest|Any CPU
+		{EF22B999-D38E-4C4D-B938-4BC7578042CD}.PushTest|Any CPU.Build.0 = PushTest|Any CPU
+		{EF22B999-D38E-4C4D-B938-4BC7578042CD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EF22B999-D38E-4C4D-B938-4BC7578042CD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EF22B999-D38E-4C4D-B938-4BC7578042CD}.Test|Any CPU.ActiveCfg = Test|Any CPU
+		{EF22B999-D38E-4C4D-B938-4BC7578042CD}.Test|Any CPU.Build.0 = Test|Any CPU
+		{91D702B6-82A5-40A3-8A23-069A3E7DA6B2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{91D702B6-82A5-40A3-8A23-069A3E7DA6B2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{91D702B6-82A5-40A3-8A23-069A3E7DA6B2}.PushTest|Any CPU.ActiveCfg = Release|Any CPU
+		{91D702B6-82A5-40A3-8A23-069A3E7DA6B2}.PushTest|Any CPU.Build.0 = Release|Any CPU
+		{91D702B6-82A5-40A3-8A23-069A3E7DA6B2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{91D702B6-82A5-40A3-8A23-069A3E7DA6B2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{91D702B6-82A5-40A3-8A23-069A3E7DA6B2}.Test|Any CPU.ActiveCfg = Release|Any CPU
+		{91D702B6-82A5-40A3-8A23-069A3E7DA6B2}.Test|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {BF5E93B0-8E62-444E-A022-ABDE44BDCF80}
+	EndGlobalSection
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 7
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = http://chgsql3:8080/tfs/cra%20project
+		SccLocalPath0 = .
+		SccProjectUniqueName1 = CRA.Data\\CRA.Data.csproj
+		SccProjectName1 = CRA.Data
+		SccLocalPath1 = CRA.Data
+		SccProjectUniqueName2 = CRA\\CRA.csproj
+		SccProjectName2 = CRA
+		SccLocalPath2 = CRA
+		SccProjectUniqueName3 = CRA.Scheduler\\CRA.Scheduler.csproj
+		SccProjectName3 = CRA.Scheduler
+		SccLocalPath3 = CRA.Scheduler
+		SccProjectUniqueName4 = CRA.Tasks\\CRA.Tasks.csproj
+		SccProjectName4 = CRA.Tasks
+		SccLocalPath4 = CRA.Tasks
+		SccProjectUniqueName5 = CRA.Terminal\\CRA.Terminal.csproj
+		SccProjectName5 = CRA.Terminal
+		SccLocalPath5 = CRA.Terminal
+		SccProjectUniqueName6 = CRA.Events\\CRA.Events.csproj
+		SccProjectName6 = CRA.Events
+		SccLocalPath6 = CRA.Events
+	EndGlobalSection
+EndGlobal

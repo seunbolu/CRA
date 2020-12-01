@@ -1,0 +1,33 @@
+﻿<div class="modal fade" id="validationError" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static"
+     data-keyboard="false">
+    <div class="modal-dialog" role="document" style="width:1000px;margin:auto;">
+        <div class="modal-content" >
+            <div class="modal-header">
+                <i class="fa fa-exclamation-triangle error-modal-icon inline separator-right-4x" aria-hidden="true" ></i>
+                <h2 class="modal-title inline" >Validation Errors</h2>
+            </div>
+            <div class="modal-body" >
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th class="name-column">Category</th>
+                            <th>Item</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody data-bind="foreach:data.validationErrors">
+                        <tr>
+                            <td data-bind="text:Section"></td>
+                            <td data-bind="text:Label"></td>
+                            <td data-bind="text:Error"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+             
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

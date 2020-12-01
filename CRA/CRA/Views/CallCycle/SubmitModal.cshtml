@@ -1,0 +1,32 @@
+﻿<div class="modal fade" id="submitModal" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static"
+     data-keyboard="false">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title inline">Enter Notes</h2>
+            </div>
+            <div class="modal-body">
+                <form>
+
+
+                    <div class="form-horizontal">
+                
+                            <div class="form-group">
+          
+                                    <div class="col-xs-12">
+                                        <textarea class="form-control" data-bind="value:data.notes" rows="6"></textarea>
+                                    </div>
+                                </div>
+                             
+                          
+                        </div>
+                
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bind="click:data.save">Ok</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>

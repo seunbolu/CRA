@@ -1,0 +1,105 @@
+﻿<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ output extension=".txt" #>
+<#
+string captionSection ="status";
+string subSectionCaption ="pain scale";
+
+string mainSection ="psstatus";
+string subSection ="painscale";
+string mainSectionUpper ="PSStatus";
+string subSectionUpper ="PainScale";
+
+
+List<Item> items = new List<Item>();
+
+items.Add(new Item(){Label="Pain Scale",TypeName="Number",Code="PS"});
+items.Add(new Item(){Label="Location of Pain",TypeName="Text",Code="LOP"});
+items.Add(new Item(){Label="Pain Management",TypeName="Option",Code="PM"});
+
+
+
+
+#>
+
+
+   //<#=subSectionUpper#> mode section
+        public JsonResult <#=mainSectionUpper#><#=subSectionUpper#>(long preScreenId)
+        {
+            var model = new <#=mainSectionUpper#><#=subSectionUpper#>Model();
+            var item = _dataContext.<#=mainSectionUpper#><#=subSectionUpper#>s.Where(p => p.PreScreenId == preScreenId && p.Deleted == false).SingleOrDefault();
+            if (item != null)
+            {
+
+			<#foreach(var item in items){
+#>
+ model.<#=item.Code#> = item.<#=item.Code#>;
+<#}#>
+               
+             
+            
+            }
+
+            return Json(model, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult <#=mainSectionUpper#><#=subSectionUpper#>(long preScreenId, <#=mainSectionUpper#><#=subSectionUpper#>Model model)
+        {
+            if (model != null)
+            {
+                using (var transaction = _dataContext.Database.BeginTransaction())
+                {
+                    var item = _dataContext.<#=mainSectionUpper#><#=subSectionUpper#>s.Where(p => p.PreScreenId == preScreenId && p.Deleted == false).SingleOrDefault();
+
+                    if (item == null)
+                    {
+                        item = new <#=mainSectionUpper#><#=subSectionUpper#>();
+                        _dataContext.<#=mainSectionUpper#><#=subSectionUpper#>s.Add(item);
+                    }
+
+					
+			<#foreach(var item in items){
+#>
+ item.<#=item.Code#> = model.<#=item.Code#>;
+
+ <#if(item.Dep!=null){#>
+
+
+ if(item.<#=item.Dep#>!="<#=item.DepValue#>"){
+  item.<#=item.Code#> = null;
+ }
+
+<#}#>
+<#}#>
+
+
+                        item.PreScreenId = preScreenId;
+
+                    _dataContext.SaveChanges();
+                    transaction.Commit();
+                }
+
+                return Json(new { Status = Constant.RESPONSE_OK, Description = "Pre-screen <#=captionSection#> <#=subSectionCaption#> section saved successfully." });
+            }
+
+            return Json(new { Status = Constant.RESPONSE_ERROR, Description = "There was an error in processing the request. Please check the input and try again." });
+        }
+
+
+
+
+	<#+
+
+class Item{
+	public string Code {get;set;}
+	public string Label {get;set;}
+	public string TypeName {get;set;}
+	public string Dep {get;set;}
+	public string DepValue {get;set;}
+	}
+
+	#>

@@ -1,0 +1,12 @@
+﻿
+public class PSStatusPainScaleModel
+    {
+
+
+
+public decimal? PS {get;set;}
+public string LOP {get;set;}
+public string PM {get;set;}
+
+}
+	

@@ -1,0 +1,30 @@
+﻿<div class="modal fade" id="ceoApproval" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static"
+     data-keyboard="false">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <i class="fa fa-question-circle-o inline confirmation separator-right-4x" aria-hidden="true"></i>
+                <h2 class="modal-title inline" >CEO Approval Request</h2>
+            </div>
+            <div class="modal-body">
+
+          
+                <div class="row">
+                    <div class="form-group">
+                        <div class="col-xs-12">
+                            <label class="control-label col-xs-12">
+                                Notes
+                                <textarea class="form-control col-xs-12" rows="5" data-bind="value:data.workflow.ceoApprovalNotes"></textarea>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bind="click:data.ceoApproval">Ok</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,76 @@
+﻿<div class="modal fade" id="logUnplannedModal" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static"
+     data-keyboard="false">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title inline">Log Unplanned Contact</h2>
+            </div>
+            <div class="modal-body">
+                <form>
+
+
+                    <div class="form-horizontal">
+
+                        <div class="form-group">
+
+                            <div class="col-xs-12">
+                                <label class="control-label">
+                                    Contact Type
+                                </label>
+                                <select class="form-control" data-bind="value:data.unplannedContactType">
+                                    <option value="">-Select Option-</option>
+                                    <option value="Contact">Contact</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+
+
+
+                            <div class="col-xs-12" data-bind="css:{hide:data.unplannedContactType()!='Contact'}">
+                                <label class="control-label">
+                                    Select Site
+                                </label>
+                                <select class="form-control" data-bind="options: data.sites(), optionsText: 'FullName',optionsValue:'CHGSiteId',optionsCaption: '@Constant.DEFAULT_SELECTALL_OPTION',value:data.CHGSiteId">
+                                    <option value="">-Select Option-</option>
+                                    <option value="Contact">Contact</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+
+                            <div class="col-xs-12" data-bind="css:{hide:data.unplannedContactType()!='Contact'}">
+                                <label class="control-label">
+                                    Select Referral Source
+                                </label>
+                                <select class="form-control" data-bind="options: data.referralSources(), optionsText: 'FullName',optionsValue:'ReferralSourceId',optionsCaption: '@Constant.DEFAULT_SELECTALL_OPTION',value:data.referralSourceId"></select>
+
+                            </div>
+
+
+                            <div class="col-xs-12" data-bind="css:{hide:data.unplannedContactType()!='Contact'}">
+                                <label class="control-label">
+                                    Select Contact
+                                </label>
+                                <select class="form-control" data-bind="options: data.contacts(), optionsText: 'Description',optionsValue:'ContactId',optionsCaption: '@Constant.DEFAULT_SELECTALL_OPTION',value:data.contactId"></select>
+
+                            </div>
+
+
+                            <div class="col-xs-12">
+                                <label class="control-label">
+                                    Notes
+                                </label>
+                                <textarea class="form-control" data-bind="value:data.notes" rows="6"></textarea>
+                            </div>
+                        </div>
+
+                    </div>
+                
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bind="click:data.saveUnplanned">Ok</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>

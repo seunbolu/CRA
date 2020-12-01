@@ -1,0 +1,425 @@
+﻿@{
+    ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div id="divActionBar" class="container-fluid action-bar">
+    <div class="row">
+        <div class="col-xs-6">
+            <button class="btn btn-default">@Html.ActionLink("Back to Contacts", "Index")</button>
+        </div>
+        <div class="col-xs-6">
+            <button id="btnSaveGeneral" class="btn btn-primary pull-right">Save</button>
+        </div>
+    </div>
+</div>
+
+<form id="frmGeneral">
+
+    <div class="panel panel-default">
+        <div class="panel-heading pointer">
+            General
+        </div>
+        <div class="panel-body">
+
+            <div class="form-horizontal">
+
+                <div class="form-group">
+                    <div class="col-xs-12">
+                        <label class="col-xs-12 control-label">
+                            First Name
+                            <input type="text" name="txtFirstName" class="form-control" data-bind="value:data.firstName" />
+                        </label>
+
+                    </div>
+                </div>
+
+                <div class="form-group">
+
+                    <div class="col-xs-12">
+                        <label class="col-xs-12 control-label">
+                            Last Name
+                            <input type="text" name="txtLastName" class="form-control" data-bind="value:data.lastName" />
+                        </label>
+
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+
+                    <div class="col-xs-12">
+                        <label class="col-xs-12 control-label">
+                            Email
+                            <input type="text" name="txtEmail" class="form-control" data-bind="value:data.email" />
+                        </label>
+
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    <div class="col-xs-12">
+                        <label class="col-xs-12 control-label">
+                            Phone
+                            <input type="tel" class="form-control phone-mask" data-bind="value:data.phone" />
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-xs-12">
+                        <label class="col-xs-12 control-label">
+                            Mobile
+                            <input type="tel" class="form-control phone-mask" data-bind="value:data.mobile" />
+                        </label>
+
+                    </div>
+                </div>
+
+                <div class="form-group">
+
+                    <div class="col-xs-12">
+                        <label class="col-xs-12 control-label">
+                            Location
+                            <textarea name="txtLocation" class="form-control" data-bind="value:data.location"></textarea>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+
+                    <div class="col-xs-12">
+                        <label class="col-xs-12 control-label">
+                            Notes
+                            <textarea name="txtNote" class="form-control" data-bind="value:data.note"></textarea>
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <div class="col-xs-12">
+                        <label class="col-xs-12 control-label">
+                            Category
+                            <select name="lstCategoryTypes" class="form-control" data-bind="options: data.categoryTypes(), optionsText: 'Name',optionsValue:'CategoryTypeId',optionsCaption: '@Constant.DEFAULT_SELECTALL_OPTION',value:data.categoryTypeId"></select>
+                        </label>
+                    </div>
+                </div>
+
+
+            </div>
+
+
+        </div>
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-heading pointer">
+            Referral Source Assignment
+        </div>
+        <div class="panel-body">
+
+            <div class="form-horizontal">
+                <div class="form-group">
+                    <div class="col-xs-12">
+                        <label class="col-xs-12 control-label">
+                            Select Referral Source
+                            <input name="txtReferralSourceName" id="autoCompleteReferralSources" type="text" class="form-control" data-bind="value:data.referralSourceName" />
+                        </label>
+                    </div>
+                    <div class="separator col-xs-12 hidden visible-xs visible-sm visible-md visible-lg"></div>
+                  
+                        <div class="col-xs-12">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th class="action-column">Action</th>
+                                        <th class="name-column">Type</th>
+                                        <th>Full Name</th>
+                                    </tr>
+                                </thead>
+                                <tbody data-bind="foreach: data.referralSources">
+                                    <tr>
+                                        <td>
+                                            <span data-bind="click:$root.data.deleteClick" class="glyphicon glyphicon-remove delete-action pointer"></span>
+                                        </td>
+                                        <td data-bind="text:ReferralSourceTypeName"></td>
+                                        <td data-bind="text:FullName"></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                 
+                </div>
+
+
+
+            </div>
+        </div>
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-heading pointer">
+            Role Assignment
+        </div>
+        <div class="panel-body">
+
+            <div class="form-horizontal">
+                <div class="form-group">
+                    <div class="col-xs-12">
+                        <label class="col-xs-12 control-label">
+                            Select Role
+                            <select name="lstContactRoleTypes" class="form-control" data-bind="options: data.contactRoleTypes(), optionsText: 'Name',optionsValue:'Name',optionsCaption: '@Constant.DEFAULT_SELECTALL_OPTION',value:data.contactRoleTypeName"></select>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group" data-bind="css: { hide: data.contactRoleTypeName()!='Nurse Practitioner' && data.contactRoleTypeName()!='Physician' }">
+                    <div class="col-xs-12">
+                        <label class="col-xs-12 control-label">
+                            Select Speciality
+                            <select name="lstSpecialityTypes" class="form-control" data-bind="options: data.specialityTypes(), optionsText: 'Name',optionsValue:'SpecialityTypeId',optionsCaption: '@Constant.DEFAULT_SELECTALL_OPTION',value:data.specialityTypeId"></select>
+                        </label>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+
+</form>
+
+
+@section scripts{
+    <script>
+
+        var id;
+
+        //Initialize variables.
+        model.data.firstName = ko.observable("");
+        model.data.lastName = ko.observable("");
+        model.data.email = ko.observable("");
+        model.data.mobile = ko.observable("");
+        model.data.phone = ko.observable("");
+        model.data.location = ko.observable("");
+        model.data.note = ko.observable("");
+       
+
+        model.data.categoryTypes = ko.observableArray([]);
+        model.data.categoryTypeId = ko.observable("");
+
+        model.data.contactRoleTypes = ko.observableArray([]);
+        model.data.contactRoleTypeName = ko.observable("");
+
+        model.data.specialityTypes = ko.observableArray([]);
+        model.data.specialityTypeId = ko.observable("");
+
+        model.data.referralSourceName = ko.observable("");
+        model.data.referralSources = ko.observableArray([]);
+
+
+
+
+        function handleError(errorData) {
+            model.ui.progress(false);
+            globalErrorHandler(errorData);
+        }
+
+        $("#btnSaveGeneral").click(function () {
+            submitForm('#frmGeneral');
+        });
+
+        //UI variables
+        var actionBar = document.getElementById("divActionBar");
+        var offsetValue = actionBar.offsetTop;
+
+        function actionBarFix() {
+            if (window.pageYOffset >= offsetValue) {
+                actionBar.classList.add("action-bar-fixed");
+            } else {
+                actionBar.classList.remove("action-bar-fixed");
+            }
+        }
+
+         function getContact(id) {
+            var promise = $.ajax({
+                dataType: 'json',
+                url: '@Url.Action("DetailEntity","Contact")' + '?id=' + id,
+                type: "GET"
+            });
+
+            return promise;
+        }
+
+          function getCategoryTypes() {
+            var promise = $.ajax({
+                dataType: 'json',
+                url: '@Url.Action("CategoryTypes", "Base")',
+                type: "GET"
+            });
+
+            return promise;
+        }
+
+          function getContactRoleTypes() {
+            var promise = $.ajax({
+                dataType: 'json',
+                url: '@Url.Action("ContactRoleTypes", "Base")',
+                type: "GET"
+            });
+
+            return promise;
+        }
+
+         function getSpecialityTypes() {
+            var promise = $.ajax({
+                dataType: 'json',
+                url: '@Url.Action("SpecialityTypes", "Base")',
+                type: "GET"
+            });
+
+            return promise;
+        }
+
+
+          function createContact(id,data) {
+            var promise = $.ajax({
+                dataType: 'json',
+                url: '@Url.Action("Create","Contact")' + '?id=' + id,
+                type: "POST",
+                data:data
+            });
+
+            return promise;
+        }
+
+
+         //Validation logic goes here.
+        function validationSettings() {
+            $('#frmGeneral').validate({
+                rules: {
+                    txtFirstName: {required:true},
+                    txtLastName: { required: true },
+                    txtEmail: {
+                        email: true
+                    },
+                    lstCategoryTypes: {
+                        required: true
+                    },
+                    lstContactRoleTypes: { required: true }
+                },
+                messages: {
+                    txtFirstName: 'First name is required.',
+                    txtLastName: 'Last name is required.',
+                    txtEmail: {
+                        email: 'Please enter a valid email address.'
+                    },
+                    lstCategoryTypes: {
+                        required: 'Please select the category type.'
+                    },
+                    lstContactRoleTypes: {
+                        required: 'Please select the contact role type.'
+                    }
+                },
+                submitHandler: function (form) {
+
+                    var data = {
+                        "FirstName": model.data.firstName(),
+                        "LastName": model.data.lastName(),
+                        "Email": model.data.email(),
+                        "Phone": model.data.phone(),
+                        "Mobile": model.data.mobile(),
+                        "CategoryTypeId": model.data.categoryTypeId(),
+                        "Location": model.data.location(),
+                        "Note": model.data.note(),
+                        "ContactRoleTypeName": model.data.contactRoleTypeName(),
+                        "SpecialityTypeId": model.data.specialityTypeId(),
+                        "ReferralSources": model.data.referralSources()
+                    };
+
+                    var promise = createContact(id,data);
+                    promise.then(function (data) {
+                        var list = [];
+
+                        if (data && data.Status) {
+                            if (data.Status == '@Constant.RESPONSE_OK') {
+                                list.push({ "name": "Success", "description": data.Description });
+                                model.ui.successList(list);
+                                model.ui.success(true);
+                            } else {
+                                list.push({ "name": "Error", "description": data.Description });
+                                model.ui.errorList(list);
+                                model.ui.error(true);
+                            }
+                        }
+                        else {
+                            list.push({ "name": "Error", "description": data.Description });
+                            model.ui.errorList(list);
+                            model.ui.error(true);
+
+                        }
+
+                    }, handleError);
+
+                }
+            });
+        }
+
+        function loadData() {
+            $.when(getCategoryTypes(), getContactRoleTypes(), getSpecialityTypes()).then(function (categoryTypes, contactRoleTypes,specialityTypes) {
+                model.data.categoryTypes(categoryTypes[0]);
+                model.data.contactRoleTypes(contactRoleTypes[0]);
+                model.data.specialityTypes(specialityTypes[0]);
+
+            }, handleError);
+        }
+
+        $(document).ready(function () {
+            //model.ui.progress(true);
+            validationSettings();
+
+             $("#autoCompleteReferralSources").autocomplete({
+                source: '@Url.Action("AutoCompleteReferralSources","ReferralSource")',
+                minLength: 2,
+                select: function (event, ui) {
+                    event.preventDefault();
+                    $("#autoCompleteReferralSources").val(ui.item.userName);
+                   // model.data.referralSourceName(ui.item.FullName);
+
+                    for (let item of model.data.referralSources()) {
+                        if (item.ReferralSourceId() == ui.item.ReferralSourceId) {
+                            return;
+                        }
+
+                    }
+
+                    var referralSourceItem = {
+                        ReferralSourceId: ko.observable(ui.item.ReferralSourceId),
+                        FullName: ko.observable(ui.item.FullName),
+                        ShortName: ko.observable(ui.item.ShortName),
+                        ReferralSourceTypeName: ko.observable(ui.item.ReferralSourceTypeName)
+                    };
+
+                    model.data.referralSources.push(referralSourceItem);
+                }
+            });
+
+            loadData();
+
+            model.data.deleteClick = function (data) {
+                model.data.referralSources.remove(function (item) {
+                    return item.ReferralSourceId == data.ReferralSourceId;
+                });
+                return false;
+            };
+
+            //UI Initializations.
+            window.onscroll = function () { actionBarFix() };
+        });
+
+    </script>
+
+
+}

@@ -1,0 +1,497 @@
+﻿@model CRA.Models.CallCycle.CallCycleModel
+@{
+    ViewBag.Title = "Call Cycle";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@Html.Partial("LogUnplannedModal")
+<div class="panel panel-default">
+    <div class="panel-heading">
+        Actions
+    </div>
+    <div class="panel-body">
+        <button class="btn btn-primary" data-bind="click:data.showUnplanned">Add Unplanned Contact</button>
+    </div>
+</div>
+
+<div class="panel">
+    <div class="panel-body">
+        <div class="container-fluid">
+            <ul class="nav  nav-tabs">
+
+                <li class="active">
+                    <a data-toggle="pill" href='#tab_day'>Day View</a>
+                </li>
+                <li>
+                    <a data-toggle="pill" href='#tab_week'>Week View</a>
+                </li>
+                <li>
+                    <a data-toggle="pill" href='#tab_unplanned'>Unplanned Activity</a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="container-fluid">
+
+
+            <div class="tab-content">
+                <div id="tab_day" class='tab-pane fade in active call-cycle-schedule-container'>
+                    <table class="table col-xs-12">
+                        <thead>
+                            <tr>
+                                <th class="call-cycle-table-header-width100px"></th>
+
+                                <th></th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var time in Model.TimeHeaders)
+                            {
+                                <tr>
+                                    <td>@time.Name</td>
+                                    <td>
+                                        <div class="col-xs-12">
+                                            <table class="table call-cycle-table-header-width100pc">
+                                                <tbody data-bind="foreach:data.schedule">
+                                                    <tr data-bind="css:{hide:Day!= '@System.DateTime.Now.DayOfWeek.ToString()' || Time!='@(time.Name)'}">
+                                                        <td style="height:20px;">
+                                                            <div class="dropup">
+                                                                <button class="call-cycle-table-header-width100pc btn dropdown-toggle" style="text-align:left;" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-bind="css:{'btn-info':CategoryName=='New','btn-danger':CategoryName=='Challenge','btn-warning':CategoryName=='Influencer','btn-success':CategoryName=='Referring'}">
+                                                                    <span class="caret separator-right-2x"></span>
+                                                                    <span class="separator-right" data-bind="text:ContactName"></span>(
+                                                                    <span class="separator-right italics" data-bind="text:RoleName"></span>-
+                                                                    <span class="separator-right italics" data-bind="text:Speciality"></span>)
+                                                                    <span class="separator-left separator-right">Referral Sources:</span>
+                                                                    <span class="separator-left bold" data-bind="text:model.referralSourceName($data.ReferralSources)"></span>
+
+                                                                </button>
+                                                                <ul class="dropdown-menu">
+                                                                    <li><a href="#" data-bind="click:function(data,event){model.data.handleConfirmVisit(data);}">Confirm Visit</a></li>
+                                                                </ul>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+
+                                        </div>
+                                    </td>
+                                </tr>
+
+
+                            }
+
+                        </tbody>
+
+                    </table>
+                </div>
+                <div id="tab_week" class='tab-pane fade in'>
+                    <table class="table col-xs-12">
+                        <thead>
+                            <tr>
+                                <th class="call-cycle-table-header-width100px"></th>
+                                @foreach (var day in Model.DayHeaders)
+                                {
+                                    <th class="call-cycle-table-header">@(day.Name)</th>
+                                }
+                                <th></th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var time in Model.TimeHeaders)
+                            {
+                                <tr>
+                                    <td>@time.Name</td>
+
+                                    @foreach (var day in Model.DayHeaders)
+                                    {
+                                        <td>
+                                            <table class="table call-cycle-table-header-width100pc">
+                                                <tbody data-bind="foreach:GetItem('@(day.Name)','@(time.Name)')">
+                                                    <tr>
+                                                        <td style="height:20px;">
+                                                            <button class="call-cycle-table-header-width100pc btn dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-bind="text:ContactName,css:{'btn-info':CategoryName=='New','btn-danger':CategoryName=='Challenge','btn-warning':CategoryName=='Influencer','btn-success':CategoryName=='Referring'}"></button>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+
+                                        </td>
+                                    }
+                                    <td></td>
+                                </tr>
+
+
+                            }
+
+                        </tbody>
+
+                    </table>
+                </div>
+
+                <div id="tab_unplanned" class='tab-pane fade in'>
+
+                    <div class="form-group">
+                        <div class="col-xs-2">
+                            <label class="control-label">
+                                From
+                            </label>
+                            <input id="fromDate" type="text" class="form-control date-control" data-bind="value:data.fromDate" />
+                        </div>
+
+                        <div class="col-xs-2">
+                            <label class="control-label">
+                                To
+                            </label>
+                            <input id="toDate" type="text" class="form-control date-control" data-bind="value:data.toDate" />
+                        </div>
+                        <div class="col-xs-8">
+                        </div>
+
+                    </div>
+
+                    <div class="separator col-xs-12"></div>
+
+                    <div class="col-xs-12">
+                        <button class="btn btn-primary" data-bind="click:data.refresh">Refresh</button>
+                    </div>
+
+                    <div class="separator col-xs-12"></div>
+                    <div class="col-xs-12">
+                        <hr />
+                    </div>
+
+
+                    <table class="table table-striped" style="margin-top:10px;">
+                        <thead>
+                            <tr>
+                                <th class="date-column">Visit Date</th>
+                                <th class="short-column">Type</th>
+                                <th class="name-column">Site</th>
+                                <th class="name-column">Contact</th>
+                                <th>Referral Source</th>
+                                <th>Notes</th>
+                            </tr>
+                        </thead>
+                        <tbody data-bind="foreach:data.unplannedVisits">
+                            <tr>
+                                <td data-bind="text:VisitDate"></td>
+                                <td data-bind="text:ContactType"></td>
+                                <td data-bind="text:Site"></td>
+                                <td data-bind="text:Contact"></td>
+                                <td data-bind="text:ReferralSource"></td>
+                                <td data-bind="text:Notes"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section scripts{
+
+    <script>
+
+        model.data.schedule = ko.observableArray([]);
+        model.data.sites = ko.observableArray([]);
+        model.data.referralSources = ko.observableArray([]);
+        model.data.contacts = ko.observableArray([]);
+        model.data.unplannedVisits = ko.observableArray([]);
+
+        model.data.CHGSiteId = ko.observable("");
+        model.data.referralSourceId = ko.observable("");
+        model.data.contactId = ko.observable("");
+        model.data.notes = ko.observable("");
+        model.data.unplannedContactType = ko.observable("");
+
+          model.data.fromDate = ko.observable('@ViewBag.FromDate');
+        model.data.toDate = ko.observable('@ViewBag.ToDate');
+
+        model.referralSourceName = function (referralSources) {
+
+            var name = "";
+            var first = true;
+            for (let item of referralSources) {
+                if (first) {
+                    name = name + item.Name;
+                }
+                else {
+                    name = name + ", " + item.Name;
+                }
+                first = false;
+            }
+
+            return name;
+        }
+
+        function GetItem(day, time) {
+            var list = [];
+            var items = model.data.schedule();
+            for (let item of items) {
+                if (item.Day == day && item.Time == time) {
+                    list.push(item);
+                }
+            }
+            return list;
+        }
+
+    function handleError(errorData) {
+        model.ui.progress(false);
+        globalErrorHandler(errorData);
+    }
+
+
+           function getUnplannedActivity() {
+    var promise = $.ajax({
+        dataType: 'json',
+        url: '@Url.Action("GetCurrentUnplannedActivity", "CallCycle")' + "?fromDate=" + encodeURI(model.data.fromDate()) + "&toDate=" + encodeURI(model.data.toDate()),
+    type: "GET"
+    });
+             promise.then(function (data) {
+
+                 
+
+                    var list = [];
+              
+               
+                        if (data && data.Status) {
+                            if (data.Status == '@Constant.RESPONSE_ERROR') {
+                                list.push({ "name": "Error", "description": data.Description });
+                                model.ui.errorList(list);
+                                model.ui.error(true);
+                            }
+                            else {
+                                model.data.unplannedVisits(data.Items);
+                            }
+                        }
+                        else {
+                            list.push({ "name": "Error", "description": data.Description });
+                            model.ui.errorList(list);
+                            model.ui.error(true);
+                            model.data.unplannedVisits(data.Items);
+                 }
+
+
+
+             }, handleError);
+    return promise;
+        }
+
+        model.data.refresh = function () {
+            getUnplannedActivity();
+        }
+
+        function getSites() {
+            var promise = $.ajax({
+                dataType: 'json',
+                url: '@Url.Action("GetUserSites", "CallCycle")',
+                type: "GET"
+            });
+
+            return promise;
+        }
+
+        model.data.CHGSiteId.subscribe(function (value) {
+            getReferralSources(value).then(function (data) {
+                model.data.referralSources(data);
+            }, handleError);
+
+          
+        });
+
+          function getReferralSources(chgSiteId) {
+            if (!chgSiteId) {
+                chgSiteId = 0;
+            }
+            var promise = $.ajax({
+                dataType: 'json',
+                url: '@Url.Action("GetUserReferralSources", "CallCycle")' + '?CHGSiteId=' + chgSiteId,
+                type: "GET"
+            });
+
+            return promise;
+        }
+
+    function getCurrentSchedule() {
+    var promise = $.ajax({
+    dataType: 'json',
+    url: '@Url.Action("GetCurrentSchedule", "CallCycle")',
+    type: "GET"
+    });
+
+    return promise;
+    }
+
+
+         function getContacts(referralSourceId) {
+            if (!referralSourceId) {
+                referralSourceId = 0;
+            }
+            var promise = $.ajax({
+                dataType: 'json',
+                url: '@Url.Action("GetReferralSourceContacts", "CallCycle")' + '?ReferralSourceId=' + referralSourceId,
+                type: "GET"
+            });
+
+            return promise;
+        }
+
+
+        model.data.referralSourceId.subscribe(function (value) {
+
+            getContacts(value)
+                .then(function (data) {
+                    model.data.contacts(data);
+                }, handleError);
+
+        });
+
+    $(document).ready(function (data) {
+        getCurrentSchedule().then(function (data) {
+
+            for (let item of data.Items) {
+                if (item.Visited) {
+                    item.CategoryName = "Visited";
+                }
+            }
+
+            model.data.schedule(data.Items);
+        }, handleError);
+
+        getSites().then(function (data) {
+            model.data.sites(data);
+        }, handleError);
+
+        getUnplannedActivity();
+
+    });
+
+
+        function confirmVisit(data) {
+
+
+            var promise = $.ajax({
+                dataType: 'json',
+                url: '@Url.Action("ConfirmVisit","CallCycle")',
+                type: "POST",
+                data:data
+            });
+
+            return promise;
+        }
+
+
+      
+
+        model.data.saveUnplanned = function () {
+
+
+            var data = {};
+
+            data.ContactType = model.data.unplannedContactType();
+            data.CHGSiteId = model.data.CHGSiteId();
+            data.ReferralSourceId = model.data.referralSourceId();
+            data.ContactId = model.data.contactId();
+            data.Notes = model.data.notes();
+
+
+              var promise = $.ajax({
+                dataType: 'json',
+                url: '@Url.Action("UnplannedVisit", "CallCycle")',
+                type: "POST",
+                data:data
+            });
+
+            promise.then(function (data) {
+
+                   var list = [];
+
+                        if (data && data.Status) {
+                            if (data.Status == '@Constant.RESPONSE_OK') {
+                                $("#logUnplannedModal").modal("hide");
+                                getUnplannedActivity();
+                                list.push({ "name": "Success", "description": data.Description });
+                                model.ui.successList(list);
+                                model.ui.success(true);
+                            } else {
+                                list.push({ "name": "Error", "description": data.Description });
+                                model.ui.errorList(list);
+                                model.ui.error(true);
+                            }
+                        }
+                        else {
+                            list.push({ "name": "Error", "description": data.Description });
+                            model.ui.errorList(list);
+                            model.ui.error(true);
+
+            }
+
+            }, handleError);
+
+          
+
+        }
+
+
+        model.data.showUnplanned = function () {         
+            model.data.unplannedContactType("");
+            model.data.notes("");
+            model.data.CHGSiteId("");
+            model.data.referralSourceId("");
+            model.data.contactId("");
+            $("#logUnplannedModal").modal("show");
+        }
+
+
+       
+
+        model.data.handleConfirmVisit = function (viewModel) {
+
+           confirmVisit(viewModel).then(function (data) {
+
+
+               var sch =[];
+               for (let item of model.data.schedule()) {
+                   if (item.ScheduleItemId == viewModel.ScheduleItemId) {
+                       item.CategoryName = "Visited";
+
+                   }
+                   sch.push(item);
+
+               }
+
+               model.data.schedule([]);
+               model.data.schedule(sch);
+
+                 var list = [];
+
+                        if (data && data.Status) {
+                            if (data.Status == '@Constant.RESPONSE_OK') {
+
+                                list.push({ "name": "Success", "description": data.Description });
+                                model.ui.successList(list);
+                                model.ui.success(true);
+                            } else {
+                                list.push({ "name": "Error", "description": data.Description });
+                                model.ui.errorList(list);
+                                model.ui.error(true);
+                            }
+                        }
+                        else {
+                            list.push({ "name": "Error", "description": data.Description });
+                            model.ui.errorList(list);
+                            model.ui.error(true);
+
+               }
+
+
+
+           }, handleError);
+        }
+    </script>
+}
